@@ -12,7 +12,9 @@ import org.fsb.FlixFlow.Models.Commentaire_episode;
 import org.fsb.FlixFlow.Models.Commentaire_film;
 import org.fsb.FlixFlow.Models.Commentaire_saison;
 import org.fsb.FlixFlow.Models.Commentaire_serie;
+import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Models.Saison;
 import org.fsb.FlixFlow.Models.Serie;
 
 public class DatabaseUtil {
@@ -228,7 +230,7 @@ public class DatabaseUtil {
             c.setNom_User(resultSet.getString("user_name"));
             c1.add(c);
 
-            return c1;
+            
         }
         return c1;
 
@@ -253,7 +255,7 @@ public class DatabaseUtil {
             c.setNom_User(resultSet.getString("user_name"));
             c1.add(c);
 
-            return c1;
+          
         }
         return c1;
 
@@ -279,7 +281,7 @@ public class DatabaseUtil {
            c.setNom_User(resultSet.getString("user_name"));
            c1.add(c);
 
-           return c1;
+          
        }
        return c1;
 
@@ -304,11 +306,72 @@ public class DatabaseUtil {
            c.setNom_User(resultSet.getString("user_name"));
            c1.add(c);
 
-           return c1;
+         
        }
        System.out.println("hhhhh");
        return c1;
 
+	}
+	
+	public static List<Saison> getSaisonBySerieId(int serieId) throws SQLException
+	{
+		String query = "select saison.*, serie.nom as serie_name from saison join serie on saison.id_serie = serie.id_serie where saison.id_saison = ?";
+		Connection connection = getConnection();
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, serieId);
+		ResultSet resultSet = statement.executeQuery();
+		List<Saison> c1 = new ArrayList<>();
+
+	       if (resultSet.next()) {
+	           Saison c = new Saison();
+	          c.setDate_debut(resultSet.getDate("date_debut"));
+	          c.setId_saison(resultSet.getInt("id_saison"));
+	          c.setId_serie(resultSet.getInt("id_serie"));
+	          c.setNom_serie(resultSet.getString("serie_name"));
+	          c.setNum_saison(resultSet.getInt("num_saison"));
+	          c.setSynopsis(resultSet.getString("synopsis"));
+	          c.setUrl_image(resultSet.getString("url_image"));
+	          c.setUrl_video(resultSet.getString("url_video"));
+	          c.setVues(resultSet.getInt("vues"));
+	          c1.add(c);
+
+	         
+	       }
+
+	       return c1;
+	
+		
+	}
+	
+	public static List<Episode> getEpisodeByIds(int saisonId,int serieId) throws SQLException
+	{
+		String query = "select episode.*, serie.nom as serie_name from episode join saison on episode.id_saison = saison.id_saison join serie on saison.id_serie = serie.id_serie where episode.id_saison = ? and episode.id_serie = ?";
+		Connection connection = getConnection();
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, saisonId);
+		statement.setInt(1, serieId);
+		ResultSet resultSet = statement.executeQuery();
+		List<Episode> c1 = new ArrayList<>();
+		 if (resultSet.next()) {
+	          Episode c = new Episode();
+	          c.setDate_diffusion(resultSet.getDate("date_diffusion"));
+	          c.setId_saison(resultSet.getInt("id_saison"));
+	          c.setId_serie(resultSet.getInt("id_serie"));
+	          c.setId_episode(resultSet.getInt("id_episode"));
+	          c.setNom_serie(resultSet.getString("serie_name"));
+	          c.setNum_saison(resultSet.getInt("num_saison"));
+	          c.setNum_episode(resultSet.getInt("num_episode"));
+	          c.setSynopsis(resultSet.getString("synopsis"));
+	          c.setUrl_episode(resultSet.getString("url_episode"));
+	          c.setVues(resultSet.getInt("vues"));
+	          c1.add(c);
+
+	         
+	       }
+
+	       return c1;
+	
+		
 	}
 
 
