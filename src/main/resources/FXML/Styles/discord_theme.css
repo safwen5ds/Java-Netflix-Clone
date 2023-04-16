@@ -1,0 +1,55 @@
+
+.root {
+    -fx-background-color: #2C2F33;
+    -fx-base: #23272A;
+    -fx-accent: #7289DA;
+    -fx-text-base-color: #DCDDDE;
+    -fx-text-background-color: #99AAB5;
+}
+
+
+HBox {
+    -fx-background-color: #23272A;
+    -fx-padding: 10;
+}
+
+
+VBox {
+    -fx-padding: 20;
+}
+
+
+Button {
+    -fx-text-fill: #DCDDDE;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 18px;
+}
+
+Button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+Button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+TextField {
+    -fx-background-color: #23272A;
+    -fx-text-fill: #DCDDDE;
+    -fx-border-color: #2C2F33;
+    -fx-prompt-text-fill: #99AAB5;
+}
+
+
+ImageView {
+    -fx-padding: 10;
+}
+
+
+AnchorPane {
+    -fx-background-color: #2C2F33;
+}
+
+

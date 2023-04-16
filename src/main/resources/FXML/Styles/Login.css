@@ -1,0 +1,47 @@
+.root {
+    -fx-base: #181818;
+    -fx-background-color: #181818;
+    -fx-text-fill: #ffffff;
+}
+
+.label {
+    -fx-text-fill: #ffffff;
+}
+
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.subtitle-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: normal;
+}
+
+.input-field {
+    -fx-background-color: #3b3d40;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #72767d;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5;
+}
+
+.button {
+    -fx-background-color: #e50914;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+.button:hover {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+.button:pressed {
+    -fx-background-color: #7d050c;
+}
+.icon
+{
+	-fx-fill:white;
+}

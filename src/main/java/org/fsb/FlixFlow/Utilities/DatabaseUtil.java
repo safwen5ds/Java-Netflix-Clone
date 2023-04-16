@@ -1,0 +1,327 @@
+package org.fsb.FlixFlow.Utilities;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.fsb.FlixFlow.Models.Commentaire_episode;
+import org.fsb.FlixFlow.Models.Commentaire_film;
+import org.fsb.FlixFlow.Models.Commentaire_saison;
+import org.fsb.FlixFlow.Models.Commentaire_serie;
+import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Models.Serie;
+
+public class DatabaseUtil {
+    private static final String DB_URL = "jdbc:oracle:thin:@localhost:1521:xe";
+    private static final String DB_USER = "admin";
+    private static final String DB_PASSWORD = "admin";
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+    }
+
+
+    public static List<Film> getTrendingMovies() throws SQLException {
+        String query = "SELECT * FROM FILM ";
+        List<Film> movies = new ArrayList<>();
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Film movie = new Film();
+                movie.setId_film(resultSet.getInt("ID_FILM"));
+                System.out.println(movie.getId_film());
+                movie.setNom(resultSet.getString("NOM"));
+                movie.setAnnee_sortie(resultSet.getInt("ANNEE_SORTIE"));
+                movie.setUrl_film(resultSet.getString("URL_FILM"));
+                String imageUrl = resultSet.getString("URL_IMAGE");
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    movie.setUrl_image(imageUrl);
+                    System.out.println("Image URL: " + movie.getUrl_image());
+                } else {
+                    System.out.println("Image URL is null or empty.");
+                }
+                movie.setUrl_video(resultSet.getString("URL_VIDEO"));
+                movie.setVues(resultSet.getInt("VUES"));
+
+                movies.add(movie);
+            }
+        }
+        System.out.println("aha!1");
+
+        return movies;
+    }
+
+    public static List<Serie> getTrendingSeries() throws SQLException {
+        String query = "SELECT * FROM SERIE ORDER ";
+        List<Serie> seriesList = new ArrayList<>();
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Serie series = new Serie();
+                series.setId_serie(resultSet.getInt("ID_SERIE"));
+                series.setNom(resultSet.getString("NOM"));
+                series.setAnnee_sortie(resultSet.getInt("ANNEE_SORTIE"));
+                series.setUrl_image(resultSet.getString("URL_IMAGE"));
+                series.setUrl_video(resultSet.getString("URL_VIDEO"));
+                series.setVues(resultSet.getInt("VUES"));
+
+                seriesList.add(series);
+            }
+        }
+        System.out.println("aha!2");
+        return seriesList;
+    }
+
+    public static List<Film> getMoviesSortedByViews() throws SQLException {
+        String query = "SELECT * FROM ADMIN.FILM ORDER BY VUES DESC";
+        List<Film> movies = new ArrayList<>();
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Film movie = new Film();
+                movie.setId_film(resultSet.getInt("ID_FILM"));
+                movie.setNom(resultSet.getString("NOM"));
+                movie.setAnnee_sortie(resultSet.getInt("ANNEE_SORTIE"));
+                movie.setUrl_film(resultSet.getString("URL_FILM"));
+                movie.setUrl_image(resultSet.getString("URL_IMAGE"));
+                movie.setUrl_video(resultSet.getString("URL_VIDEO"));
+                movie.setVues(resultSet.getInt("VUES"));
+
+                movies.add(movie);
+            }
+        }
+        System.out.println("aha!3");
+        return movies;
+    }
+
+    public static List<Serie> getSeriesSortedByViews() throws SQLException {
+        String query = "SELECT * FROM ADMIN.SERIE ORDER BY VUES DESC";
+        List<Serie> series = new ArrayList<>();
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Serie serie = new Serie();
+                serie.setId_serie(resultSet.getInt("ID_SERIE"));
+                serie.setNom(resultSet.getString("NOM"));
+                serie.setAnnee_sortie(resultSet.getInt("ANNEE_SORTIE"));
+                serie.setUrl_image(resultSet.getString("URL_IMAGE"));
+                serie.setUrl_video(resultSet.getString("URL_VIDEO"));
+                serie.setVues(resultSet.getInt("VUES"));
+
+                series.add(serie);
+            }
+        }
+        System.out.println("aha!4");
+        return series;
+    }
+
+    public static Film getFilmById(int id) throws SQLException {
+    	 String query = "SELECT film.*, genre.nom as genre_nom, langue.nom as langue_nom, pays.nom as pays_nom, producteur.nom as producteur_nom " +
+                 "FROM film JOIN genre ON film.id_genre = genre.id_genre " +
+                 "JOIN langue ON film.id_langue = langue.id_langue " +
+                 "JOIN pays ON film.id_pays_origine = pays.id_pays " +
+                 "JOIN producteur ON film.id_producteur = producteur.id_producteur " +
+                 "WHERE film.id_film = ?";
+  Connection connection = getConnection();
+  PreparedStatement statement = connection.prepareStatement(query);
+  statement.setInt(1, id);
+  ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            Film movie = new Film();
+            movie.setId_film(resultSet.getInt("id_film"));
+            movie.setNom(resultSet.getString("nom"));
+            movie.setAnnee_sortie(resultSet.getInt("annee_sortie"));
+            movie.setUrl_film(resultSet.getString("url_film"));
+            movie.setUrl_image(resultSet.getString("url_image"));
+            movie.setUrl_video(resultSet.getString("url_video"));
+            movie.setVues(resultSet.getInt("vues"));
+            movie.setId_genre(resultSet.getInt("id_genre"));
+            movie.setId_langue(resultSet.getInt("id_langue"));
+            movie.setId_pays_origine(resultSet.getInt("id_pays_origine"));
+            movie.setId_producteur(resultSet.getInt("id_producteur"));
+            movie.setSynopsis(resultSet.getString("synopsis"));
+            movie.setId_genre(resultSet.getInt("id_genre"));
+            movie.setNom_genre(resultSet.getString("genre_nom"));
+            movie.setId_langue(resultSet.getInt("id_langue"));
+            movie.setNom_langue(resultSet.getString("langue_nom"));
+            movie.setId_pays_origine(resultSet.getInt("id_pays_origine"));
+            movie.setNom_pays(resultSet.getString("pays_nom"));
+            movie.setId_producteur(resultSet.getInt("id_producteur"));
+            movie.setNom_producteur(resultSet.getString("producteur_nom"));
+
+            return movie;
+        }
+        return null;
+    }
+
+    public static Serie getSerieById(int id) throws SQLException {
+    	String query = "SELECT serie.*, genre.nom as genre_nom, langue.nom as langue_nom, pays.nom as pays_nom, producteur.nom as producteur_nom " +
+                "FROM serie JOIN genre ON serie.id_genre = genre.id_genre " +
+                "JOIN langue ON serie.id_langue = langue.id_langue " +
+                "JOIN pays ON serie.id_pays_origine = pays.id_pays " +
+                "JOIN producteur ON serie.id_producteur = producteur.id_producteur " +
+                "WHERE serie.id_serie = ?";
+ Connection connection = getConnection();
+ PreparedStatement statement = connection.prepareStatement(query);
+ statement.setInt(1, id);
+ ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            Serie serie = new Serie();
+            serie.setId_serie(resultSet.getInt("id_serie"));
+            serie.setNom(resultSet.getString("nom"));
+            serie.setAnnee_sortie(resultSet.getInt("annee_sortie"));
+            serie.setUrl_image(resultSet.getString("url_image"));
+            serie.setUrl_video(resultSet.getString("url_video"));
+            serie.setVues(resultSet.getInt("vues"));
+            serie.setId_genre(resultSet.getInt("id_genre"));
+            serie.setId_langue(resultSet.getInt("id_langue"));
+            serie.setId_pays_origine(resultSet.getInt("id_pays_origine"));
+            serie.setId_producteur(resultSet.getInt("id_producteur"));
+            serie.setSynopsis(resultSet.getString("synopsis"));
+            serie.setId_genre(resultSet.getInt("id_genre"));
+            serie.setNom_genre(resultSet.getString("genre_nom"));
+            serie.setId_langue(resultSet.getInt("id_langue"));
+            serie.setNom_langue(resultSet.getString("langue_nom"));
+            serie.setId_pays_origine(resultSet.getInt("id_pays_origine"));
+            serie.setNom_pays(resultSet.getString("pays_nom"));
+            serie.setId_producteur(resultSet.getInt("id_producteur"));
+            serie.setNom_producteur(resultSet.getString("producteur_nom"));
+
+            return serie;
+        }
+        return null;
+    }
+
+
+	public static List<Commentaire_episode> getCommentaireEpisodesByMediaId(int mediaId) throws SQLException {
+		 String query = "SELECT commentaire_episode.*, utilisateur.nom as user_name " +
+                 "FROM commentaire_episode JOIN utilisateur ON utilisateur.id_utilisateur = commentaire_episode.id_utilisateur " +
+                 "WHERE commentaire_episode.id_episode= ?";
+  Connection connection = getConnection();
+  PreparedStatement statement = connection.prepareStatement(query);
+  statement.setInt(1, mediaId);
+  ResultSet resultSet = statement.executeQuery();
+  List<Commentaire_episode> c1 = new ArrayList<>();
+
+        if (resultSet.next()) {
+            Commentaire_episode c = new Commentaire_episode();
+            c.setId_utilisateur(resultSet.getInt("id_utilisateur"));
+            c.setId_episode(resultSet.getInt("id_episode"));
+            c.setContenu(resultSet.getString("contenu"));
+            c.setNom_User(resultSet.getString("user_name"));
+            c1.add(c);
+
+            return c1;
+        }
+        return c1;
+
+	}
+
+
+	public static List<Commentaire_saison> getCommentaireSaisonsByMediaId(int mediaId) throws SQLException {
+		 String query = "SELECT commentaire_saison.*, utilisateur.nom as user_name " +
+                 "FROM commentaire_saison JOIN utilisateur ON utilisateur.id_utilisateur = commentaire_saison.id_utilisateur " +
+                 "WHERE commentaire_saison.id_saison= ?";
+  Connection connection = getConnection();
+  PreparedStatement statement = connection.prepareStatement(query);
+  statement.setInt(1, mediaId);
+  ResultSet resultSet = statement.executeQuery();
+  List<Commentaire_saison> c1 = new ArrayList<>();
+
+        if (resultSet.next()) {
+            Commentaire_saison c = new Commentaire_saison();
+            c.setId_utilisateur(resultSet.getInt("id_utilisateur"));
+            c.setId_saison(resultSet.getInt("id_saison"));
+            c.setContenu(resultSet.getString("contenu"));
+            c.setNom_User(resultSet.getString("user_name"));
+            c1.add(c);
+
+            return c1;
+        }
+        return c1;
+
+	}
+
+
+
+	public static List<Commentaire_serie> getCommentaireSeriesByMediaId(int mediaId) throws SQLException {
+		String query = "SELECT commentaire_serie.*, utilisateur.nom as user_name " +
+                "FROM commentaire_serie JOIN utilisateur ON utilisateur.id_utilisateur = commentaire_serie.id_utilisateur " +
+                "WHERE commentaire_serie.id_serie= ?";
+ Connection connection = getConnection();
+ PreparedStatement statement = connection.prepareStatement(query);
+ statement.setInt(1, mediaId);
+ ResultSet resultSet = statement.executeQuery();
+ List<Commentaire_serie> c1 = new ArrayList<>();
+
+       if (resultSet.next()) {
+           Commentaire_serie c = new Commentaire_serie();
+           c.setId_utilisateur(resultSet.getInt("id_utilisateur"));
+           c.setId_serie(resultSet.getInt("id_serie"));
+           c.setContenu(resultSet.getString("contenu"));
+           c.setNom_User(resultSet.getString("user_name"));
+           c1.add(c);
+
+           return c1;
+       }
+       return c1;
+
+	}
+
+
+	public static List<Commentaire_film> getCommentaireFilmsByMediaId(int mediaId) throws SQLException {
+		String query = "SELECT commentaire_film.*, utilisateur.nom as user_name " +
+                "FROM commentaire_film JOIN utilisateur ON utilisateur.id_utilisateur = commentaire_film.id_utilisateur " +
+                "WHERE commentaire_film.id_film= ?";
+ Connection connection = getConnection();
+ PreparedStatement statement = connection.prepareStatement(query);
+ statement.setInt(1, mediaId);
+ ResultSet resultSet = statement.executeQuery();
+ List<Commentaire_film> c1 = new ArrayList<>();
+
+       if (resultSet.next()) {
+           Commentaire_film c = new Commentaire_film();
+           c.setId_utilisateur(resultSet.getInt("id_utilisateur"));
+           c.setId_film(resultSet.getInt("id_film"));
+           c.setContenu(resultSet.getString("contenu"));
+           c.setNom_User(resultSet.getString("user_name"));
+           c1.add(c);
+
+           return c1;
+       }
+       System.out.println("hhhhh");
+       return c1;
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

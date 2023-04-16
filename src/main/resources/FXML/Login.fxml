@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchor" maxHeight="1000.0" maxWidth="1200.0" minHeight="600.0" minWidth="1200.0" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.LoginController">
+   <children>
+      <ImageView fx:id="im1" fitHeight="699.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images_Videos/wp8296640.jpg" />
+         </image>
+      </ImageView>
+      <Pane fx:id="pane1" layoutX="600.0" prefHeight="600.0" prefWidth="600.0" styleClass="root" stylesheets="@Styles/Login.css">
+         <children>
+            <ImageView fx:id="im2" fitHeight="446.0" fitWidth="871.0" layoutX="-113.0" layoutY="-88.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Images_Videos/Sansre.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="label1" layoutX="178.0" layoutY="234.0" style="-fx-font-family: bebas neue;" styleClass="title-label" stylesheets="@Styles/Login.css" text="Welcome to FlixFlow!">
+               <font>
+                  <Font name="Book Antiqua" size="12.0" />
+               </font></Label>
+            <Label fx:id="label2" layoutX="209.0" layoutY="288.0" style="-fx-font-family: bebas neue;" styleClass="subtitle-label" stylesheets="@Styles/Login.css" text="Please sign in to continue" />
+            <TextField fx:id="inputemail" layoutX="134.0" layoutY="345.0" prefHeight="27.0" prefWidth="347.0" promptText="Email" styleClass="input-field" stylesheets="@Styles/Login.css" />
+            <PasswordField fx:id="inputpass" layoutX="134.0" layoutY="403.0" prefHeight="27.0" prefWidth="347.0" promptText="Password" styleClass="input-field" stylesheets="@Styles/Login.css" />
+            <Button fx:id="btnreg" layoutX="369.0" layoutY="463.0" mnemonicParsing="false" style="-fx-font-family: bebas neue; -fx-font-weight: bold;" stylesheets="@Styles/Login.css" text="REGISTER" />
+            <Button fx:id="btnlogin" layoutX="182.0" layoutY="463.0" mnemonicParsing="false" style="-fx-font-family: bebas neue; -fx-font-weight: bold;" stylesheets="@Styles/Login.css" text="LOGIN" />
+            <FontAwesomeIconView fx:id="ic1" glyphName="TWITTER" layoutX="404.0" layoutY="581.0" size="30" styleClass="icon" wrappingWidth="16.546142578125" />
+            <FontAwesomeIconView fx:id="ic2" glyphName="FACEBOOK" layoutX="455.0" layoutY="581.0" size="30" styleClass="icon" />
+            <FontAwesomeIconView fx:id="ic3" glyphName="INSTAGRAM" layoutX="497.0" layoutY="581.0" size="30" styleClass="icon" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
