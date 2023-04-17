@@ -16,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,6 +41,8 @@ import org.fsb.FlixFlow.Models.Commentaire_serie;
 import org.fsb.FlixFlow.Models.Film;
 import org.fsb.FlixFlow.Models.Serie;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
+
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -49,6 +52,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -68,6 +74,7 @@ public class MovieSeriesDetailsController {
 
     private int mediaId;
     private boolean isMovie;
+    
 
     // Add the new constructor
     public MovieSeriesDetailsController(int mediaId, boolean isMovie) {
@@ -163,6 +170,9 @@ public class MovieSeriesDetailsController {
             }
             openUrlInNewWindow(url);
         });
+        
+        watchButton.setOnAction(event -> openSaisonPage());
+
     }
 
 
@@ -268,10 +278,24 @@ public class MovieSeriesDetailsController {
         newWindow.show();
     }
 
+    private void openSaisonPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/saison.fxml"));
+            loader.setControllerFactory(param -> new SaisonController());
+            Parent saisonPage = loader.load();
 
+            Platform.runLater(() -> {
+                UserDashboardController.getContentPane().getChildren().setAll(saisonPage);
+            });
 
-
-
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
+
+
+
+
+

@@ -2,6 +2,8 @@ package org.fsb.FlixFlow.Controllers;
 
 import java.io.IOException;
 
+
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,11 +18,16 @@ public class UserDashboardController {
     @FXML
     private Button btnhome;
 
+    
 
 
 
+    public UserDashboardController() {
+		
+	}
 
-    @FXML
+
+	@FXML
     private void handleHomeClick() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/HomePage.fxml"));
@@ -33,9 +40,10 @@ public class UserDashboardController {
             e.printStackTrace();
         }
     }
+	
 
-
-    public HBox getContentPane() {
+    @SuppressWarnings("exports")
+	public HBox getContentPane() {
         return contentPane;
     }
 

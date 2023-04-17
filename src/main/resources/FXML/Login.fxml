@@ -37,6 +37,7 @@
             <FontAwesomeIconView fx:id="ic1" glyphName="TWITTER" layoutX="404.0" layoutY="581.0" size="30" styleClass="icon" wrappingWidth="16.546142578125" />
             <FontAwesomeIconView fx:id="ic2" glyphName="FACEBOOK" layoutX="455.0" layoutY="581.0" size="30" styleClass="icon" />
             <FontAwesomeIconView fx:id="ic3" glyphName="INSTAGRAM" layoutX="497.0" layoutY="581.0" size="30" styleClass="icon" />
+            <Label fx:id="alert1" layoutX="134.0" layoutY="372.0" prefHeight="17.0" prefWidth="347.0" textFill="#ff2d2d" />
          </children>
       </Pane>
    </children>

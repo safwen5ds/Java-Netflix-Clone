@@ -342,6 +342,25 @@ public class DatabaseUtil {
 	
 		
 	}
+	public static boolean checkUserCredentials(String email, String password) {
+	 
+
+	    String query = "SELECT * FROM utilisateur WHERE email = ? AND mot_de_passe = ?";
+
+	    try (Connection connection = getConnection();
+	        PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+	        preparedStatement.setString(1, email);
+	        preparedStatement.setString(2, password);
+
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            return resultSet.next(); 
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
 	
 	public static List<Episode> getEpisodeByIds(int saisonId,int serieId) throws SQLException
 	{
