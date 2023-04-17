@@ -55,7 +55,6 @@ public class DatabaseUtil {
                 movies.add(movie);
             }
         }
-        System.out.println("aha!1");
 
         return movies;
     }
@@ -80,7 +79,6 @@ public class DatabaseUtil {
                 seriesList.add(series);
             }
         }
-        System.out.println("aha!2");
         return seriesList;
     }
 
@@ -105,7 +103,6 @@ public class DatabaseUtil {
                 movies.add(movie);
             }
         }
-        System.out.println("aha!3");
         return movies;
     }
 
@@ -129,7 +126,6 @@ public class DatabaseUtil {
                 series.add(serie);
             }
         }
-        System.out.println("aha!4");
         return series;
     }
 
@@ -308,7 +304,6 @@ public class DatabaseUtil {
 
          
        }
-       System.out.println("hhhhh");
        return c1;
 
 	}
