@@ -284,14 +284,20 @@ public class MovieSeriesDetailsController {
             loader.setControllerFactory(param -> new SaisonController());
             Parent saisonPage = loader.load();
 
+            FXMLLoader userDashboardLoader = new FXMLLoader(getClass().getResource("/FXML/dash.fxml"));
+            userDashboardLoader.setControllerFactory(param -> new UserDashboardController());
+            Parent userDashboard = userDashboardLoader.load();
+            UserDashboardController userDashboardController = userDashboardLoader.getController();
+
             Platform.runLater(() -> {
-                UserDashboardController.getContentPane().getChildren().setAll(saisonPage);
+                userDashboardController.getContentPane().getChildren().setAll(saisonPage);
             });
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 }
 
