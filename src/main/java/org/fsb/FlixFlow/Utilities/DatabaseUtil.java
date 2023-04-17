@@ -308,35 +308,31 @@ public class DatabaseUtil {
 
 	}
 	
-	public static List<Saison> getSaisonBySerieId(int serieId) throws SQLException
-	{
-		String query = "select saison.*, serie.nom as serie_name from saison join serie on saison.id_serie = serie.id_serie where saison.id_saison = ?";
-		Connection connection = getConnection();
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.setInt(1, serieId);
-		ResultSet resultSet = statement.executeQuery();
-		List<Saison> c1 = new ArrayList<>();
+	public static List<Saison> getSaisonBySerieId(int serieId) throws SQLException {
+	    String query = "SELECT saison.*, serie.nom AS serie_name FROM saison JOIN serie ON saison.id_serie = serie.id_serie WHERE serie.id_serie = ?";
+	    Connection connection = getConnection();
+	    PreparedStatement statement = connection.prepareStatement(query);
+	    statement.setInt(1, serieId);
+	    ResultSet resultSet = statement.executeQuery();
+	    List<Saison> seasons = new ArrayList<>();
 
-	       if (resultSet.next()) {
-	           Saison c = new Saison();
-	          c.setDate_debut(resultSet.getDate("date_debut"));
-	          c.setId_saison(resultSet.getInt("id_saison"));
-	          c.setId_serie(resultSet.getInt("id_serie"));
-	          c.setNom_serie(resultSet.getString("serie_name"));
-	          c.setNum_saison(resultSet.getInt("num_saison"));
-	          c.setSynopsis(resultSet.getString("synopsis"));
-	          c.setUrl_image(resultSet.getString("url_image"));
-	          c.setUrl_video(resultSet.getString("url_video"));
-	          c.setVues(resultSet.getInt("vues"));
-	          c1.add(c);
+	    while (resultSet.next()) {
+	        Saison season = new Saison();
+	        season.setDate_debut(resultSet.getDate("date_debut"));
+	        season.setId_saison(resultSet.getInt("id_saison"));
+	        season.setId_serie(resultSet.getInt("id_serie"));
+	        season.setNom_serie(resultSet.getString("serie_name"));
+	        season.setNum_saison(resultSet.getInt("num_saison"));
+	        season.setSynopsis(resultSet.getString("synopsis"));
+	        season.setUrl_image(resultSet.getString("url_image"));
+	        season.setUrl_video(resultSet.getString("url_video"));
+	        season.setVues(resultSet.getInt("vues"));
+	        seasons.add(season);
+	    }
 
-	         
-	       }
-
-	       return c1;
-	
-		
+	    return seasons;
 	}
+
 	public static boolean checkUserCredentials(String email, String password) {
 	 
 

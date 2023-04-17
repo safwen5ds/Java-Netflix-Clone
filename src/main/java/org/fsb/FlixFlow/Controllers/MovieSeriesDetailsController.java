@@ -74,13 +74,13 @@ public class MovieSeriesDetailsController {
 
     private int mediaId;
     private boolean isMovie;
-    
+    private UserDashboardController userDashboardController;
 
-    // Add the new constructor
-    public MovieSeriesDetailsController(int mediaId, boolean isMovie) {
+    // Modify the constructor
+    public MovieSeriesDetailsController(int mediaId, boolean isMovie, UserDashboardController userDashboardController) {
         this.mediaId = mediaId;
         this.isMovie = isMovie;
-      
+        this.userDashboardController = userDashboardController;
     }
     @FXML
     private Button Watchtrailer;
@@ -281,13 +281,11 @@ public class MovieSeriesDetailsController {
     private void openSaisonPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/saison.fxml"));
-            loader.setControllerFactory(param -> new SaisonController());
+            SaisonController saisonController = new SaisonController();
+            loader.setController(saisonController);
             Parent saisonPage = loader.load();
-
-            FXMLLoader userDashboardLoader = new FXMLLoader(getClass().getResource("/FXML/dash.fxml"));
-            userDashboardLoader.setControllerFactory(param -> new UserDashboardController());
-            Parent userDashboard = userDashboardLoader.load();
-            UserDashboardController userDashboardController = userDashboardLoader.getController();
+            int serieId = 1;
+			saisonController.initData(serieId, mediaId);
 
             Platform.runLater(() -> {
                 userDashboardController.getContentPane().getChildren().setAll(saisonPage);
@@ -297,6 +295,8 @@ public class MovieSeriesDetailsController {
             e.printStackTrace();
         }
     }
+
+
 
 
 }

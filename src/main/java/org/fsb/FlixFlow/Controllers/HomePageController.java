@@ -69,7 +69,7 @@ public class HomePageController {
             mediaContainer.setAlignment(Pos.CENTER);
             mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
             mediaContainer.setOnMouseClicked(event -> {
-                openMovieSeriesDetails(film.getId_film(), true);
+                openMovieSeriesDetails(film.getId_film(), true,userDashboardController);
             });
 
             trendingPane2.getChildren().add(mediaContainer);
@@ -94,7 +94,7 @@ public class HomePageController {
 
             mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
             mediaContainer.setOnMouseClicked(event -> {
-                openMovieSeriesDetails(serie.getId_serie(), false);
+                openMovieSeriesDetails(serie.getId_serie(), false,userDashboardController);
             });
 
             sortedByViewsPane2.getChildren().add(mediaContainer);
@@ -139,7 +139,7 @@ public class HomePageController {
              mediaContainer.setAlignment(Pos.CENTER);
              mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
              mediaContainer.setOnMouseClicked(event -> {
-                 openMovieSeriesDetails(serie.getId_serie(), false);
+                 openMovieSeriesDetails(serie.getId_serie(), false,userDashboardController);
              });
 
              sortedByViewsPane2.getChildren().add(mediaContainer);
@@ -163,7 +163,7 @@ public class HomePageController {
 	            mediaContainer.setAlignment(Pos.CENTER);
 	            mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
 	            mediaContainer.setOnMouseClicked(event -> {
-	                openMovieSeriesDetails(film.getId_film(), true);
+	                openMovieSeriesDetails(film.getId_film(), true,userDashboardController);
 	            });
 
 	            sortedByViewsPane2.getChildren().add(mediaContainer);
@@ -172,10 +172,11 @@ public class HomePageController {
 
 
 
-	private void openMovieSeriesDetails(int id, boolean isMovie) {
+	private void openMovieSeriesDetails(int id, boolean isMovie ,UserDashboardController userDashboardController)
+ {
 	    try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MovieSeriesDetails.fxml"));
-	        loader.setControllerFactory(param -> new MovieSeriesDetailsController(id, isMovie));
+	        loader.setControllerFactory(param -> new MovieSeriesDetailsController(id, isMovie,userDashboardController));
 	        Parent detailsPage = loader.load();
 
 	        Platform.runLater(() -> {
