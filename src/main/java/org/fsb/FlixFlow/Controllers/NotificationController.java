@@ -5,8 +5,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class NotificationController {
 	@FXML
-    private AnchorPane notifPage;
+	private AnchorPane notifPage;
 
-    public NotificationController(UserDashboardController userDashboardController) {
-    }
+	public NotificationController(UserDashboardController userDashboardController) {
+	}
 }

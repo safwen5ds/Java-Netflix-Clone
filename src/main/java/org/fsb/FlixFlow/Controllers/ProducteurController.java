@@ -5,8 +5,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class ProducteurController {
 	@FXML
-    private AnchorPane producteurPage;
+	private AnchorPane producteurPage;
 
-    public ProducteurController(UserDashboardController userDashboardController) {
-    }
+	public ProducteurController(UserDashboardController userDashboardController) {
+	}
 }

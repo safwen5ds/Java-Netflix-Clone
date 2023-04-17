@@ -24,169 +24,167 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class HomePageController {
-    private UserDashboardController userDashboardController;
+	private UserDashboardController userDashboardController;
 
-    public HomePageController(UserDashboardController userDashboardController) {
-        this.userDashboardController = userDashboardController;
-    }
-    @FXML
-    Label lab1;
-    @FXML
-    Label lab2;
-    Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 50);
+	public HomePageController(UserDashboardController userDashboardController) {
+		this.userDashboardController = userDashboardController;
+	}
 
-    Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
+	@FXML
+	Label lab1;
+	@FXML
+	Label lab2;
+	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 50);
 
-    @FXML
-    private HBox trendingPane;
+	Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 
-    @FXML
-    private FlowPane sortedByViewsPane;
-    @FXML
-    private Image gifImage;
+	@FXML
+	private HBox trendingPane;
 
-    @FXML
-    public void initialize() {
-        loadTrendingMovies();
-        loadSortedByViewsMoviesAndSeries();
-        lab1.setFont(bebasNeueFont);
-        lab2.setFont(bebasNeueFont);
+	@FXML
+	private FlowPane sortedByViewsPane;
+	@FXML
+	private Image gifImage;
 
-    }
+	@FXML
+	public void initialize() {
+		loadTrendingMovies();
+		loadSortedByViewsMoviesAndSeries();
+		lab1.setFont(bebasNeueFont);
+		lab2.setFont(bebasNeueFont);
 
-    private void loadFilm(List<Film> films, HBox trendingPane2) {
-        for (Film film : films) {
-            ImageView poster = new ImageView(new Image(film.getUrl_image()));
-            poster.setFitHeight(250);
-            poster.setFitWidth(200);
-            Label title = new Label(film.getNom());
-            title.setWrapText(true);
-            title.setMaxWidth(150);
-            title.setAlignment(Pos.CENTER);
-            title.setFont(Montessart);
-            VBox mediaContainer = new VBox(5);
-            mediaContainer.getChildren().addAll(poster, title);
-            mediaContainer.setAlignment(Pos.CENTER);
-            mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
-            mediaContainer.setOnMouseClicked(event -> {
-                openMovieSeriesDetails(film.getId_film(), true,userDashboardController);
-            });
+	}
 
-            trendingPane2.getChildren().add(mediaContainer);
-        }
-    }
+	private void loadFilm(List<Film> films, HBox trendingPane2) {
+		for (Film film : films) {
+			ImageView poster = new ImageView(new Image(film.getUrl_image()));
+			poster.setFitHeight(250);
+			poster.setFitWidth(200);
+			Label title = new Label(film.getNom());
+			title.setWrapText(true);
+			title.setMaxWidth(150);
+			title.setAlignment(Pos.CENTER);
+			title.setFont(Montessart);
+			VBox mediaContainer = new VBox(5);
+			mediaContainer.getChildren().addAll(poster, title);
+			mediaContainer.setAlignment(Pos.CENTER);
+			mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
+			mediaContainer.setOnMouseClicked(event -> {
+				openMovieSeriesDetails(film.getId_film(), true, userDashboardController);
+			});
 
-    private void loadSerie(List<Serie> series, HBox sortedByViewsPane2) {
-        for (Serie serie : series) {
-            ImageView poster = new ImageView(new Image(serie.getUrl_image()));
-            poster.setFitHeight(250);
-            poster.setFitWidth(200);
+			trendingPane2.getChildren().add(mediaContainer);
+		}
+	}
 
-            Label title = new Label(serie.getNom());
-            title.setWrapText(true);
-            title.setMaxWidth(150);
-            title.setAlignment(Pos.CENTER);
-            title.setFont(Montessart);
+	private void loadSerie(List<Serie> series, HBox sortedByViewsPane2) {
+		for (Serie serie : series) {
+			ImageView poster = new ImageView(new Image(serie.getUrl_image()));
+			poster.setFitHeight(250);
+			poster.setFitWidth(200);
 
-            VBox mediaContainer = new VBox(5);
-            mediaContainer.getChildren().addAll(poster, title);
-            mediaContainer.setAlignment(Pos.CENTER);
+			Label title = new Label(serie.getNom());
+			title.setWrapText(true);
+			title.setMaxWidth(150);
+			title.setAlignment(Pos.CENTER);
+			title.setFont(Montessart);
 
-            mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
-            mediaContainer.setOnMouseClicked(event -> {
-                openMovieSeriesDetails(serie.getId_serie(), false,userDashboardController);
-            });
+			VBox mediaContainer = new VBox(5);
+			mediaContainer.getChildren().addAll(poster, title);
+			mediaContainer.setAlignment(Pos.CENTER);
 
-            sortedByViewsPane2.getChildren().add(mediaContainer);
-        }
-    }
+			mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
+			mediaContainer.setOnMouseClicked(event -> {
+				openMovieSeriesDetails(serie.getId_serie(), false, userDashboardController);
+			});
 
-    private void loadTrendingMovies() {
-        try {
-            List<Film> movies = DatabaseUtil.getTrendingMovies();
-            loadFilm(movies, trendingPane);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+			sortedByViewsPane2.getChildren().add(mediaContainer);
+		}
+	}
 
-    private void loadSortedByViewsMoviesAndSeries() {
-        try {
-            List<Film> movies = DatabaseUtil.getMoviesSortedByViews();
-            List<Serie> series = DatabaseUtil.getSeriesSortedByViews();
+	private void loadTrendingMovies() {
+		try {
+			List<Film> movies = DatabaseUtil.getTrendingMovies();
+			loadFilm(movies, trendingPane);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-            loadFilm(movies, sortedByViewsPane);
-            loadSerie(series, sortedByViewsPane);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	private void loadSortedByViewsMoviesAndSeries() {
+		try {
+			List<Film> movies = DatabaseUtil.getMoviesSortedByViews();
+			List<Serie> series = DatabaseUtil.getSeriesSortedByViews();
 
-    private void loadSerie(List<Serie> series, FlowPane sortedByViewsPane2) {
+			loadFilm(movies, sortedByViewsPane);
+			loadSerie(series, sortedByViewsPane);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void loadSerie(List<Serie> series, FlowPane sortedByViewsPane2) {
 		// TODO Auto-generated method stub
-    	 for (Serie serie : series) {
-             ImageView poster = new ImageView(new Image(serie.getUrl_image()));
-             poster.setFitHeight(250);
-             poster.setFitWidth(200);
+		for (Serie serie : series) {
+			ImageView poster = new ImageView(new Image(serie.getUrl_image()));
+			poster.setFitHeight(250);
+			poster.setFitWidth(200);
 
-             Label title = new Label(serie.getNom());
-             title.setWrapText(true);
-             title.setMaxWidth(150);
-             title.setAlignment(Pos.CENTER);
-             title.setFont(Montessart);
-             VBox mediaContainer = new VBox(5);
-             mediaContainer.getChildren().addAll(poster, title);
-             mediaContainer.setAlignment(Pos.CENTER);
-             mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
-             mediaContainer.setOnMouseClicked(event -> {
-                 openMovieSeriesDetails(serie.getId_serie(), false,userDashboardController);
-             });
+			Label title = new Label(serie.getNom());
+			title.setWrapText(true);
+			title.setMaxWidth(150);
+			title.setAlignment(Pos.CENTER);
+			title.setFont(Montessart);
+			VBox mediaContainer = new VBox(5);
+			mediaContainer.getChildren().addAll(poster, title);
+			mediaContainer.setAlignment(Pos.CENTER);
+			mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
+			mediaContainer.setOnMouseClicked(event -> {
+				openMovieSeriesDetails(serie.getId_serie(), false, userDashboardController);
+			});
 
-             sortedByViewsPane2.getChildren().add(mediaContainer);
-         }
+			sortedByViewsPane2.getChildren().add(mediaContainer);
+		}
 	}
 
 	private void loadFilm(List<Film> movies, FlowPane sortedByViewsPane2) {
 		// TODO Auto-generated method stub
-		 for (Film film : movies) {
-	            ImageView poster = new ImageView(new Image(film.getUrl_image()));
-	            poster.setFitHeight(250);
-	            poster.setFitWidth(200);
+		for (Film film : movies) {
+			ImageView poster = new ImageView(new Image(film.getUrl_image()));
+			poster.setFitHeight(250);
+			poster.setFitWidth(200);
 
-	            Label title = new Label(film.getNom());
-	            title.setWrapText(true);
-	            title.setMaxWidth(150);
-	            title.setAlignment(Pos.CENTER);
-	            title.setFont(Montessart);
-	            VBox mediaContainer = new VBox(5);
-	            mediaContainer.getChildren().addAll(poster, title);
-	            mediaContainer.setAlignment(Pos.CENTER);
-	            mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
-	            mediaContainer.setOnMouseClicked(event -> {
-	                openMovieSeriesDetails(film.getId_film(), true,userDashboardController);
-	            });
+			Label title = new Label(film.getNom());
+			title.setWrapText(true);
+			title.setMaxWidth(150);
+			title.setAlignment(Pos.CENTER);
+			title.setFont(Montessart);
+			VBox mediaContainer = new VBox(5);
+			mediaContainer.getChildren().addAll(poster, title);
+			mediaContainer.setAlignment(Pos.CENTER);
+			mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
+			mediaContainer.setOnMouseClicked(event -> {
+				openMovieSeriesDetails(film.getId_film(), true, userDashboardController);
+			});
 
-	            sortedByViewsPane2.getChildren().add(mediaContainer);
-	        }
+			sortedByViewsPane2.getChildren().add(mediaContainer);
+		}
 	}
 
+	private void openMovieSeriesDetails(int id, boolean isMovie, UserDashboardController userDashboardController) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MovieSeriesDetails.fxml"));
+			loader.setControllerFactory(
+					param -> new MovieSeriesDetailsController(id, isMovie, userDashboardController));
+			Parent detailsPage = loader.load();
 
+			Platform.runLater(() -> {
+				userDashboardController.getContentPane().getChildren().setAll(detailsPage);
+			});
 
-	private void openMovieSeriesDetails(int id, boolean isMovie ,UserDashboardController userDashboardController)
- {
-	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MovieSeriesDetails.fxml"));
-	        loader.setControllerFactory(param -> new MovieSeriesDetailsController(id, isMovie,userDashboardController));
-	        Parent detailsPage = loader.load();
-
-	        Platform.runLater(() -> {
-	            userDashboardController.getContentPane().getChildren().setAll(detailsPage);
-	        });
-
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
-

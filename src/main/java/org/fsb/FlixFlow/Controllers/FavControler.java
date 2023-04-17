@@ -5,8 +5,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class FavControler {
 	@FXML
-    private AnchorPane favPage;
+	private AnchorPane favPage;
 
-    public FavControler(UserDashboardController userDashboardController) {
-    }
+	public FavControler(UserDashboardController userDashboardController) {
+	}
 }

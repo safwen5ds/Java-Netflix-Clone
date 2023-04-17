@@ -5,8 +5,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class SerieController {
 	@FXML
-    private AnchorPane seriePage;
+	private AnchorPane seriePage;
 
-    public SerieController(UserDashboardController userDashboardController) {
-    }
+	public SerieController(UserDashboardController userDashboardController) {
+	}
 }

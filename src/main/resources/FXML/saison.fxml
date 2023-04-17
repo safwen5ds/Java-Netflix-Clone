@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
@@ -11,30 +12,10 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="933.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <AnchorPane prefHeight="886.0" prefWidth="934.0">
-         <children>
-            <Rectangle fx:id="image" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="253.0" layoutX="132.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-            <Label fx:id="seasonNumLabel" layoutX="103.0" layoutY="37.0">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Label>
-            <Label fx:id="serieNameLabel" layoutX="126.0" layoutY="367.0" />
-            <Label layoutX="129.0" layoutY="454.0" text="Synopsis : " />
-            <Label fx:id="seasonDate_debutLabel" layoutX="126.0" layoutY="394.0" />
-            <Label fx:id="seasonViewsLabel" layoutX="126.0" layoutY="423.0" />
-            <Text fx:id="seasonSynopsistext" layoutX="129.0" layoutY="496.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <TextField fx:id="commentinput" layoutX="129.0" layoutY="512.0" prefHeight="26.0" prefWidth="423.0" />
-            <Button fx:id="addcommentbtn" layoutX="597.0" layoutY="513.0" mnemonicParsing="false" text="Add Comment" />
-            <ListView fx:id="listcomment" layoutX="125.0" layoutY="557.0" prefHeight="292.0" prefWidth="704.0" />
-            <Button fx:id="watchnow" layoutX="427.0" layoutY="399.0" mnemonicParsing="false" text="Watch Now" />
-            <Button fx:id="watchtrailer" layoutX="545.0" layoutY="399.0" mnemonicParsing="false" text="Watch trailer" />
-            <Button fx:id="addfav" layoutX="665.0" layoutY="399.0" mnemonicParsing="false" text="add to favorite " />
-            <Button fx:id="votebtn" layoutX="803.0" layoutY="399.0" mnemonicParsing="false" text="Vote" />
-            <WebView fx:id="videoweb" layoutX="427.0" layoutY="90.0" prefHeight="246.0" prefWidth="423.0" />
-         </children>
-      </AnchorPane>
-   </children>
-</VBox>
+<ScrollPane fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="933.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.SaisonController">
+   <content>
+      <VBox fx:id="seasonsContainer" spacing="20">
+         <!-- Seasons' layouts will be added here -->
+      </VBox>
+   </content>
+</ScrollPane>

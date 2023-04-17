@@ -1,24 +1,24 @@
 package org.fsb.FlixFlow.Utilities;
 
 public class UserSession {
-    private static UserSession instance;
-    private int userId;
+	private static UserSession instance;
+	private int userId;
 
-    private UserSession() {
-    }
+	private UserSession() {
+	}
 
-    public static UserSession getInstance() {
-        if (instance == null) {
-            instance = new UserSession();
-        }
-        return instance;
-    }
+	public static UserSession getInstance() {
+		if (instance == null) {
+			instance = new UserSession();
+		}
+		return instance;
+	}
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
-    public int getUserId() {
-        return userId;
-    }
+	public int getUserId() {
+		return userId;
+	}
 }

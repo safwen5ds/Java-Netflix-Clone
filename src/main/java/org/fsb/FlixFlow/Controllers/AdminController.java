@@ -5,8 +5,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class AdminController {
 	@FXML
-    private AnchorPane adminPage;
+	private AnchorPane adminPage;
 
-    public AdminController(UserDashboardController userDashboardController) {
-    }
+	public AdminController(UserDashboardController userDashboardController) {
+	}
 }

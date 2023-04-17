@@ -5,8 +5,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class MovieController {
 	@FXML
-    private AnchorPane moviePage;
+	private AnchorPane moviePage;
 
-    public MovieController(UserDashboardController userDashboardController) {
-    }
+	public MovieController(UserDashboardController userDashboardController) {
+	}
 }

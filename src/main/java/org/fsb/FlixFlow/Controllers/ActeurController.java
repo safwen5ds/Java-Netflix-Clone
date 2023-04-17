@@ -5,8 +5,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class ActeurController {
 	@FXML
-    private AnchorPane acteurPage;
+	private AnchorPane acteurPage;
 
-    public ActeurController(UserDashboardController userDashboardController) {
-    }
+	public ActeurController(UserDashboardController userDashboardController) {
+	}
 }

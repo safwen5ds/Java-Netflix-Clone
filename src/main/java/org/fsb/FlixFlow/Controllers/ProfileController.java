@@ -5,8 +5,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class ProfileController {
 	@FXML
-    private AnchorPane profilePage;
+	private AnchorPane profilePage;
 
-    public ProfileController(UserDashboardController userDashboardController) {
-    }
+	public ProfileController(UserDashboardController userDashboardController) {
+	}
 }

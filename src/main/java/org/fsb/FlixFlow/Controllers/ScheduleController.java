@@ -5,8 +5,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class ScheduleController {
 	@FXML
-    private AnchorPane schedulePage;
+	private AnchorPane schedulePage;
 
-    public ScheduleController(UserDashboardController userDashboardController) {
-    }
+	public ScheduleController(UserDashboardController userDashboardController) {
+	}
 }
