@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fsb.FlixFlow.Controllers.ActorRoleDisplay;
+import org.fsb.FlixFlow.Models.Acteur;
 import org.fsb.FlixFlow.Models.Commentaire_episode;
 import org.fsb.FlixFlow.Models.Commentaire_film;
 import org.fsb.FlixFlow.Models.Commentaire_saison;
@@ -340,31 +342,111 @@ public class DatabaseUtil {
 	}
 
 	public static List<Episode> getEpisodeByIds(int saisonId, int serieId) throws SQLException {
-		String query = "select episode.*, serie.nom as serie_name from episode join saison on episode.id_saison = saison.id_saison join serie on saison.id_serie = serie.id_serie where episode.id_saison = ? and episode.id_serie = ?";
-		Connection connection = getConnection();
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.setInt(1, saisonId);
-		statement.setInt(1, serieId);
-		ResultSet resultSet = statement.executeQuery();
-		List<Episode> c1 = new ArrayList<>();
-		if (resultSet.next()) {
-			Episode c = new Episode();
-			c.setDate_diffusion(resultSet.getDate("date_diffusion"));
-			c.setId_saison(resultSet.getInt("id_saison"));
-			c.setId_serie(resultSet.getInt("id_serie"));
-			c.setId_episode(resultSet.getInt("id_episode"));
-			c.setNom_serie(resultSet.getString("serie_name"));
-			c.setNum_saison(resultSet.getInt("num_saison"));
-			c.setNum_episode(resultSet.getInt("num_episode"));
-			c.setSynopsis(resultSet.getString("synopsis"));
-			c.setUrl_episode(resultSet.getString("url_episode"));
-			c.setVues(resultSet.getInt("vues"));
-			c1.add(c);
+		String query = "select episode.*, serie.nom as serie_name, saison.num_saison as num_saison from episode join saison on episode.id_saison = saison.id_saison join serie on saison.id_serie = serie.id_serie where episode.id_saison = ? and episode.id_serie = ?";
+	    Connection connection = getConnection();
+	    PreparedStatement statement = connection.prepareStatement(query);
+	    statement.setInt(1, saisonId);
+	    statement.setInt(2, serieId); // <-- changed from statement.setInt(1, serieId)
+	    ResultSet resultSet = statement.executeQuery();
+	    List<Episode> c1 = new ArrayList<>();
+	    if (resultSet.next()) {
+	        Episode c = new Episode();
+	        c.setDate_diffusion(resultSet.getDate("date_diffusion"));
+	        c.setId_saison(resultSet.getInt("id_saison"));
+	        c.setId_serie(resultSet.getInt("id_serie"));
+	        c.setId_episode(resultSet.getInt("id_episode"));
+	        c.setNom_serie(resultSet.getString("serie_name"));
+	        c.setNum_saison(resultSet.getInt("num_saison"));
+	        c.setNum_episode(resultSet.getInt("num_episode"));
+	        c.setSynopsis(resultSet.getString("synopsis"));
+	        c.setUrl_episode(resultSet.getString("url_episode"));
+	        c.setVues(resultSet.getInt("vues"));
+	        c1.add(c);
+	    }
 
-		}
-
-		return c1;
-
+	    return c1;
 	}
+	public static List<ActorRoleDisplay> getActorRolesForMovie(int filmId) throws SQLException {
+	    String query = "SELECT A.*, RF.ROLE_TYPE, RF.URL_IMAGE FROM ACTEUR A " +
+	            "JOIN ROLE_FILM RF ON A.ID_ACTEUR = RF.ID_ACTEUR " +
+	            "WHERE RF.ID_FILM = ?";
+	    Connection connection = getConnection();
+	    PreparedStatement statement = connection.prepareStatement(query);
+	    statement.setInt(1, filmId);
+	    ResultSet resultSet = statement.executeQuery();
+	    List<ActorRoleDisplay> actorRoles = new ArrayList<>();
+	    while (resultSet.next()) {
+	        ActorRoleDisplay actorRole = new ActorRoleDisplay(
+	                resultSet.getString("URL_IMAGE"),
+	                resultSet.getString("NOM"),
+	                resultSet.getString("ROLE_TYPE")
+	        );
+	        actorRoles.add(actorRole);
+	    }
+	    return actorRoles;
+	}
+
+	public static List<ActorRoleDisplay> getActorRolesForSeries(int serieId) throws SQLException {
+	    String query = "SELECT A.*, RS.ROLE_TYPE, RS.URL_IMAGE FROM ACTEUR A " +
+	            "JOIN ROLE_SERIE RS ON A.ID_ACTEUR = RS.ID_ACTEUR " +
+	            "JOIN SAISON S ON S.ID_SAISON = RS.ID_SAISON " +
+	            "WHERE S.ID_SERIE = ?";
+	    Connection connection = getConnection();
+	    PreparedStatement statement = connection.prepareStatement(query);
+	    statement.setInt(1, serieId);
+	    ResultSet resultSet = statement.executeQuery();
+	    List<ActorRoleDisplay> actorRoles = new ArrayList<>();
+	    while (resultSet.next()) {
+	        ActorRoleDisplay actorRole = new ActorRoleDisplay(
+	                resultSet.getString("URL_IMAGE"),
+	                resultSet.getString("NOM"),
+	                resultSet.getString("ROLE_TYPE")
+	        );
+	        actorRoles.add(actorRole);
+	    }
+	    return actorRoles;
+	}
+	public static Acteur extractActeurFromResultSet(ResultSet resultSet) throws SQLException {
+	    int id = resultSet.getInt("ID_ACTEUR");
+	    String nom = resultSet.getString("NOM");
+	    String url_image = resultSet.getString("URL_IMAGE");
+
+	    Acteur acteur = new Acteur(id, nom, url_image);
+	    return acteur;
+	}
+
+	public static List<Acteur> getActorsByFilmId(int filmId) throws SQLException {
+	    Connection connection = getConnection();
+
+	    String query = "SELECT A.* FROM ACTEUR A " +
+	            "JOIN ROLE_FILM RF ON A.ID_ACTEUR = RF.ID_ACTEUR " +
+	            "WHERE RF.ID_FILM = ?";
+	    PreparedStatement statement = connection.prepareStatement(query);
+	    statement.setInt(1, filmId);
+	    ResultSet resultSet = statement.executeQuery();
+	    List<Acteur> actors = new ArrayList<>();
+	    while (resultSet.next()) {
+	        actors.add(extractActeurFromResultSet(resultSet));
+	    }
+	    return actors;
+	}
+
+	public static List<Acteur> getActorsBySerieId(int serieId) throws SQLException {
+	    Connection connection = getConnection();
+
+	    String query = "SELECT A.* FROM ACTEUR A " +
+	            "JOIN ROLE_SERIE RS ON A.ID_ACTEUR = RS.ID_ACTEUR " +
+	            "JOIN SAISON S ON S.ID_SAISON = RS.ID_SAISON " +
+	            "WHERE S.ID_SERIE = ?";
+	    PreparedStatement statement = connection.prepareStatement(query);
+	    statement.setInt(1, serieId);
+	    ResultSet resultSet = statement.executeQuery();
+	    List<Acteur> actors = new ArrayList<>();
+	    while (resultSet.next()) {
+	        actors.add(extractActeurFromResultSet(resultSet));
+	    }
+	    return actors;
+	}
+
 
 }

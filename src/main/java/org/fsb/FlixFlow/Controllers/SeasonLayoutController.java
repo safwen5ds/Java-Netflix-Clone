@@ -1,6 +1,15 @@
 package org.fsb.FlixFlow.Controllers;
 
 import org.fsb.FlixFlow.Models.Commentaire_saison;
+import java.io.IOException;
+import java.net.URL;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import org.fsb.FlixFlow.Models.Saison;
 
 import javafx.fxml.FXML;
@@ -58,8 +67,39 @@ public class SeasonLayoutController {
 	@FXML
 	private Button watchtrailer;
 
+	private int saisonId;
+
+	private int serieId;
+	public void setIds(int saisonId, int serieId) {
+	    this.saisonId = saisonId;
+	    this.serieId = serieId;
+	}
+
+	@FXML
+	public void initialize() {
+	    watchnow.setOnAction(event -> openEpisodeLayout());
+	}
+
+	private void openEpisodeLayout() {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/episode.fxml"));
+	        Parent root = loader.load();
+	        EpisodeLayoutController controller = loader.getController();
+	        controller.initData(saisonId, serieId);
+
+	        Scene scene = new Scene(root);
+	        Stage stage = new Stage();
+	        stage.setScene(scene);
+	        stage.show();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
 	public void initData(Saison season) {
 		if (season != null) {
+			setIds(season.getId_saison(), season.getId_serie());
 			serieNameLabel.setText("Name: " + season.getNom_serie());
 			seasonNumLabel.setText("Season: " + season.getNum_saison());
 			seasonSynopsistext.setText(season.getSynopsis());

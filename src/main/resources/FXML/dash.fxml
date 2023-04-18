@@ -34,7 +34,6 @@
    <left>
       <VBox alignment="TOP_CENTER" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
          <Button fx:id="btnhome" mnemonicParsing="false" onAction="#handleHomeClick" text="Home" />
-         <Button mnemonicParsing="false" onAction="#handleRecentClick" text="Recent" />
          <Button mnemonicParsing="false" onAction="#handleFavoriteClick" text="Favorite" />
          <Button mnemonicParsing="false" onAction="#handleScheduleClick" text="Schedule" />
          <Button mnemonicParsing="false" onAction="#handleMoviesClick" text="Movies" />

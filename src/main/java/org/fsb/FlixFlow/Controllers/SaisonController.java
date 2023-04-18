@@ -18,8 +18,7 @@ public class SaisonController {
 	@FXML
 	private VBox seasonsContainer;
 
-	private int mediaId;
-	private int serieId;
+	
 
 	private final IntegerProperty mediaIdProperty = new SimpleIntegerProperty();
 	private final IntegerProperty serieIdProperty = new SimpleIntegerProperty();
@@ -66,28 +65,27 @@ public class SaisonController {
 	}
 
 	public void loadData(int mediaId, int serieId) {
-		this.mediaId = mediaId;
-		this.serieId = serieId;
-		setMediaId(mediaId);
-		setSerieId(serieId);
+	    setMediaId(mediaId);
+	    setSerieId(serieId);
 
-		try {
-			List<Saison> seasons = DatabaseUtil.getSaisonBySerieId(serieId);
-			System.out.println("Seasons: " + seasons);
+	    try {
+	        List<Saison> seasons = DatabaseUtil.getSaisonBySerieId(serieId);
+	        System.out.println("Seasons: " + seasons);
 
-			// Clear previous seasons
-			seasonsContainer.getChildren().clear();
+	        // Clear previous seasons
+	        seasonsContainer.getChildren().clear();
 
-			for (Saison season : seasons) {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SeasonLayout.fxml"));
-				AnchorPane seasonLayout = loader.load();
-				SeasonLayoutController seasonLayoutController = loader.getController();
-				seasonLayoutController.initData(season);
+	        for (Saison season : seasons) {
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SeasonLayout.fxml"));
+	            AnchorPane seasonLayout = loader.load();
+	            SeasonLayoutController seasonLayoutController = loader.getController();
+	            seasonLayoutController.initData(season);
 
-				seasonsContainer.getChildren().add(seasonLayout);
-			}
-		} catch (SQLException | IOException e) {
-			e.printStackTrace();
-		}
+	            seasonsContainer.getChildren().add(seasonLayout);
+	        }
+	    } catch (SQLException | IOException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 }

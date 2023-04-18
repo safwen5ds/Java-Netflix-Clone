@@ -3,15 +3,16 @@ package org.fsb.FlixFlow.Models;
 public class Acteur {
 	private int id_acteur;
 	private String nom;
+	private String url_image;
 
 	public Acteur() {
 		super();
 	}
 
-	public Acteur(int id_acteur, String nom) {
-		super();
+	public Acteur(int id_acteur, String nom, String url_image) {
 		this.id_acteur = id_acteur;
 		this.nom = nom;
+		this.url_image = url_image;
 	}
 
 	public int getId_acteur() {
@@ -30,4 +31,15 @@ public class Acteur {
 		this.nom = nom;
 	}
 
+	public String getUrl_image() {
+		return url_image;
+	}
+
+	public void setUrl_image(String url_image) {
+		this.url_image = url_image;
+	}
+
+	
+
+    
 }

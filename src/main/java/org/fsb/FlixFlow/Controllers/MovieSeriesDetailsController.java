@@ -1,9 +1,11 @@
 package org.fsb.FlixFlow.Controllers;
 
 import java.io.IOException;
+
 import java.sql.SQLException;
 import java.util.List;
 
+import org.fsb.FlixFlow.Models.Acteur;
 import org.fsb.FlixFlow.Models.CommentaireDisplay;
 import org.fsb.FlixFlow.Models.Commentaire_film;
 import org.fsb.FlixFlow.Models.Commentaire_serie;
@@ -20,9 +22,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
@@ -48,6 +52,16 @@ public class MovieSeriesDetailsController {
 
 	@FXML
 	private Button Watchtrailer;
+	
+	 @FXML
+	 private ListView<ActorRoleDisplay> actorslist;
+	 
+
+	    @FXML
+	    private TextField txtcomment;
+	    
+	    @FXML
+	    private Button commentbtn;
 
 	@FXML
 	private Button addfav;
@@ -104,7 +118,7 @@ public class MovieSeriesDetailsController {
 	private Button watchButton;
 
 	@FXML
-	public void initialize() {
+	public void initialize() throws SQLException {
 		initializeTableView();
 
 		if (isMovie) {
@@ -122,7 +136,7 @@ public class MovieSeriesDetailsController {
 				e.printStackTrace();
 			}
 		}
-
+		loadActorsList();
 		table();
 
 		Watchtrailer.setOnAction(e -> {
@@ -136,7 +150,24 @@ public class MovieSeriesDetailsController {
 			openUrlInNewWindow(url);
 		});
 
-		watchButton.setOnAction(event -> openSaisonPage());
+        if (!isMovie)
+        {
+        	watchButton.setOnAction(event -> openSaisonPage());
+        }
+        else
+        {
+        	watchButton.setOnAction(e -> {
+    			String url = null;
+    			try {
+    				url = DatabaseUtil.getFilmById(mediaId).getUrl_film();
+    			} catch (SQLException e1) {
+    				e1.printStackTrace();
+    			}
+    			openUrlInNewWindow(url);
+    		});
+        }
+        actorslist.setCellFactory(listView -> new ActorRoleListCell());
+
 
 	}
 
@@ -156,6 +187,23 @@ public class MovieSeriesDetailsController {
 			return myRow;
 		});
 	}
+	private void loadActorsList() {
+	    try {
+	        List<ActorRoleDisplay> actorRoles;
+	        if (isMovie) {
+	            actorRoles = DatabaseUtil.getActorRolesForMovie(mediaId);
+	        } else {
+	            actorRoles = DatabaseUtil.getActorRolesForSeries(mediaId);
+	        }
+	        actorslist.getItems().clear();
+	        for (ActorRoleDisplay actorRole : actorRoles) {
+	            actorslist.getItems().add(actorRole);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 
 	private void table() {
 		ObservableList<CommentaireDisplay> commentaires = FXCollections.observableArrayList();
