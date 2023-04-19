@@ -70,6 +70,12 @@ public class MovieSeriesDetailsController {
 	    
 	    @FXML
 	    private Button commentbtn;
+	    @FXML
+	    private Button modifyCommentButton;
+
+	    @FXML
+	    private Button deleteCommentButton;
+
 
 	@FXML
 	private Button addfav;
@@ -193,6 +199,65 @@ public class MovieSeriesDetailsController {
         });
         submitRating.setOnAction(event -> DatabaseUtil.submitRating(ratingSlider, isMovie, mediaId));
 
+        commentbtn.setOnAction(e -> {
+            Utilisateur User;
+            try {
+                User = DatabaseUtil.readUserFromFile();
+                String content = txtcomment.getText();
+                if (!content.isEmpty()) {
+                    if (isMovie) {
+                        DatabaseUtil.addCommentForFilm(User.getId_utilisateur(), mediaId, content);
+                    } else {
+                        DatabaseUtil.addCommentForSeries(User.getId_utilisateur(), mediaId, content);
+                    }
+                    txtcomment.clear();
+                    table();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
+        modifyCommentButton.setOnAction(e -> {
+            CommentaireDisplay selectedComment = tab.getSelectionModel().getSelectedItem();
+            if (selectedComment != null) {
+                try {
+                    int comment_id = selectedComment.getComment_id();
+                    String newContent = txtcomment.getText();
+                    if (!newContent.isEmpty()) {
+                        if (isMovie) {
+                            DatabaseUtil.updateCommentForFilm(comment_id, newContent);
+                        } else {
+                            DatabaseUtil.updateCommentForSeries(comment_id, newContent);
+                        }
+                        txtcomment.clear();
+                        table();
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        deleteCommentButton.setOnAction(e -> {
+            CommentaireDisplay selectedComment = tab.getSelectionModel().getSelectedItem();
+            if (selectedComment != null) {
+                try {
+                    int comment_id = selectedComment.getComment_id();
+                    if (isMovie) {
+                        DatabaseUtil.deleteCommentForFilm(comment_id);
+                    } else {
+                        DatabaseUtil.deleteCommentForSeries(comment_id);
+                    }
+                    initializeTableView();
+                    table();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
 
 
 	}
@@ -239,13 +304,15 @@ public class MovieSeriesDetailsController {
 				List<Commentaire_film> commentaireFilms = DatabaseUtil.getCommentaireFilmsByMediaId(mediaId);
 
 				for (Commentaire_film cf : commentaireFilms) {
-					commentaires.add(new CommentaireDisplay(cf.getNom_User(), cf.getContenu()));
+	                System.out.println("Commentaire_film: " + cf.getNom_User() + " - " + cf.getContenu()); 
+					commentaires.add(new CommentaireDisplay(cf.getNom_User(), cf.getContenu(),cf.getComment_id()));
 				}
 			} else {
 				List<Commentaire_serie> commentaireSeries = DatabaseUtil.getCommentaireSeriesByMediaId(mediaId);
 
 				for (Commentaire_serie cs : commentaireSeries) {
-					commentaires.add(new CommentaireDisplay(cs.getNom_User(), cs.getContenu()));
+	                System.out.println("Commentaire_serie: " + cs.getNom_User() + " - " + cs.getContenu());
+					commentaires.add(new CommentaireDisplay(cs.getNom_User(), cs.getContenu(),cs.getComment_id()));
 				}
 			}
 		} catch (SQLException e) {
@@ -253,20 +320,7 @@ public class MovieSeriesDetailsController {
 		}
 
 		tab.setItems(commentaires);
-		prenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
-		commentaire.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
-
-		tab.setRowFactory(tv -> {
-			TableRow<CommentaireDisplay> myRow = new TableRow<>();
-			myRow.setOnMouseClicked(event -> {
-				if (event.getClickCount() == 1 && (!myRow.isEmpty())) {
-					int myIndex = tab.getSelectionModel().getSelectedIndex();
-					prenom.setText(tab.getItems().get(myIndex).getPrenom());
-					commentaire.setText(tab.getItems().get(myIndex).getCommentaire());
-				}
-			});
-			return myRow;
-		});
+		
 	}
 
 	public void setFilmDetails(Film film) throws SQLException {

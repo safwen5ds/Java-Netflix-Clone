@@ -5,17 +5,18 @@ public class Commentaire_episode {
 	private int id_episode;
 	private String contenu;
 	private String Nom_User;
+	private int comment_id;
 
 	public Commentaire_episode() {
 		super();
 	}
 
-	public Commentaire_episode(int id_utilisateur, int id_episode, String contenu, String nom_User) {
-		super();
+	public Commentaire_episode(int id_utilisateur, int id_episode, String contenu, String nom_User, int comment_id) {
 		this.id_utilisateur = id_utilisateur;
 		this.id_episode = id_episode;
 		this.contenu = contenu;
 		Nom_User = nom_User;
+		this.comment_id = comment_id;
 	}
 
 	public int getId_utilisateur() {
@@ -50,9 +51,14 @@ public class Commentaire_episode {
 		Nom_User = nom_User;
 	}
 
-	public String getCommentaire() {
-		// TODO Auto-generated method stub
-		return null;
+	public int getComment_id() {
+		return comment_id;
 	}
+
+	public void setComment_id(int comment_id) {
+		this.comment_id = comment_id;
+	}
+
+	
 
 }

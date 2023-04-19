@@ -232,7 +232,7 @@ public class DatabaseUtil {
 		ResultSet resultSet = statement.executeQuery();
 		List<Commentaire_episode> c1 = new ArrayList<>();
 
-		if (resultSet.next()) {
+		while (resultSet.next()) {
 			Commentaire_episode c = new Commentaire_episode();
 			c.setId_utilisateur(resultSet.getInt("id_utilisateur"));
 			c.setId_episode(resultSet.getInt("id_episode"));
@@ -255,7 +255,7 @@ public class DatabaseUtil {
 		ResultSet resultSet = statement.executeQuery();
 		List<Commentaire_saison> c1 = new ArrayList<>();
 
-		if (resultSet.next()) {
+		while (resultSet.next()) {
 			Commentaire_saison c = new Commentaire_saison();
 			c.setId_utilisateur(resultSet.getInt("id_utilisateur"));
 			c.setId_saison(resultSet.getInt("id_saison"));
@@ -278,7 +278,7 @@ public class DatabaseUtil {
 		ResultSet resultSet = statement.executeQuery();
 		List<Commentaire_serie> c1 = new ArrayList<>();
 
-		if (resultSet.next()) {
+		while (resultSet.next()) {
 			Commentaire_serie c = new Commentaire_serie();
 			c.setId_utilisateur(resultSet.getInt("id_utilisateur"));
 			c.setId_serie(resultSet.getInt("id_serie"));
@@ -301,7 +301,7 @@ public class DatabaseUtil {
 		ResultSet resultSet = statement.executeQuery();
 		List<Commentaire_film> c1 = new ArrayList<>();
 
-		if (resultSet.next()) {
+		while (resultSet.next()) {
 			Commentaire_film c = new Commentaire_film();
 			c.setId_utilisateur(resultSet.getInt("id_utilisateur"));
 			c.setId_film(resultSet.getInt("id_film"));
@@ -819,6 +819,90 @@ public class DatabaseUtil {
 	        }
 	    } catch (SQLException e) {
 	        throw new SQLException("Error while checking actor in favorites", e);
+	    }
+	}
+	public static void updateCommentForFilm(int comment_id, String newContent) throws SQLException {
+	    String query = "UPDATE commentaire_film SET contenu = ? WHERE comment_id = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setString(1, newContent);
+	        preparedStatement.setInt(2, comment_id);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while updating comment for film", e);
+	    }
+	}
+
+
+	public static void updateCommentForSeries(int comment_id, String newContent) throws SQLException {
+	    String query = "UPDATE commentaire_serie SET contenu = ? WHERE comment_id = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setString(1, newContent);
+	        preparedStatement.setInt(2, comment_id);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while updating comment for series", e);
+	    }
+	}
+
+	public static void deleteCommentForFilm(int comment_id) throws SQLException {
+	    String query = "DELETE FROM commentaire_film WHERE comment_id = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, comment_id);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while deleting comment for film", e);
+	    }
+	}
+
+	public static void deleteCommentForSeries(int comment_id) throws SQLException {
+	    String query = "DELETE FROM commentaire_serie WHERE comment_id = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, comment_id);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while deleting comment for series", e);
+	    }
+	}
+
+	public static void addCommentForFilm(int id_utilisateur, int id_film, String content) throws SQLException {
+	    String query = "INSERT INTO commentaire_film (id_utilisateur, id_film, contenu) VALUES (?, ?, ?)";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, id_utilisateur);
+	        preparedStatement.setInt(2, id_film);
+	        preparedStatement.setString(3, content);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while adding comment for film", e);
+	    }
+	}
+
+	public static void addCommentForSeries(int id_utilisateur, int id_serie, String content) throws SQLException {
+	    String query = "INSERT INTO commentaire_serie (id_utilisateur, id_serie, contenu) VALUES (?, ?, ?)";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, id_utilisateur);
+	        preparedStatement.setInt(2, id_serie);
+	        preparedStatement.setString(3, content);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while adding comment for series", e);
 	    }
 	}
 
