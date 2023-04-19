@@ -1,10 +1,18 @@
 package org.fsb.FlixFlow.Utilities;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +26,9 @@ import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Models.Film;
 import org.fsb.FlixFlow.Models.Saison;
 import org.fsb.FlixFlow.Models.Serie;
+import org.fsb.FlixFlow.Models.Utilisateur;
+
+import javafx.scene.control.Slider;
 
 public class DatabaseUtil {
 	private static final String DB_URL = "jdbc:oracle:thin:@localhost:1521:xe";
@@ -323,23 +334,95 @@ public class DatabaseUtil {
 		return seasons;
 	}
 
-	public static boolean checkUserCredentials(String email, String password) {
+	private static final String USER_FILE = "user.txt";
+    private static final SimpleDateFormat DATE_FORMAT;
 
-		String query = "SELECT * FROM utilisateur WHERE email = ? AND mot_de_passe = ?";
+    static {
+        DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    }
+    
+    public static boolean checkUserCredentials(String email, String password) {
+        String query = "SELECT * FROM utilisateur WHERE email = ? AND mot_de_passe = ?";
+    
+        try (Connection connection = getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+    
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    Utilisateur user = new Utilisateur();
+                    user.setId_utilisateur(resultSet.getInt("id_utilisateur"));
+                    user.setNom(resultSet.getString("nom"));
+                    user.setPrenom(resultSet.getString("prenom"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setMot_de_passe(resultSet.getString("mot_de_passe"));
+                    user.setDate_de_naissance(resultSet.getDate("date_de_naissance"));
+                    user.setType(resultSet.getString("type"));
+                    
+                    storeUserToFile(user);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public static void storeUserToFile(Utilisateur user) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(USER_FILE))) {
+            writer.write(user.getId_utilisateur() + ",");
+            writer.write(user.getNom() + ",");
+            writer.write(user.getPrenom() + ",");
+            writer.write(user.getEmail() + ",");
+            writer.write(user.getMot_de_passe() + ",");
+            writer.write(DATE_FORMAT.format(user.getDate_de_naissance()) + ",");
+            writer.write(user.getType());
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-			preparedStatement.setString(1, email);
-			preparedStatement.setString(2, password);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				return resultSet.next();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+    public static void deleteUserFromFile() {
+        try {
+            Files.deleteIfExists(Paths.get(USER_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static Utilisateur readUserFromFile() {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(USER_FILE))) {
+            String line = reader.readLine();
+            if (line != null) {
+                String[] tokens = line.split(",");
+                if (tokens.length < 7) {
+                    System.err.println("Error: The input file has fewer fields than expected.");
+                    return null;
+                }
+                Utilisateur user = new Utilisateur();
+                user.setId_utilisateur(Integer.parseInt(tokens[0]));
+                user.setNom(tokens[1]);
+                user.setPrenom(tokens[2]);
+                user.setEmail(tokens[3]);
+                user.setMot_de_passe(tokens[4]);
+                user.setDate_de_naissance(DATE_FORMAT.parse(tokens[5]));
+                user.setType(tokens[6]);
+
+                return user;
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 	public static List<Episode> getEpisodeByIds(int saisonId, int serieId) throws SQLException {
 		String query = "select episode.*, serie.nom as serie_name, saison.num_saison as num_saison from episode join saison on episode.id_saison = saison.id_saison join serie on saison.id_serie = serie.id_serie where episode.id_saison = ? and episode.id_serie = ?";
@@ -447,6 +530,89 @@ public class DatabaseUtil {
 	    }
 	    return actors;
 	}
+	
+	// UserManager.java
+
+	public static boolean updateUserInDatabase(Utilisateur user) {
+	    String query = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, mot_de_passe = ?, date_de_naissance = ?, type = ? WHERE id_utilisateur = ?";
+
+	    try (Connection connection = getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+	        preparedStatement.setString(1, user.getNom());
+	        preparedStatement.setString(2, user.getPrenom());
+	        preparedStatement.setString(3, user.getEmail());
+	        preparedStatement.setString(4, user.getMot_de_passe());
+	        preparedStatement.setDate(5, new java.sql.Date(user.getDate_de_naissance().getTime()));
+	        preparedStatement.setString(6, user.getType());
+	        preparedStatement.setInt(7, user.getId_utilisateur());
+
+	        int rowsAffected = preparedStatement.executeUpdate();
+	        return rowsAffected > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+	public static boolean deleteUserFromDatabase(int id_utilisateur) {
+	    String query = "DELETE FROM utilisateur WHERE id_utilisateur = ?";
+
+	    try (Connection connection = getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+	        preparedStatement.setInt(1, id_utilisateur);
+
+	        int rowsAffected = preparedStatement.executeUpdate();
+	        return rowsAffected > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	public static void addPreferenceFilm(int userId, int filmId) throws SQLException {
+	    String sql = "INSERT INTO PREFERENCES_FILM (ID_UTILISATEUR, ID_FILM) VALUES (?, ?)";
+	    try (Connection connection = getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	        preparedStatement.setInt(1, userId);
+	        preparedStatement.setInt(2, filmId);
+	        preparedStatement.executeUpdate();
+	    }
+	}
+
+	public static void addPreferenceSerie(int userId, int serieId) throws SQLException {
+	    String sql = "INSERT INTO PREFERENCES_SERIE (ID_UTILISATEUR, ID_SERIE) VALUES (?, ?)";
+	    try (Connection connection = getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	        preparedStatement.setInt(1, userId);
+	        preparedStatement.setInt(2, serieId);
+	        preparedStatement.executeUpdate();
+	    }
+	}
+	public static void submitRating(Slider ratingSlider, boolean isMovie, int mediaid) {
+		int score = (int) ratingSlider.getValue();
+		Utilisateur user = DatabaseUtil.readUserFromFile();
+	    int userId = user.getId_utilisateur();
+	    int mediaId = mediaid;
+
+	    String query = null;
+	    if (isMovie) {
+	        query = "INSERT INTO ADMIN.SCORE_FILM (ID_UTILISATEUR, ID_FILM, SCORE) VALUES (?, ?, ?)";
+	    } else {
+	        query = "INSERT INTO ADMIN.SCORE_SERIE (ID_UTILISATEUR, ID_SERIE, SCORE) VALUES (?, ?, ?)";
+	    }
+
+	    try {
+	    	Connection con = getConnection();
+	        PreparedStatement pstmt = con.prepareStatement(query);
+	        pstmt.setInt(1, userId);
+	        pstmt.setInt(2, mediaId);
+	        pstmt.setInt(3, score);
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
 
 
 }

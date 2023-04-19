@@ -13,6 +13,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.control.Slider?>
+
 
 <StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1900.0" prefWidth="1280.0" stylesheets="@../style/movie-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.MovieSeriesDetailsController">
     <children>
@@ -77,7 +79,9 @@
                                           <Button fx:id="watchButton" focusTraversable="false" layoutX="104.0" layoutY="10.0" mnemonicParsing="false" text="Watch Now" />
                                           <Button fx:id="Watchtrailer" focusTraversable="false" layoutX="104.0" layoutY="10.0" mnemonicParsing="false" text="Watch Trailer" />
                                           <Button fx:id="addfav" focusTraversable="false" mnemonicParsing="false" text="Add to Favorite" />
-                                          <Button fx:id="addvote" mnemonicParsing="false" text="Vote" />
+                                         <Slider fx:id="ratingSlider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+										<Button fx:id="submitRating" mnemonicParsing="false" text="Submit Rating" />
+
                                        </children>
                                     </HBox>
                                     <Label id="overview-label" fx:id="synopsis" focusTraversable="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="647.0" text="Synopsis :" wrapText="true" />

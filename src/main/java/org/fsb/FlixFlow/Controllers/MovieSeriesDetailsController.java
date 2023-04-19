@@ -4,13 +4,15 @@ import java.io.IOException;
 
 import java.sql.SQLException;
 import java.util.List;
-
+import javafx.scene.control.Slider;
+import javafx.scene.control.Button;
 import org.fsb.FlixFlow.Models.Acteur;
 import org.fsb.FlixFlow.Models.CommentaireDisplay;
 import org.fsb.FlixFlow.Models.Commentaire_film;
 import org.fsb.FlixFlow.Models.Commentaire_serie;
 import org.fsb.FlixFlow.Models.Film;
 import org.fsb.FlixFlow.Models.Serie;
+import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import javafx.application.Platform;
@@ -52,6 +54,12 @@ public class MovieSeriesDetailsController {
 
 	@FXML
 	private Button Watchtrailer;
+	@FXML
+	private Slider ratingSlider;
+
+	@FXML
+	private Button submitRating;
+
 	
 	 @FXML
 	 private ListView<ActorRoleDisplay> actorslist;
@@ -117,6 +125,8 @@ public class MovieSeriesDetailsController {
 	@FXML
 	private Button watchButton;
 
+
+
 	@FXML
 	public void initialize() throws SQLException {
 		initializeTableView();
@@ -167,6 +177,22 @@ public class MovieSeriesDetailsController {
     		});
         }
         actorslist.setCellFactory(listView -> new ActorRoleListCell());
+        Utilisateur loggedInUser = DatabaseUtil.readUserFromFile();
+
+        
+        addfav.setOnAction(e -> {
+            try {
+                if (isMovie) {
+                    DatabaseUtil.addPreferenceFilm(loggedInUser.getId_utilisateur(), mediaId);
+                } else {
+                    DatabaseUtil.addPreferenceSerie(loggedInUser.getId_utilisateur(), mediaId);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+        submitRating.setOnAction(event -> DatabaseUtil.submitRating(ratingSlider, isMovie, mediaId));
+
 
 
 	}

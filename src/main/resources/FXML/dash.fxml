@@ -19,14 +19,14 @@
          </ImageView>
          <Pane HBox.hgrow="ALWAYS" />
          <Pane HBox.hgrow="ALWAYS" />
-         <ImageView fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleProfileClick" pickOnBounds="true" preserveRatio="true">
+         <ImageView fx:id="notificon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0">
             <image>
-               <Image url="@user_icon.png" />
+               <Image url="@Images_Videos/notification%20(1).png" />
             </image>
          </ImageView>
-         <ImageView fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleNotificationClick" pickOnBounds="true" preserveRatio="true">
+         <ImageView fx:id="profileicon" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleProfileClick" pickOnBounds="true" preserveRatio="true">
             <image>
-               <Image url="@notification_icon.png" />
+               <Image url="@Images_Videos/utilisateur%20(1).png" />
             </image>
          </ImageView>
       </HBox>
