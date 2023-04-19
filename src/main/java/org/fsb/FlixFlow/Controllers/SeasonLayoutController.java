@@ -11,11 +11,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import org.fsb.FlixFlow.Models.Saison;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -30,6 +32,12 @@ public class SeasonLayoutController {
 
 	@FXML
 	private Button addfav;
+	
+	@FXML
+	private Slider saisonRatingSlider;
+
+	@FXML
+	private Button submitSaisonRatingButton;
 
 	@FXML
 	private TextField commentinput;
@@ -78,8 +86,14 @@ public class SeasonLayoutController {
 	@FXML
 	public void initialize() {
 	    watchnow.setOnAction(event -> openEpisodeLayout());
-	}
+		submitSaisonRatingButton.setOnAction(event -> submitSaisonRating());
 
+	}
+	private void submitSaisonRating() {
+		int userId = 1; // Replace with the current user ID
+		int rating = (int) Math.round(saisonRatingSlider.getValue());
+		DatabaseUtil.submitSaisonRating(userId, saisonId, rating);
+	}
 	private void openEpisodeLayout() {
 	    try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/episode.fxml"));

@@ -1,6 +1,10 @@
 package org.fsb.FlixFlow.Utilities;
 
 import java.io.BufferedReader;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,6 +32,7 @@ import org.fsb.FlixFlow.Models.Saison;
 import org.fsb.FlixFlow.Models.Serie;
 import org.fsb.FlixFlow.Models.Utilisateur;
 
+import javafx.application.Platform;
 import javafx.scene.control.Slider;
 
 public class DatabaseUtil {
@@ -450,7 +455,7 @@ public class DatabaseUtil {
 	    return c1;
 	}
 	public static List<ActorRoleDisplay> getActorRolesForMovie(int filmId) throws SQLException {
-	    String query = "SELECT A.*, RF.ROLE_TYPE, RF.URL_IMAGE FROM ACTEUR A " +
+	    String query = "SELECT A.*, RF.ROLE_TYPE, RF.URL_IMAGE,RF.ID_ACTEUR FROM ACTEUR A " +
 	            "JOIN ROLE_FILM RF ON A.ID_ACTEUR = RF.ID_ACTEUR " +
 	            "WHERE RF.ID_FILM = ?";
 	    Connection connection = getConnection();
@@ -462,7 +467,8 @@ public class DatabaseUtil {
 	        ActorRoleDisplay actorRole = new ActorRoleDisplay(
 	                resultSet.getString("URL_IMAGE"),
 	                resultSet.getString("NOM"),
-	                resultSet.getString("ROLE_TYPE")
+	                resultSet.getString("ROLE_TYPE"),
+	                resultSet.getInt("ID_ACTEUR")
 	        );
 	        actorRoles.add(actorRole);
 	    }
@@ -483,7 +489,8 @@ public class DatabaseUtil {
 	        ActorRoleDisplay actorRole = new ActorRoleDisplay(
 	                resultSet.getString("URL_IMAGE"),
 	                resultSet.getString("NOM"),
-	                resultSet.getString("ROLE_TYPE")
+	                resultSet.getString("ROLE_TYPE"),
+	                resultSet.getInt("ID_ACTEUR")
 	        );
 	        actorRoles.add(actorRole);
 	    }
@@ -569,48 +576,253 @@ public class DatabaseUtil {
 	    }
 	}
 	public static void addPreferenceFilm(int userId, int filmId) throws SQLException {
-	    String sql = "INSERT INTO PREFERENCES_FILM (ID_UTILISATEUR, ID_FILM) VALUES (?, ?)";
-	    try (Connection connection = getConnection();
-	         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-	        preparedStatement.setInt(1, userId);
-	        preparedStatement.setInt(2, filmId);
-	        preparedStatement.executeUpdate();
+	    if (preferenceFilmExists(userId, filmId)) {
+	    	Platform.runLater(() -> {
+	    	    Alert alert = new Alert(AlertType.WARNING);
+	    	    alert.setTitle("Warning");
+	    	    alert.setHeaderText("Preference already exists");
+	    	    alert.setContentText("The selected film/serie has already been added to the user's preferences.");
+	    	    alert.showAndWait();
+	    	});
+
+	    } else {
+	        String sql = "INSERT INTO PREFERENCES_FILM (ID_UTILISATEUR, ID_FILM) VALUES (?, ?)";
+	        try (Connection connection = getConnection();
+	             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	            preparedStatement.setInt(1, userId);
+	            preparedStatement.setInt(2, filmId);
+	            preparedStatement.executeUpdate();
+	        }
 	    }
 	}
 
 	public static void addPreferenceSerie(int userId, int serieId) throws SQLException {
-	    String sql = "INSERT INTO PREFERENCES_SERIE (ID_UTILISATEUR, ID_SERIE) VALUES (?, ?)";
+	    if (preferenceSerieExists(userId, serieId)) {
+	    	Platform.runLater(() -> {
+	    	    Alert alert = new Alert(AlertType.WARNING);
+	    	    alert.setTitle("Warning");
+	    	    alert.setHeaderText("Preference already exists");
+	    	    alert.setContentText("The selected film/serie has already been added to the user's preferences.");
+	    	    alert.showAndWait();
+	    	});
+
+	    } else {
+	        String sql = "INSERT INTO PREFERENCES_SERIE (ID_UTILISATEUR, ID_SERIE) VALUES (?, ?)";
+	        try (Connection connection = getConnection();
+	             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	            preparedStatement.setInt(1, userId);
+	            preparedStatement.setInt(2, serieId);
+	            preparedStatement.executeUpdate();
+	        }
+	    }
+	}
+
+	public static boolean preferenceFilmExists(int userId, int filmId) throws SQLException {
+	    String sql = "SELECT COUNT(*) FROM PREFERENCES_FILM WHERE ID_UTILISATEUR = ? AND ID_FILM = ?";
+	    try (Connection connection = getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	        preparedStatement.setInt(1, userId);
+	        preparedStatement.setInt(2, filmId);
+	        ResultSet resultSet = preparedStatement.executeQuery();
+	        resultSet.next();
+	        return resultSet.getInt(1) > 0;
+	    }
+	}
+
+	public static boolean preferenceSerieExists(int userId, int serieId) throws SQLException {
+	    String sql = "SELECT COUNT(*) FROM PREFERENCES_SERIE WHERE ID_UTILISATEUR = ? AND ID_SERIE = ?";
 	    try (Connection connection = getConnection();
 	         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 	        preparedStatement.setInt(1, userId);
 	        preparedStatement.setInt(2, serieId);
-	        preparedStatement.executeUpdate();
+	        ResultSet resultSet = preparedStatement.executeQuery();
+	        resultSet.next();
+	        return resultSet.getInt(1) > 0;
 	    }
 	}
+
 	public static void submitRating(Slider ratingSlider, boolean isMovie, int mediaid) {
-		int score = (int) ratingSlider.getValue();
-		Utilisateur user = DatabaseUtil.readUserFromFile();
+	    int score = (int) ratingSlider.getValue();
+	    Utilisateur user = DatabaseUtil.readUserFromFile();
 	    int userId = user.getId_utilisateur();
 	    int mediaId = mediaid;
 
-	    String query = null;
-	    if (isMovie) {
-	        query = "INSERT INTO ADMIN.SCORE_FILM (ID_UTILISATEUR, ID_FILM, SCORE) VALUES (?, ?, ?)";
-	    } else {
-	        query = "INSERT INTO ADMIN.SCORE_SERIE (ID_UTILISATEUR, ID_SERIE, SCORE) VALUES (?, ?, ?)";
+	    try {
+			if ((isMovie && ratingFilmExists(userId, mediaId)) || (!isMovie && ratingSerieExists(userId, mediaId))) {
+			    Platform.runLater(() -> {
+			        Alert alert = new Alert(AlertType.WARNING);
+			        alert.setTitle("Warning");
+			        alert.setHeaderText("Rating already exists");
+			        alert.setContentText("You have already rated this film/serie.");
+			        alert.showAndWait();
+			    });
+			} else {
+			    String query = null;
+			    if (isMovie) {
+			        query = "INSERT INTO ADMIN.SCORE_FILM (ID_UTILISATEUR, ID_FILM, SCORE) VALUES (?, ?, ?)";
+			    } else {
+			        query = "INSERT INTO ADMIN.SCORE_SERIE (ID_UTILISATEUR, ID_SERIE, SCORE) VALUES (?, ?, ?)";
+			    }
+
+			    try {
+			        Connection con = getConnection();
+			        PreparedStatement pstmt = con.prepareStatement(query);
+			        pstmt.setInt(1, userId);
+			        pstmt.setInt(2, mediaId);
+			        pstmt.setInt(3, score);
+			        pstmt.executeUpdate();
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			    }
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static boolean ratingFilmExists(int userId, int filmId) throws SQLException {
+	    String query = "SELECT COUNT(*) FROM ADMIN.SCORE_FILM WHERE ID_UTILISATEUR = ? AND ID_FILM = ?";
+	    try (Connection connection = getConnection();
+	         PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, userId);
+	        pstmt.setInt(2, filmId);
+	        ResultSet resultSet = pstmt.executeQuery();
+	        resultSet.next();
+	        return resultSet.getInt(1) > 0;
 	    }
+	}
+
+	public static boolean ratingSerieExists(int userId, int serieId) throws SQLException {
+	    String query = "SELECT COUNT(*) FROM ADMIN.SCORE_SERIE WHERE ID_UTILISATEUR = ? AND ID_SERIE = ?";
+	    try (Connection connection = getConnection();
+	         PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, userId);
+	        pstmt.setInt(2, serieId);
+	        ResultSet resultSet = pstmt.executeQuery();
+	        resultSet.next();
+	        return resultSet.getInt(1) > 0;
+	    }
+	}
+	
+	public static void submitSaisonRating(int userId, int saisonId, int score) {
+	    String checkQuery = "SELECT COUNT(*) FROM ADMIN.SCORE_SAISON WHERE ID_UTILISATEUR = ? AND ID_SAISON = ?";
+	    String insertQuery = "INSERT INTO ADMIN.SCORE_SAISON (ID_UTILISATEUR, ID_SAISON, SCORE) VALUES (?, ?, ?)";
+	    String updateQuery = "UPDATE ADMIN.SCORE_SAISON SET SCORE = ? WHERE ID_UTILISATEUR = ? AND ID_SAISON = ?";
 
 	    try {
-	    	Connection con = getConnection();
-	        PreparedStatement pstmt = con.prepareStatement(query);
-	        pstmt.setInt(1, userId);
-	        pstmt.setInt(2, mediaId);
-	        pstmt.setInt(3, score);
+	        Connection con = getConnection();
+	        PreparedStatement checkStmt = con.prepareStatement(checkQuery);
+	        checkStmt.setInt(1, userId);
+	        checkStmt.setInt(2, saisonId);
+
+	        ResultSet rs = checkStmt.executeQuery();
+	        rs.next();
+	        PreparedStatement pstmt;
+	        if (rs.getInt(1) == 0) {
+	            pstmt = con.prepareStatement(insertQuery);
+	            pstmt.setInt(1, userId);
+	            pstmt.setInt(2, saisonId);
+	            pstmt.setInt(3, score);
+	        } else {
+	            pstmt = con.prepareStatement(updateQuery);
+	            pstmt.setInt(1, score);
+	            pstmt.setInt(2, userId);
+	            pstmt.setInt(3, saisonId);
+
+	            // Show an alert to inform the user that their rating has been updated
+	            showAlert("Rating Updated", "Your rating for this season has been updated.");
+	        }
 	        pstmt.executeUpdate();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	}
+
+	public static void submitEpisodeRating(int userId, int episodeId, int score) {
+	    String checkQuery = "SELECT COUNT(*) FROM ADMIN.SCORE_EPISODE WHERE ID_UTILISATEUR = ? AND ID_EPISODE = ?";
+	    String insertQuery = "INSERT INTO ADMIN.SCORE_EPISODE (ID_UTILISATEUR, ID_EPISODE, SCORE) VALUES (?, ?, ?)";
+	    String updateQuery = "UPDATE ADMIN.SCORE_EPISODE SET SCORE = ? WHERE ID_UTILISATEUR = ? AND ID_EPISODE = ?";
+
+	    try {
+	        Connection con = getConnection();
+	        PreparedStatement checkStmt = con.prepareStatement(checkQuery);
+	        checkStmt.setInt(1, userId);
+	        checkStmt.setInt(2, episodeId);
+
+	        ResultSet rs = checkStmt.executeQuery();
+	        rs.next();
+	        PreparedStatement pstmt;
+	        if (rs.getInt(1) == 0) {
+	            pstmt = con.prepareStatement(insertQuery);
+	            pstmt.setInt(1, userId);
+	            pstmt.setInt(2, episodeId);
+	            pstmt.setInt(3, score);
+	        } else {
+	            pstmt = con.prepareStatement(updateQuery);
+	            pstmt.setInt(1, score);
+	            pstmt.setInt(2, userId);
+	            pstmt.setInt(3, episodeId);
+
+	            // Show an alert to inform the user that their rating has been updated
+	            showAlert("Rating Updated", "Your rating for this episode has been updated.");
+	        }
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	private static void showAlert(String title, String content) {
+	    Alert alert = new Alert(AlertType.INFORMATION);
+	    alert.setTitle(title);
+	    alert.setHeaderText(null);
+	    alert.setContentText(content);
+	    alert.showAndWait();
+	}
+	// DatabaseUtil.java
+
+	public static void addPreference(int id_utilisateur, int id_acteur) throws SQLException {
+	    if (isActorInFavorites(id_utilisateur, id_acteur)) {
+	        throw new SQLException("Actor already exists in favorites");
+	    }
+
+	    String query = "INSERT INTO preferences_acteur(id_utilisateur, id_acteur) VALUES (?, ?)";
+
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, id_utilisateur);
+	        preparedStatement.setInt(2, id_acteur);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while adding preference", e);
+	    }
+	}
+	public static boolean isActorInFavorites(int id_utilisateur, int id_acteur) throws SQLException {
+	    String query = "SELECT COUNT(*) FROM preferences_acteur WHERE id_utilisateur = ? AND id_acteur = ?";
+
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, id_utilisateur);
+	        preparedStatement.setInt(2, id_acteur);
+
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            if (resultSet.next()) {
+	                int count = resultSet.getInt(1);
+	                return count > 0;
+	            } else {
+	                return false;
+	            }
+	        }
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while checking actor in favorites", e);
+	    }
+	}
+
+
 
 
 

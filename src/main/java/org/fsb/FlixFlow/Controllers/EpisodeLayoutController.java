@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 
@@ -28,6 +29,12 @@ public class EpisodeLayoutController {
 
     @FXML
     private Label VUES;
+    
+    @FXML
+	private Slider episodeRatingSlider;
+
+	@FXML
+	private Button submitEpisodeRatingButton;
 
     @FXML
     private Text synopsistext;
@@ -73,7 +80,18 @@ public class EpisodeLayoutController {
                 }
             }
         });
+		submitEpisodeRatingButton.setOnAction(event -> submitEpisodeRating());
+
     }
+    private void submitEpisodeRating() {
+		int selectedIndex = episodeListView.getSelectionModel().getSelectedIndex();
+		if (selectedIndex >= 0) {
+			int userId = 1; // Replace with the current user ID
+			int episodeId = episodes.get(selectedIndex).getId_episode();
+			int rating = (int) Math.round(episodeRatingSlider.getValue());
+			DatabaseUtil.submitEpisodeRating(userId, episodeId, rating);
+		}
+	}
 
     private void onEpisodeSelected(Episode episode) {
         DATE_DIFFUSION.setText("Date: " + episode.getDate_diffusion());

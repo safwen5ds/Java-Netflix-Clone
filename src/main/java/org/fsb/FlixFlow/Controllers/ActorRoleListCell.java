@@ -1,6 +1,14 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.sql.SQLException;
+
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -30,8 +38,15 @@ public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
         // Add an action to the favoriteButton
         favoriteButton.setOnAction(event -> {
             ActorRoleDisplay currentItem = getItem();
-            // Perform action to add actor to favorites.
-            // For example, you can call a method from your controller class
+            int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+            int actorId = currentItem.getActorid();
+
+            try {
+                DatabaseUtil.addPreference(userId, actorId);
+                showAlert(AlertType.INFORMATION, "Success", "Actor added to favorites.");
+            } catch (SQLException e) {
+                showAlert(AlertType.ERROR, "Error", "The actor is already in your favorites.");
+            }
         });
 
         content = new HBox(imageView, nameLabel, roleLabel, favoriteButton);
@@ -39,7 +54,13 @@ public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
     }
 
 
-
+    private void showAlert(AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
     @Override
     protected void updateItem(ActorRoleDisplay item, boolean empty) {
         super.updateItem(item, empty);

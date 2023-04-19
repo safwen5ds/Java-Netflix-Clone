@@ -75,15 +75,7 @@ public class UserDashboardController {
 	}
 
 	public void handleRecentClick() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/recent.fxml"));
-			loader.setControllerFactory(param -> new RecentController(this));
-			Parent recentPage = loader.load();
-			contentPane.getChildren().clear();
-			contentPane.getChildren().add(recentPage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 
 	}
 

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
-
+<?import javafx.scene.control.Slider?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="840.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.EpisodeLayoutController">
    <children>
       <ListView fx:id="episodeListView" layoutX="45.0" layoutY="21.0" prefHeight="474.0" prefWidth="208.0" />
@@ -16,9 +16,8 @@
       <Label fx:id="VUES" layoutX="324.0" layoutY="397.0" />
       <Label layoutX="324.0" layoutY="440.0" text="Synopsis :" />
       <Text fx:id="synopsistext" layoutX="327.0" layoutY="491.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-      <Button fx:id="addfavbtn" layoutX="326.0" layoutY="317.0" mnemonicParsing="false" text="Add to Favorite" />
-      <Button fx:id="votebtn" layoutX="459.0" layoutY="317.0" mnemonicParsing="false" text="vote" />
-      <TextField layoutX="324.0" layoutY="504.0" prefHeight="26.0" prefWidth="336.0" />
+<Slider fx:id="episodeRatingSlider" layoutX="459.0" layoutY="317.0" />
+<Button fx:id="submitEpisodeRatingButton" layoutX="459.0" layoutY="348.0" mnemonicParsing="false" text="Submit Rating" />      <TextField layoutX="324.0" layoutY="504.0" prefHeight="26.0" prefWidth="336.0" />
       <Button layoutX="685.0" layoutY="505.0" mnemonicParsing="false" text="Add comment" />
       <ListView fx:id="listcomments" layoutX="320.0" layoutY="540.0" prefHeight="125.0" prefWidth="458.0" />
    </children>
