@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.FavControler">
-   <children>
-      <Label layoutX="14.0" layoutY="14.0" text="Recent Page" />
-   </children>
-</AnchorPane>
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="org.fsb.FlixFlow.Controllers.FavController">
+    <HBox spacing="10">
+        <TextField fx:id="actorSearch" promptText="Search Actors" />
+        <TextField fx:id="filmSearch" promptText="Search Films" />
+        <TextField fx:id="seriesSearch" promptText="Search Series" />
+        <TextField fx:id="genreSearch" promptText="Search Genres" />
+    </HBox>
+    <GridPane>
+        <ListView fx:id="actorsList" GridPane.columnIndex="0" />
+        <ListView fx:id="filmsList" GridPane.columnIndex="1" />
+        <ListView fx:id="seriesList" GridPane.columnIndex="2" />
+        <ListView fx:id="genresList" GridPane.columnIndex="3" />
+    </GridPane>
+</VBox>

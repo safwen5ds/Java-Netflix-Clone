@@ -224,6 +224,7 @@ public class MovieSeriesDetailsController {
             if (selectedComment != null) {
                 try {
                     int comment_id = selectedComment.getComment_id();
+                    txtcomment.setText(selectedComment.getCommentaire());
                     String newContent = txtcomment.getText();
                     if (!newContent.isEmpty()) {
                         if (isMovie) {

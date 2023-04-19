@@ -82,7 +82,7 @@ public class UserDashboardController {
 	public void handleFavoriteClick() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/favorite.fxml"));
-			loader.setControllerFactory(param -> new FavControler(this));
+			loader.setControllerFactory(param -> new FavController());
 			Parent recentPage = loader.load();
 			contentPane.getChildren().clear();
 			contentPane.getChildren().add(recentPage);

@@ -2,6 +2,8 @@ package org.fsb.FlixFlow.Utilities;
 
 import java.io.BufferedReader;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -14,6 +16,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -905,6 +908,19 @@ public class DatabaseUtil {
 	        throw new SQLException("Error while adding comment for series", e);
 	    }
 	}
+	public static ObservableList<String> getData(String query) {
+        ObservableList<String> data = FXCollections.observableArrayList();
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                data.add(resultSet.getString(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
 
 
 
