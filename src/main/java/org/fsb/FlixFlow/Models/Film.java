@@ -17,6 +17,7 @@ public class Film {
 	private String Nom_genre;
 	private String Nom_pays;
 	private String Nom_langue;
+	private String Nom_acteur;
 
 	public Film() {
 		super();
@@ -24,7 +25,7 @@ public class Film {
 
 	public Film(int id_film, String nom, int annee_sortie, String url_film, String url_image, String url_video,
 			int vues, int id_genre, int id_langue, int id_pays_origine, int id_producteur, String synopsis,
-			String nom_producteur, String nom_genre, String nom_pays, String nom_langue) {
+			String nom_producteur, String nom_genre, String nom_pays, String nom_langue, String nom_acteur) {
 		super();
 		this.id_film = id_film;
 		this.nom = nom;
@@ -42,6 +43,7 @@ public class Film {
 		Nom_genre = nom_genre;
 		Nom_pays = nom_pays;
 		Nom_langue = nom_langue;
+		Nom_acteur = nom_acteur;
 	}
 
 	public int getId_film() {
@@ -171,5 +173,15 @@ public class Film {
 	public void setNom_langue(String nom_langue) {
 		Nom_langue = nom_langue;
 	}
+
+	public String getNom_acteur() {
+		return Nom_acteur;
+	}
+
+	public void setNom_acteur(String nom_acteur) {
+		Nom_acteur = nom_acteur;
+	}
+
+	
 
 }

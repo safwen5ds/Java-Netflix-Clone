@@ -31,6 +31,7 @@ import org.fsb.FlixFlow.Models.Commentaire_saison;
 import org.fsb.FlixFlow.Models.Commentaire_serie;
 import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Models.Pays;
 import org.fsb.FlixFlow.Models.Saison;
 import org.fsb.FlixFlow.Models.Serie;
 import org.fsb.FlixFlow.Models.Utilisateur;
@@ -241,6 +242,7 @@ public class DatabaseUtil {
 			c.setId_episode(resultSet.getInt("id_episode"));
 			c.setContenu(resultSet.getString("contenu"));
 			c.setNom_User(resultSet.getString("user_name"));
+			c.setComment_id(resultSet.getInt("id_commentaire"));
 			c1.add(c);
 
 		}
@@ -264,6 +266,7 @@ public class DatabaseUtil {
 			c.setId_saison(resultSet.getInt("id_saison"));
 			c.setContenu(resultSet.getString("contenu"));
 			c.setNom_User(resultSet.getString("user_name"));
+			c.setComment_id(resultSet.getInt("id_commentaire"));
 			c1.add(c);
 
 		}
@@ -287,6 +290,7 @@ public class DatabaseUtil {
 			c.setId_serie(resultSet.getInt("id_serie"));
 			c.setContenu(resultSet.getString("contenu"));
 			c.setNom_User(resultSet.getString("user_name"));
+			c.setComment_id(resultSet.getInt("id_commentaire"));
 			c1.add(c);
 
 		}
@@ -310,6 +314,7 @@ public class DatabaseUtil {
 			c.setId_film(resultSet.getInt("id_film"));
 			c.setContenu(resultSet.getString("contenu"));
 			c.setNom_User(resultSet.getString("user_name"));
+			c.setComment_id(resultSet.getInt("id_commentaire"));
 			c1.add(c);
 
 		}
@@ -825,7 +830,7 @@ public class DatabaseUtil {
 	    }
 	}
 	public static void updateCommentForFilm(int comment_id, String newContent) throws SQLException {
-	    String query = "UPDATE commentaire_film SET contenu = ? WHERE comment_id = ?";
+	    String query = "UPDATE commentaire_film SET contenu = ? WHERE id_commentaire = ?";
 	    try (Connection conn = getConnection();
 	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
 
@@ -840,7 +845,7 @@ public class DatabaseUtil {
 
 
 	public static void updateCommentForSeries(int comment_id, String newContent) throws SQLException {
-	    String query = "UPDATE commentaire_serie SET contenu = ? WHERE comment_id = ?";
+	    String query = "UPDATE commentaire_serie SET contenu = ? WHERE id_commentaire = ?";
 	    try (Connection conn = getConnection();
 	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
 
@@ -854,7 +859,7 @@ public class DatabaseUtil {
 	}
 
 	public static void deleteCommentForFilm(int comment_id) throws SQLException {
-	    String query = "DELETE FROM commentaire_film WHERE comment_id = ?";
+	    String query = "DELETE FROM commentaire_film WHERE id_commentaire = ?";
 	    try (Connection conn = getConnection();
 	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
 
@@ -867,7 +872,7 @@ public class DatabaseUtil {
 	}
 
 	public static void deleteCommentForSeries(int comment_id) throws SQLException {
-	    String query = "DELETE FROM commentaire_serie WHERE comment_id = ?";
+	    String query = "DELETE FROM commentaire_serie WHERE id_commentaire = ?";
 	    try (Connection conn = getConnection();
 	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
 
@@ -880,18 +885,18 @@ public class DatabaseUtil {
 	}
 
 	public static void addCommentForFilm(int id_utilisateur, int id_film, String content) throws SQLException {
-	    String query = "INSERT INTO commentaire_film (id_utilisateur, id_film, contenu) VALUES (?, ?, ?)";
-	    try (Connection conn = getConnection();
-	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+		 String query = "INSERT INTO commentaire_film (id_utilisateur, id_film, contenu) VALUES (?, ?, ?)";
+		    try (Connection conn = getConnection();
+		         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
 
-	        preparedStatement.setInt(1, id_utilisateur);
-	        preparedStatement.setInt(2, id_film);
-	        preparedStatement.setString(3, content);
+		        preparedStatement.setInt(1, id_utilisateur);
+		        preparedStatement.setInt(2, id_film);
+		        preparedStatement.setString(3, content);
 
-	        preparedStatement.executeUpdate();
-	    } catch (SQLException e) {
-	        throw new SQLException("Error while adding comment for film", e);
-	    }
+		        preparedStatement.executeUpdate();
+		    } catch (SQLException e) {
+		        throw new SQLException("Error while adding comment for series", e);
+		    }
 	}
 
 	public static void addCommentForSeries(int id_utilisateur, int id_serie, String content) throws SQLException {
@@ -908,6 +913,7 @@ public class DatabaseUtil {
 	        throw new SQLException("Error while adding comment for series", e);
 	    }
 	}
+
 	public static ObservableList<String> getData(String query) {
         ObservableList<String> data = FXCollections.observableArrayList();
         try (Connection connection = getConnection();
@@ -922,6 +928,231 @@ public class DatabaseUtil {
         return data;
     }
 
+	// For commentaire_episode
+	public static void updateCommentForEpisode(int comment_id, String newContent) throws SQLException {
+	    String query = "UPDATE commentaire_episode SET contenu = ? WHERE id_commentaire = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setString(1, newContent);
+	        preparedStatement.setInt(2, comment_id);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while updating comment for episode", e);
+	    }
+	}
+
+	public static void deleteCommentForEpisode(int comment_id) throws SQLException {
+	    String query = "DELETE FROM commentaire_episode WHERE id_commentaire = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, comment_id);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while deleting comment for episode", e);
+	    }
+	}
+
+	public static void addCommentForEpisode(int id_utilisateur, int id_episode, String content) throws SQLException {
+	    String query = "INSERT INTO commentaire_episode (id_utilisateur, id_episode, contenu) VALUES (?, ?, ?)";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, id_utilisateur);
+	        preparedStatement.setInt(2, id_episode);
+	        preparedStatement.setString(3, content);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while adding comment for episode", e);
+	    }
+	}
+
+	// For commentaire_saison
+	public static void updateCommentForSeason(int comment_id, String newContent) throws SQLException {
+	    String query = "UPDATE commentaire_saison SET contenu = ? WHERE id_commentaire = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setString(1, newContent);
+	        preparedStatement.setInt(2, comment_id);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while updating comment for season", e);
+	    }
+	}
+
+	public static void deleteCommentForSeason(int comment_id) throws SQLException {
+	    String query = "DELETE FROM commentaire_saison WHERE id_commentaire = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, comment_id);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while deleting comment for season", e);
+	    }
+	}
+
+	public static void addCommentForSeason(int id_utilisateur, int id_saison, String content) throws SQLException {
+	    String query = "INSERT INTO commentaire_saison (id_utilisateur, id_saison, contenu) VALUES (?, ?, ?)";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+	        preparedStatement.setInt(1, id_utilisateur);
+	        preparedStatement.setInt(2, id_saison);
+	        preparedStatement.setString(3, content);
+
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while adding comment for season", e);
+	    }
+	}
+	public static void incrementEpisodeViews(int id_episode) throws SQLException {
+	    String query = "UPDATE episode SET VUES = VUES + 1 WHERE ID_EPISODE = ?";
+	    Connection con = getConnection();
+	    try (PreparedStatement stmt = con.prepareStatement(query)) {
+	        stmt.setInt(1, id_episode);
+	        stmt.executeUpdate();
+	    }
+	}
+
+	public static void incrementSeasonViews(int id_saison) throws SQLException {
+	    String query = "UPDATE saison SET VUES = VUES + 1 WHERE ID_SAISON = ?";
+	    Connection con = getConnection();
+	    try (PreparedStatement stmt = con.prepareStatement(query)) {
+	        stmt.setInt(1, id_saison);
+	        stmt.executeUpdate();
+	    }
+	}
+	public static boolean hasUserSeenEpisode(int id_utilisateur, int id_episode) throws SQLException {
+	    String query = "SELECT * FROM utilisateur_vue WHERE ID_UTILISATEUR = ? AND ID_EPISODE = ?";
+	    Connection con = getConnection();
+	    try (PreparedStatement stmt = con.prepareStatement(query)) {
+	        stmt.setInt(1, id_utilisateur);
+	        stmt.setInt(2, id_episode);
+	        ResultSet rs = stmt.executeQuery();
+	        return rs.next();
+	    }
+	}
+	
+	public static void addUserView(int id_utilisateur, int id_episode) throws SQLException {
+	    String query = "INSERT INTO utilisateur_vue (ID_UTILISATEUR, ID_EPISODE) VALUES (?, ?)";
+	    Connection con = getConnection();
+	    try (PreparedStatement stmt = con.prepareStatement(query)) {
+	        stmt.setInt(1, id_utilisateur);
+	        stmt.setInt(2, id_episode);
+	        stmt.executeUpdate();
+	    }
+	}
+
+	public static void calculateTotalSeriesViews(int serieId) throws SQLException {
+	    String query = "SELECT * FROM saison WHERE ID_SERIE = ?";
+	    PreparedStatement pstmt = getConnection().prepareStatement(query);
+	    pstmt.setInt(1, serieId);
+	    ResultSet rs = pstmt.executeQuery();
+
+	    int totalViews = 0;
+
+	    while (rs.next()) {
+	        totalViews += rs.getInt("VUES");
+	    }
+
+	    String updateQuery = "UPDATE serie SET VUES = ? WHERE ID_SERIE = ?";
+	    PreparedStatement updateStmt = getConnection().prepareStatement(updateQuery);
+	    updateStmt.setInt(1, totalViews);
+	    updateStmt.setInt(2, serieId);
+
+	    updateStmt.executeUpdate();
+	}
+	
+	public static boolean hasUserSeenFilm(int userId, int filmId) throws SQLException {
+	    String query = "SELECT * FROM utilisateur_vue_film WHERE ID_UTILISATEUR = ? AND ID_FILM = ?";
+	    PreparedStatement pstmt = getConnection().prepareStatement(query);
+	    pstmt.setInt(1, userId);
+	    pstmt.setInt(2, filmId);
+	    ResultSet rs = pstmt.executeQuery();
+
+	    return rs.next();
+	}
+
+	public static void addUserFilmView(int userId, int filmId) throws SQLException {
+	    String query = "INSERT INTO utilisateur_vue_film (ID_UTILISATEUR, ID_FILM) VALUES (?, ?)";
+	    PreparedStatement pstmt = getConnection().prepareStatement(query);
+	    pstmt.setInt(1, userId);
+	    pstmt.setInt(2, filmId);
+	    pstmt.executeUpdate();
+	}
+	public static void incrementFilmViews(int filmId) throws SQLException {
+	    String query = "UPDATE film SET vues = vues + 1 WHERE ID_FILM = ?";
+	    PreparedStatement pstmt = getConnection().prepareStatement(query);
+	    pstmt.setInt(1, filmId);
+	    pstmt.executeUpdate();
+	}
+	// Add the following method to check if the genre already exists in the user's favorites
+	public static boolean isGenreFavExists(int userId, int genreId) throws SQLException {
+	    String query = "SELECT * FROM preferences_genre WHERE id_utilisateur = ? AND id_genre = ?";
+	    PreparedStatement pstmt = getConnection().prepareStatement(query);
+	    pstmt.setInt(1, userId);
+	    pstmt.setInt(2, genreId);
+	    ResultSet rs = pstmt.executeQuery();
+	    return rs.next();
+	}
+
+	public static void addPreferenceGenre(int userId, int genreId) throws SQLException {
+	    String query = "INSERT INTO preferences_genre (id_utilisateur, id_genre) VALUES (?, ?)";
+	    PreparedStatement pstmt = getConnection().prepareStatement(query);
+	    pstmt.setInt(1, userId);
+	    pstmt.setInt(2, genreId);
+	    pstmt.executeUpdate();
+	}
+
+	public static double calculateAverageEpisodeScore(int episodeId) throws SQLException {
+        String query = "SELECT AVG(score) FROM score_episode WHERE id_episode = ?";
+        return calculateAverage(query, episodeId);
+    }
+
+    public static double calculateAverageSeasonScore(int seasonId) throws SQLException {
+        String query = "SELECT AVG(score) FROM score_saison WHERE id_saison = ?";
+        return calculateAverage(query, seasonId);
+    }
+
+    public static double calculateAverageSeriesScore(int seriesId) throws SQLException {
+        String query = "SELECT AVG(score) FROM score_serie WHERE id_serie = ?";
+        return calculateAverage(query, seriesId);
+    }
+
+    public static double calculateAverageFilmScore(int filmId) throws SQLException {
+        String query = "SELECT AVG(score) FROM score_film WHERE id_film = ?";
+        return calculateAverage(query, filmId);
+    }
+
+    private static double calculateAverage(String query, int id) throws SQLException {
+        double average = 0.0;
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                average = resultSet.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return average;
+    }
+
+   
 
 
 

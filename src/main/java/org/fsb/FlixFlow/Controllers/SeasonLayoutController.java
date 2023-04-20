@@ -1,8 +1,23 @@
 package org.fsb.FlixFlow.Controllers;
 
+import org.fsb.FlixFlow.Models.Commentaire_episode;
+import javafx.application.Application;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.collections.*;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.*;
+import javafx.scene.layout.*;
+import java.sql.SQLException;
+import java.util.List;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.fsb.FlixFlow.Models.Commentaire_saison;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,11 +26,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import org.fsb.FlixFlow.Models.Saison;
+import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -29,7 +46,13 @@ public class SeasonLayoutController {
 
 	@FXML
 	private Button addcommentbtn;
-
+    @FXML
+    private Button delbtn;
+    @FXML
+    private Label average;
+    
+    @FXML 
+    private Button modifbtn;
 	@FXML
 	private Button addfav;
 	
@@ -83,17 +106,95 @@ public class SeasonLayoutController {
 	    this.serieId = serieId;
 	}
 
-	@FXML
-	public void initialize() {
-	    watchnow.setOnAction(event -> openEpisodeLayout());
-		submitSaisonRatingButton.setOnAction(event -> submitSaisonRating());
+	 @FXML
+	    public void initialize() {
+		 listcomment.setCellFactory(param -> new ListCell<Commentaire_saison>() {
+	            @Override
+	            protected void updateItem(Commentaire_saison item, boolean empty) {
+	                super.updateItem(item, empty);
 
-	}
-	private void submitSaisonRating() {
-		int userId = 1; // Replace with the current user ID
-		int rating = (int) Math.round(saisonRatingSlider.getValue());
-		DatabaseUtil.submitSaisonRating(userId, saisonId, rating);
-	}
+	                if (empty || item == null) {
+	                    setText(null);
+	                } else {
+	                    setText(item.getNom_User() + " : " + item.getContenu());
+	                }
+	            }
+	        });
+		 
+	        watchnow.setOnAction(event -> openEpisodeLayout());
+	        submitSaisonRatingButton.setOnAction(event -> submitSaisonRating());
+	        addcommentbtn.setOnAction(event -> addComment());
+	        delbtn.setOnAction(event -> deleteComment());
+	        modifbtn.setOnAction(event -> modifyComment());
+	        updateCommentList();
+	    }
+
+	
+
+	    private void addComment() {
+	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+	        String content = commentinput.getText();
+
+	        try {
+	            DatabaseUtil.addCommentForSeason(userId, saisonId, content);
+	            updateCommentList();
+	            commentinput.clear();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    private void deleteComment() {
+	        Commentaire_saison selectedComment = listcomment.getSelectionModel().getSelectedItem();
+	        if (selectedComment != null) {
+	            try {
+	                DatabaseUtil.deleteCommentForSeason(selectedComment.getComment_id());
+	                updateCommentList();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+
+	    private void modifyComment() {
+	        Commentaire_saison selectedComment = listcomment.getSelectionModel().getSelectedItem();
+	        if (selectedComment != null) {
+	            String newContent = commentinput.getText();
+	            try {
+	                DatabaseUtil.updateCommentForSeason(selectedComment.getComment_id(), newContent);
+	                updateCommentList();
+	                commentinput.clear();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+
+	    private void updateCommentList() {
+	        try {
+	            List<Commentaire_saison> comments = DatabaseUtil.getCommentaireSaisonsByMediaId(saisonId);
+	            listcomment.getItems().setAll(comments);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	
+	    private void submitSaisonRating() {
+	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+	        int rating = (int) Math.round(saisonRatingSlider.getValue());
+	        DatabaseUtil.submitSaisonRating(userId, saisonId, rating);
+	        updateAverageScore();
+	    }
+	    private void updateAverageScore() {
+	        try {
+	            double averageScore = DatabaseUtil.calculateAverageSeasonScore(saisonId);
+	            average.setText(String.format("%.2f", averageScore));
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
 	private void openEpisodeLayout() {
 	    try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/episode.fxml"));
@@ -111,7 +212,7 @@ public class SeasonLayoutController {
 	}
 
 
-	public void initData(Saison season) {
+	public void initData(Saison season) throws SQLException {
 		if (season != null) {
 			setIds(season.getId_saison(), season.getId_serie());
 			serieNameLabel.setText("Name: " + season.getNom_serie());
@@ -119,6 +220,8 @@ public class SeasonLayoutController {
 			seasonSynopsistext.setText(season.getSynopsis());
 			seasonDate_debutLabel.setText("Date: " + season.getDate_debut());
 			seasonViewsLabel.setText("Views: " + season.getVues());
+		    double averageScore = DatabaseUtil.calculateAverageSeasonScore(season.getId_saison());
+			average.setText(String.format("%.2f", averageScore));
 
 			// Set image for the Rectangle
 			String imageUrl = season.getUrl_image();
@@ -128,5 +231,7 @@ public class SeasonLayoutController {
 
 			videoweb.getEngine().load(season.getUrl_video());
 		}
+		updateCommentList();
+		
 	}
 }

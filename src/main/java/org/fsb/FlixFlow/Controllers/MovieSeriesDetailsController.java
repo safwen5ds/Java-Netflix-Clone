@@ -1,6 +1,8 @@
 package org.fsb.FlixFlow.Controllers;
 
 import java.io.IOException;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.fsb.FlixFlow.Models.CommentaireDisplay;
 import org.fsb.FlixFlow.Models.Commentaire_film;
 import org.fsb.FlixFlow.Models.Commentaire_serie;
 import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Models.Genre;
 import org.fsb.FlixFlow.Models.Serie;
 import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
@@ -43,6 +46,10 @@ public class MovieSeriesDetailsController {
 
 	private int mediaId;
 	private boolean isMovie;
+	@FXML
+    private Label average;
+	  @FXML
+	    private Button addgenrefav;
 	private UserDashboardController userDashboardController;
 
 	// Modify the constructor
@@ -131,11 +138,46 @@ public class MovieSeriesDetailsController {
 	@FXML
 	private Button watchButton;
 
+	private void addFavoriteGenre(int genreId) {
+	    try {
+	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+	        if (DatabaseUtil.isGenreFavExists(userId, genreId)) {
+	            Alert alert = new Alert(AlertType.WARNING);
+	            alert.setTitle("Warning");
+	            alert.setHeaderText(null);
+	            alert.setContentText("This genre is already in your favorites.");
+	            alert.showAndWait();
+	        } else {
+	            DatabaseUtil.addPreferenceGenre(userId, genreId);
+	            Alert alert = new Alert(AlertType.INFORMATION);
+	            alert.setTitle("Information");
+	            alert.setHeaderText(null);
+	            alert.setContentText("Genre added to your favorites.");
+	            alert.showAndWait();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 
+	private void updateAverageRating() {
+	    try {
+	        double averageScore;
+	        if (isMovie) {
+	            averageScore = DatabaseUtil.calculateAverageFilmScore(mediaId);
+	        } else {
+	            averageScore = DatabaseUtil.calculateAverageSeriesScore(mediaId);
+	        }
+	        average.setText(String.format("%.2f", averageScore));
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 	@FXML
 	public void initialize() throws SQLException {
 		initializeTableView();
+        
 
 		if (isMovie) {
 			try {
@@ -147,6 +189,7 @@ public class MovieSeriesDetailsController {
 		} else {
 			try {
 				Serie serie = DatabaseUtil.getSerieById(mediaId);
+				DatabaseUtil.calculateTotalSeriesViews(mediaId);
 				setSerieDetails(serie);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -173,14 +216,25 @@ public class MovieSeriesDetailsController {
         else
         {
         	watchButton.setOnAction(e -> {
-    			String url = null;
-    			try {
-    				url = DatabaseUtil.getFilmById(mediaId).getUrl_film();
-    			} catch (SQLException e1) {
-    				e1.printStackTrace();
-    			}
-    			openUrlInNewWindow(url);
-    		});
+        	    String url = null;
+        	    try {
+        	        url = DatabaseUtil.getFilmById(mediaId).getUrl_film();
+        	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+        	        
+        	        if (!DatabaseUtil.hasUserSeenFilm(userId, mediaId)) {
+        	            DatabaseUtil.incrementFilmViews(mediaId);
+        	            DatabaseUtil.addUserFilmView(userId, mediaId);
+        	            
+        	            // Update the views count displayed on the UI
+        	            Film updatedFilm = DatabaseUtil.getFilmById(mediaId);
+        	            vues.setText(String.valueOf(updatedFilm.getVues()));
+        	        }
+        	    } catch (SQLException e1) {
+        	        e1.printStackTrace();
+        	    }
+        	    openUrlInNewWindow(url);
+        	});
+
         }
         actorslist.setCellFactory(listView -> new ActorRoleListCell());
         Utilisateur loggedInUser = DatabaseUtil.readUserFromFile();
@@ -197,7 +251,11 @@ public class MovieSeriesDetailsController {
                 ex.printStackTrace();
             }
         });
-        submitRating.setOnAction(event -> DatabaseUtil.submitRating(ratingSlider, isMovie, mediaId));
+        submitRating.setOnAction(event -> {
+            DatabaseUtil.submitRating(ratingSlider, isMovie, mediaId);
+            updateAverageRating();
+        });
+
 
         commentbtn.setOnAction(e -> {
             Utilisateur User;
@@ -224,7 +282,6 @@ public class MovieSeriesDetailsController {
             if (selectedComment != null) {
                 try {
                     int comment_id = selectedComment.getComment_id();
-                    txtcomment.setText(selectedComment.getCommentaire());
                     String newContent = txtcomment.getText();
                     if (!newContent.isEmpty()) {
                         if (isMovie) {
@@ -258,8 +315,22 @@ public class MovieSeriesDetailsController {
                 }
             }
         });
-
-
+        
+        addgenrefav.setOnAction(e -> {
+            int genreId = -1;
+            try {
+                if (isMovie) {
+                    Film film = DatabaseUtil.getFilmById(mediaId);
+                    genreId = film.getId_genre(); 
+                } else {
+                    Serie serie = DatabaseUtil.getSerieById(mediaId);
+                    genreId = serie.getId_genre(); 
+                }
+                addFavoriteGenre(genreId);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
 
 	}
 
@@ -337,6 +408,8 @@ public class MovieSeriesDetailsController {
 		producteur.setText(film.getNom_producteur());
 		pays.setText(film.getNom_producteur());
 		table();
+		 double averageScore = DatabaseUtil.calculateAverageFilmScore(film.getId_film());
+		 average.setText(String.format("%.2f", averageScore));
 
 	}
 
@@ -347,12 +420,15 @@ public class MovieSeriesDetailsController {
 		annee.setText(String.valueOf(serie.getAnnee_sortie()));
 		posterImage.setFill(pattern);
 		synopsisArea.setText(serie.getSynopsis());
+		DatabaseUtil.calculateTotalSeriesViews(mediaId);
 		vues.setText(String.valueOf(serie.getVues()));
 		genre.setText(serie.getNom_genre());
 		langue.setText(serie.getNom_langue());
 		producteur.setText(serie.getNom_producteur());
 		pays.setText(serie.getNom_pays());
 		table();
+		double averageScore = DatabaseUtil.calculateAverageSeriesScore(serie.getId_serie());
+		average.setText(String.format("%.2f", averageScore));
 	}
 
 	private void openUrlInNewWindow(String url) {

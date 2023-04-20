@@ -7,6 +7,7 @@ import java.util.List;
 import org.fsb.FlixFlow.Models.Film;
 import org.fsb.FlixFlow.Models.Serie;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Views.PageNavigationUtil;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -70,7 +71,7 @@ public class HomePageController {
 			mediaContainer.setAlignment(Pos.CENTER);
 			mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
 			mediaContainer.setOnMouseClicked(event -> {
-				openMovieSeriesDetails(film.getId_film(), true, userDashboardController);
+				PageNavigationUtil.openMovieSeriesDetails(film.getId_film(), true, userDashboardController);
 			});
 
 			trendingPane2.getChildren().add(mediaContainer);
@@ -95,7 +96,7 @@ public class HomePageController {
 
 			mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
 			mediaContainer.setOnMouseClicked(event -> {
-				openMovieSeriesDetails(serie.getId_serie(), false, userDashboardController);
+				PageNavigationUtil.openMovieSeriesDetails(serie.getId_serie(), false, userDashboardController);
 			});
 
 			sortedByViewsPane2.getChildren().add(mediaContainer);
@@ -123,7 +124,7 @@ public class HomePageController {
 		}
 	}
 
-	private void loadSerie(List<Serie> series, FlowPane sortedByViewsPane2) {
+	public void loadSerie(List<Serie> series, FlowPane sortedByViewsPane2) {
 		// TODO Auto-generated method stub
 		for (Serie serie : series) {
 			ImageView poster = new ImageView(new Image(serie.getUrl_image()));
@@ -140,14 +141,14 @@ public class HomePageController {
 			mediaContainer.setAlignment(Pos.CENTER);
 			mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
 			mediaContainer.setOnMouseClicked(event -> {
-				openMovieSeriesDetails(serie.getId_serie(), false, userDashboardController);
+				PageNavigationUtil.openMovieSeriesDetails(serie.getId_serie(), false, userDashboardController);
 			});
 
 			sortedByViewsPane2.getChildren().add(mediaContainer);
 		}
 	}
 
-	private void loadFilm(List<Film> movies, FlowPane sortedByViewsPane2) {
+	public void loadFilm(List<Film> movies, FlowPane sortedByViewsPane2) {
 		// TODO Auto-generated method stub
 		for (Film film : movies) {
 			ImageView poster = new ImageView(new Image(film.getUrl_image()));
@@ -164,7 +165,7 @@ public class HomePageController {
 			mediaContainer.setAlignment(Pos.CENTER);
 			mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
 			mediaContainer.setOnMouseClicked(event -> {
-				openMovieSeriesDetails(film.getId_film(), true, userDashboardController);
+				PageNavigationUtil.openMovieSeriesDetails(film.getId_film(), true, userDashboardController);
 			});
 
 			sortedByViewsPane2.getChildren().add(mediaContainer);

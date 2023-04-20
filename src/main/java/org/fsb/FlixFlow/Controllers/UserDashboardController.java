@@ -106,27 +106,30 @@ public class UserDashboardController {
 	}
 
 	public void handleMoviesClick() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/movies.fxml"));
-			loader.setControllerFactory(param -> new MovieController(this));
-			Parent recentPage = loader.load();
-			contentPane.getChildren().clear();
-			contentPane.getChildren().add(recentPage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SearchMovies.fxml"));
+	        SearchMoviesController searchMoviesController = new SearchMoviesController(this);
+	        loader.setControllerFactory(param -> searchMoviesController);
+	        Parent recentPage = loader.load();
+	        contentPane.getChildren().clear();
+	        contentPane.getChildren().add(recentPage);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	public void handleSeriesClick() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/series.fxml"));
-			loader.setControllerFactory(param -> new SerieController(this));
-			Parent recentPage = loader.load();
-			contentPane.getChildren().clear();
-			contentPane.getChildren().add(recentPage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SearchSeries.fxml"));
+	        SearchSeriesController searchSeriesController = new SearchSeriesController(this);
+	        loader.setControllerFactory(param -> searchSeriesController);
+	        Parent recentPage = loader.load();
+	        contentPane.getChildren().clear();
+	        contentPane.getChildren().add(recentPage);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 
 }

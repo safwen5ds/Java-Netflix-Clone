@@ -50,6 +50,7 @@
                                       <HBox>
                                <Label text="Genre : " />
                                     <Label fx:id="genre" text="Label" />
+                                       <Button fx:id="addgenrefav" mnemonicParsing="false" text="addgenrefav" />
                                  </HBox> 
                                  
                                    <HBox>
@@ -71,6 +72,8 @@
                                     
                                  </children>
                               </VBox>
+                              <Label text="Average :" />
+                              <Label fx:id="average" text="Label" />
                               <VBox spacing="24.0">
                                  <children>
                                     <HBox prefHeight="26.0" prefWidth="10" spacing="16.0" translateX="-50.0">
