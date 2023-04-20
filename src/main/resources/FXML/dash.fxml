@@ -19,7 +19,7 @@
          </ImageView>
          <Pane HBox.hgrow="ALWAYS" />
          <Pane HBox.hgrow="ALWAYS" />
-         <ImageView fx:id="notificon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0">
+         <ImageView fx:id="notificon" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleNotificationClick" pickOnBounds="true" preserveRatio="true" translateX="-10.0">
             <image>
                <Image url="@Images_Videos/notification%20(1).png" />
             </image>

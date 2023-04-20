@@ -20,6 +20,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import org.fsb.FlixFlow.Models.Commentaire_saison;
 import org.fsb.FlixFlow.Models.Commentaire_serie;
 import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Models.Notification;
 import org.fsb.FlixFlow.Models.Pays;
 import org.fsb.FlixFlow.Models.Saison;
 import org.fsb.FlixFlow.Models.Serie;
@@ -1151,9 +1153,85 @@ public class DatabaseUtil {
         return average;
     }
 
-   
+    public static List<Notification> getEpisodeNotifications() {
+        List<Notification> notifications = new ArrayList<>();
 
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            String query = "SELECT E.ID_EPISODE, E.ID_SERIE, E.NUM_EPISODE, E.DATE_DIFFUSION, S.NOM " +
+                    "FROM EPISODE E INNER JOIN SERIE S ON E.ID_SERIE = S.ID_SERIE " +
+                    "WHERE E.DATE_DIFFUSION = TO_DATE('" + LocalDate.now() + "', 'YYYY-MM-DD')";
+            ResultSet resultSet = statement.executeQuery(query);
 
+            while (resultSet.next()) {
+                Notification notification = new Notification();
+                notification.setIdEpisode(resultSet.getInt("ID_EPISODE"));
+                notification.setIdSerie(resultSet.getInt("ID_SERIE"));
+                notification.setNumEpisode(resultSet.getInt("NUM_EPISODE"));
+                notification.setDateDiffusion(resultSet.getDate("DATE_DIFFUSION"));
+                notification.setSerieNom(resultSet.getString("NOM"));
+                notifications.add(notification);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return notifications;
+    }
+
+    
+    public static List<Episode> fetchTodaysEpisodes(int userId) {
+        List<Episode> episodes = new ArrayList<>();
+
+        // Get today's date
+        LocalDate today = LocalDate.now();
+        java.sql.Date todaySql = java.sql.Date.valueOf(today);
+
+        String selectEpisodesQuery = "SELECT * FROM EPISODE E WHERE DATE_DIFFUSION = ? AND EXISTS (" +
+                "SELECT 1 FROM SERIE S " +
+                "JOIN SCORE_SERIE SS ON S.ID_SERIE = SS.ID_SERIE AND SS.SCORE >= 5 AND SS.ID_UTILISATEUR = ? " +
+                "JOIN PREFERENCES_SERIE PS ON S.ID_SERIE = PS.ID_SERIE AND PS.ID_UTILISATEUR = ? " +
+                "WHERE E.ID_SERIE = S.ID_SERIE)";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(selectEpisodesQuery)) {
+
+            preparedStatement.setDate(1, todaySql);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.setInt(3, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int idSerie = resultSet.getInt("ID_SERIE");
+                int numEpisode = resultSet.getInt("NUM_EPISODE");
+                java.sql.Date dateDiffusion = resultSet.getDate("DATE_DIFFUSION");
+
+                String selectSeriesNameQuery = "SELECT NOM FROM SERIE WHERE ID_SERIE = ?";
+                String serieNom = "";
+                try (PreparedStatement seriesStatement = connection.prepareStatement(selectSeriesNameQuery)) {
+                    seriesStatement.setInt(1, idSerie);
+                    ResultSet seriesResultSet = seriesStatement.executeQuery();
+                    if (seriesResultSet.next()) {
+                        serieNom = seriesResultSet.getString("NOM");
+                    }
+                }
+
+                // Create an Episode object and add it to the list
+                Episode episode = new Episode();
+                episode.setId_serie(idSerie);
+                episode.setNum_episode(numEpisode);
+                episode.setDate_diffusion(dateDiffusion);
+                episode.setNom_serie(serieNom);
+
+                episodes.add(episode);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return episodes;
+    }
 
 
 

@@ -1,10 +1,18 @@
 package org.fsb.FlixFlow.Controllers;
 
 import java.io.IOException;
+import javafx.scene.control.Alert;
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+
+import org.fsb.FlixFlow.Models.Episode;
+import org.fsb.FlixFlow.Models.Notification;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,8 +40,17 @@ public class UserDashboardController {
     private ImageView profileicon;
 
 	public UserDashboardController() {
-
+		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+	    List<Episode> todaysEpisodes = DatabaseUtil.fetchTodaysEpisodes(userId);
+	    showNewEpisodeAlerts(todaysEpisodes);
 	}
+	
+	 @FXML
+	    public void initialize() {
+		 int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+		    List<Episode> todaysEpisodes = DatabaseUtil.fetchTodaysEpisodes(userId);
+		    showNewEpisodeAlerts(todaysEpisodes);
+	 }
 
 	@FXML
 	private void handleHomeClick() {
@@ -41,7 +58,7 @@ public class UserDashboardController {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/HomePage.fxml"));
 			loader.setControllerFactory(param -> new HomePageController(this));
 			Parent homePage = loader.load();
-			contentPane.getChildren().clear(); // Clear the previous content
+			contentPane.getChildren().clear(); 
 			contentPane.getChildren().add(homePage);
 
 		} catch (IOException e) {
@@ -71,13 +88,32 @@ public class UserDashboardController {
     }
 
 	public void handleNotificationClick() {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Notifications.fxml"));
+	        NotificationsController notificationsController = new NotificationsController();
+	        loader.setControllerFactory(param -> notificationsController);
 
+	        // Fetch notifications from the database
+	        List<Notification> userNotifications = DatabaseUtil.getEpisodeNotifications();
+	        for (Notification notification : userNotifications) {
+	            notificationsController.addNotification(notification);
+	        }
+
+	        Parent notificationsRoot = loader.load();
+	        Scene notificationsScene = new Scene(notificationsRoot);
+
+	        Stage notificationsStage = new Stage();
+	        notificationsStage.setScene(notificationsScene);
+	        notificationsStage.setTitle("Notifications");
+	        notificationsStage.show();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
 
-	public void handleRecentClick() {
-		
 
-	}
+
+	
 
 	public void handleFavoriteClick() {
 		try {
@@ -130,6 +166,19 @@ public class UserDashboardController {
 	        e.printStackTrace();
 	    }
 	}
+	
+	public void showNewEpisodeAlerts(List<Episode> episodes) {
+	    for (Episode episode : episodes) {
+	        Platform.runLater(() -> {
+	            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	            alert.setTitle("New Episode Released");
+	            alert.setHeaderText("A new episode of " + episode.getNom_serie() + " is now available!");
+	            alert.setContentText("Series: " + episode.getNom_serie() + "\nEpisode Number: " + episode.getNum_episode() + "\nRelease Date: " + episode.getDate_diffusion());
+	            alert.showAndWait();
+	        });
+	    }
+	}
+
 
 
 }
