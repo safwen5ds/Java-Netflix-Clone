@@ -507,9 +507,8 @@ public class DatabaseUtil {
 	public static Acteur extractActeurFromResultSet(ResultSet resultSet) throws SQLException {
 	    int id = resultSet.getInt("ID_ACTEUR");
 	    String nom = resultSet.getString("NOM");
-	    String url_image = resultSet.getString("URL_IMAGE");
 
-	    Acteur acteur = new Acteur(id, nom, url_image);
+	    Acteur acteur = new Acteur(id, nom);
 	    return acteur;
 	}
 

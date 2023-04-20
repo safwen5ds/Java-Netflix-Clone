@@ -11,13 +11,13 @@
       <AnchorPane prefHeight="584.0" prefWidth="893.0">
            <FlowPane fx:id="moviesFlowPane" layoutX="290.0" layoutY="7.0" prefHeight="558.0" prefWidth="591.0" />
             <Label text="Search Movies" />
-         <TextField fx:id="movieTitleSearchComboBox" layoutX="78.0" layoutY="68.0" />
-         <TextField fx:id="releaseYearSearchComboBox" layoutX="79.0" layoutY="142.0" />
-         <TextField fx:id="genreSearchComboBox" layoutX="80.0" layoutY="219.0" />
-         <TextField fx:id="languageSearchComboBox" layoutX="80.0" layoutY="306.0" />
-         <TextField fx:id="countryOfOriginSearchComboBox" layoutX="78.0" layoutY="388.0" />
-         <TextField fx:id="producerSearchComboBox" layoutX="78.0" layoutY="468.0" />
-         <TextField fx:id="actorSearchComboBox" layoutX="77.0" layoutY="540.0" />
+         <TextField fx:id="movieTitleSearchTextField" layoutX="78.0" layoutY="68.0" />
+         <TextField fx:id="releaseYearSearchTextField" layoutX="79.0" layoutY="142.0" />
+         <TextField fx:id="genreSearchTextField" layoutX="80.0" layoutY="219.0" />
+         <TextField fx:id="languageSearchTextField" layoutX="80.0" layoutY="306.0" />
+         <TextField fx:id="countryOfOriginSearchTextField" layoutX="78.0" layoutY="388.0" />
+         <TextField fx:id="producerSearchTextField" layoutX="78.0" layoutY="468.0" />
+         <TextField fx:id="actorSearchTextField" layoutX="77.0" layoutY="540.0" />
       </AnchorPane>
    </children>
 </VBox>

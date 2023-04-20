@@ -1,11 +1,13 @@
 package org.fsb.FlixFlow.Controllers;
 
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
-
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.HashMap;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 import org.fsb.FlixFlow.Models.Acteur;
 import org.fsb.FlixFlow.Models.Film;
@@ -15,13 +17,21 @@ import org.fsb.FlixFlow.Views.PageNavigationUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class SearchMoviesController {
     @FXML
     private TextField movieTitleSearchTextField;
+    Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 
     @FXML
     private TextField releaseYearSearchTextField;
@@ -56,25 +66,69 @@ public class SearchMoviesController {
         loadAllMovies();
         setupSearchFieldListeners();
     }
+    private void updateMoviesFlowPane(ObservableList<Film> films) {
+        moviesFlowPane.getChildren().clear();
+        loadFilm(films, moviesFlowPane);
+    }
+
+    private void loadFilm(List<Film> movies, FlowPane moviesFlowPane) {
+        for (Film film : movies) {
+            ImageView poster = new ImageView(new Image(film.getUrl_image()));
+            poster.setFitHeight(250);
+            poster.setFitWidth(200);
+
+            Label title = new Label(film.getNom());
+            title.setWrapText(true);
+            title.setMaxWidth(150);
+            title.setAlignment(Pos.CENTER);
+            title.setFont(Montessart); 
+            VBox mediaContainer = new VBox(5);
+            mediaContainer.getChildren().addAll(poster, title);
+            mediaContainer.setAlignment(Pos.CENTER);
+            mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
+            mediaContainer.setOnMouseClicked(event -> {
+                PageNavigationUtil.openMovieSeriesDetails(film.getId_film(), true, userDashboardController);
+            });
+
+            moviesFlowPane.getChildren().add(mediaContainer);
+        }
+    }
+
+    private Map<Integer, List<Acteur>> moviesActorsMap;
 
     private void loadAllMovies() {
         try {
             List<Film> films = DatabaseUtil.getMoviesSortedByViews();
             masterData = FXCollections.observableArrayList(films);
+            moviesActorsMap = new HashMap<>();
+            for (Film film : films) {
+                List<Acteur> actors = DatabaseUtil.getActorsByFilmId(film.getId_film());
+                moviesActorsMap.put(film.getId_film(), actors);
+            }
             updateMoviesFlowPane(masterData);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (
+        		SQLException e) {
+        	e.printStackTrace();
+        	}
+        	}
+    
+    
+    private void setupSearchFieldListeners() {
+        setDelayedSearchListener(movieTitleSearchTextField);
+        setDelayedSearchListener(releaseYearSearchTextField);
+        setDelayedSearchListener(genreSearchTextField);
+        setDelayedSearchListener(languageSearchTextField);
+        setDelayedSearchListener(countryOfOriginSearchTextField);
+        setDelayedSearchListener(producerSearchTextField);
+        setDelayedSearchListener(actorSearchTextField);
     }
 
-    private void setupSearchFieldListeners() {
-        movieTitleSearchTextField.setOnKeyReleased(event -> searchMovies());
-        releaseYearSearchTextField.setOnKeyReleased(event -> searchMovies());
-        genreSearchTextField.setOnKeyReleased(event -> searchMovies());
-        languageSearchTextField.setOnKeyReleased(event -> searchMovies());
-        countryOfOriginSearchTextField.setOnKeyReleased(event -> searchMovies());
-        producerSearchTextField.setOnKeyReleased(event -> searchMovies());
-        actorSearchTextField.setOnKeyReleased(event -> searchMovies());
+    private void setDelayedSearchListener(TextField textField) {
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+        textField.setOnKeyReleased(event -> {
+            pause.setOnFinished(e -> searchMovies());
+            pause.playFromStart();
+        });
     }
 
     private void searchMovies() {
@@ -87,25 +141,21 @@ public class SearchMoviesController {
         String actorFilter = actorSearchTextField.getText().toLowerCase();
 
         List<Film> filteredData = masterData.stream()
-            .filter(film -> film.getNom().toLowerCase().contains(movieTitleFilter))
-            .filter(film -> String.valueOf(film.getAnnee_sortie()).contains(releaseYearFilter))
-            .filter(film -> film.getNom_genre().toLowerCase().contains(genreFilter))
-            .filter(film -> film.getNom_langue().toLowerCase().contains(languageFilter))
-            .filter(film -> film.getNom_pays().toLowerCase().contains(countryOfOriginFilter))
-            .filter(film -> film.getNom_producteur().toLowerCase().contains(producerFilter))
+            .filter(film -> movieTitleFilter.isEmpty() || film.getNom().toLowerCase().contains(movieTitleFilter))
+            .filter(film -> releaseYearFilter.isEmpty() || String.valueOf(film.getAnnee_sortie()).contains(releaseYearFilter))
+            .filter(film -> genreFilter.isEmpty() || film.getNom_genre().toLowerCase().contains(genreFilter))
+            .filter(film -> languageFilter.isEmpty() || film.getNom_langue().toLowerCase().contains(languageFilter))
+            .filter(film -> countryOfOriginFilter.isEmpty() || film.getNom_pays().toLowerCase().contains(countryOfOriginFilter))
+            .filter(film -> producerFilter.isEmpty() || film.getNom_producteur().toLowerCase().contains(producerFilter))
             .filter(film -> {
-                try {
-                    List<Acteur> actors = DatabaseUtil.getActorsByFilmId(film.getId_film());
-                    return actors.stream()
-                        .anyMatch(actor -> actor.getNom().toLowerCase().contains(actorFilter));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    return false;
+                if (actorFilter.isEmpty()) {
+                    return true;
                 }
+                List<Acteur> actors = moviesActorsMap.get(film.getId_film());
+                return actors.stream().anyMatch(actor -> actor.getNom().toLowerCase().contains(actorFilter));
             })
             .collect(Collectors.toList());
 
         updateMoviesFlowPane(FXCollections.observableArrayList(filteredData));
     }
-
 }

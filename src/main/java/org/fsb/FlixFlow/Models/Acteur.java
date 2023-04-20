@@ -9,10 +9,10 @@ public class Acteur {
 		super();
 	}
 
-	public Acteur(int id_acteur, String nom, String url_image) {
+	public Acteur(int id_acteur, String nom) {
 		this.id_acteur = id_acteur;
 		this.nom = nom;
-		this.url_image = url_image;
+       
 	}
 
 	public int getId_acteur() {
