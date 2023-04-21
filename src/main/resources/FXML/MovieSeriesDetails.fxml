@@ -65,7 +65,9 @@
                                     <HBox>
                                 <Label text="Producteur :" />
                                     <Label fx:id="producteur" text="Label" />
-                                 </HBox> 
+                                 </HBox>
+                                    <Label text="Nbr De Vote : " />
+                                    <Label fx:id="vote" text="Label" /> 
                                     
                                    
                                    

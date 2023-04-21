@@ -10,7 +10,7 @@ public class Commentaire_film {
 		super();
 	}
 	public Commentaire_film(int id_utilisateur, int id_film, String contenu, String nom_User, int comment_id) {
-		
+
 		this.id_utilisateur = id_utilisateur;
 		this.id_film = id_film;
 		this.contenu = contenu;
@@ -47,7 +47,7 @@ public class Commentaire_film {
 	public void setComment_id(int comment_id) {
 		this.comment_id = comment_id;
 	}
-    
-	
+
+
 
 }

@@ -2,21 +2,17 @@ package org.fsb.FlixFlow.Controllers;
 
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.HashMap;
-import java.util.Map;
-import javafx.animation.PauseTransition;
-import javafx.util.Duration;
-
-
 
 import org.fsb.FlixFlow.Models.Acteur;
 import org.fsb.FlixFlow.Models.Serie;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import org.fsb.FlixFlow.Views.PageNavigationUtil;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,6 +26,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 public class SearchSeriesController {
 
@@ -144,7 +141,7 @@ public class SearchSeriesController {
         });
     }
 
-    
+
     private void searchSeries() {
         String serieTitleFilter = serieTitleSearchTextField.getText().toLowerCase().trim();
         String releaseYearFilter = releaseYearSearchTextField.getText().toLowerCase().trim();

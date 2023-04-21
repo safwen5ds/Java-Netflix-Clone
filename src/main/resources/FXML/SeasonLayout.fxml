@@ -36,5 +36,9 @@
       <Button fx:id="delbtn" layoutX="794.0" layoutY="513.0" mnemonicParsing="false" text="Delete" />
       <Label layoutX="677.0" layoutY="359.0" text="Average :" />
       <Label fx:id="average" layoutX="743.0" layoutY="359.0" text="Label" />
+      <Label layoutX="439.0" layoutY="454.0" text="Nbr De Vote : " />
+      <Label fx:id="vote" layoutX="515.0" layoutY="454.0" text="Label" />
+      <Label layoutX="439.0" layoutY="475.0" text="Nbr des eps : " />
+      <Label fx:id="nbreps" layoutX="515.0" layoutY="475.0" text="Label" />
          </children>
 </AnchorPane>

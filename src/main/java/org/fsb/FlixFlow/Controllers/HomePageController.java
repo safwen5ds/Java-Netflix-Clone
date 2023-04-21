@@ -1,6 +1,5 @@
 package org.fsb.FlixFlow.Controllers;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -9,11 +8,8 @@ import org.fsb.FlixFlow.Models.Serie;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import org.fsb.FlixFlow.Views.PageNavigationUtil;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -106,7 +102,9 @@ public class HomePageController {
 	private void loadTrendingMovies() {
 		try {
 			List<Film> movies = DatabaseUtil.getTrendingMovies();
+			List<Serie> series = DatabaseUtil.getTrendingSeries();
 			loadFilm(movies, trendingPane);
+			loadSerie(series, trendingPane);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -172,6 +170,6 @@ public class HomePageController {
 		}
 	}
 
-	
+
 
 }

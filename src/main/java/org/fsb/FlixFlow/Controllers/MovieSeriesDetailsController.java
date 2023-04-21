@@ -1,19 +1,13 @@
 package org.fsb.FlixFlow.Controllers;
 
 import java.io.IOException;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-
 import java.sql.SQLException;
 import java.util.List;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Button;
-import org.fsb.FlixFlow.Models.Acteur;
+
 import org.fsb.FlixFlow.Models.CommentaireDisplay;
 import org.fsb.FlixFlow.Models.Commentaire_film;
 import org.fsb.FlixFlow.Models.Commentaire_serie;
 import org.fsb.FlixFlow.Models.Film;
-import org.fsb.FlixFlow.Models.Genre;
 import org.fsb.FlixFlow.Models.Serie;
 import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
@@ -25,9 +19,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -62,19 +59,21 @@ public class MovieSeriesDetailsController {
 	@FXML
 	private Button Watchtrailer;
 	@FXML
+    private Label vote;
+	@FXML
 	private Slider ratingSlider;
 
 	@FXML
 	private Button submitRating;
 
-	
+
 	 @FXML
 	 private ListView<ActorRoleDisplay> actorslist;
-	 
+
 
 	    @FXML
 	    private TextField txtcomment;
-	    
+
 	    @FXML
 	    private Button commentbtn;
 	    @FXML
@@ -163,38 +162,65 @@ public class MovieSeriesDetailsController {
 	private void updateAverageRating() {
 	    try {
 	        double averageScore;
+	        int voteCount;
 	        if (isMovie) {
 	            averageScore = DatabaseUtil.calculateAverageFilmScore(mediaId);
+	          
 	        } else {
 	            averageScore = DatabaseUtil.calculateAverageSeriesScore(mediaId);
+	           
 	        }
 	        average.setText(String.format("%.2f", averageScore));
+	 
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	private void updateVoteCount() {
+	    try {
+	        int voteCount;
+	        if (isMovie) {
+	            voteCount = DatabaseUtil.getVoteCountForFilm(mediaId);
+	        } else {
+	            voteCount = DatabaseUtil.getVoteCountForSeries(mediaId);
+	        }
+	        vote.setText(String.valueOf(voteCount));
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	}
 
+
 	@FXML
 	public void initialize() throws SQLException {
-		initializeTableView();
-        
+	    initializeTableView();
 
-		if (isMovie) {
-			try {
-				Film film = DatabaseUtil.getFilmById(mediaId);
-				setFilmDetails(film);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				Serie serie = DatabaseUtil.getSerieById(mediaId);
-				DatabaseUtil.calculateTotalSeriesViews(mediaId);
-				setSerieDetails(serie);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	    if (isMovie) {
+	        try {
+	            Film film = DatabaseUtil.getFilmById(mediaId);
+	            if (film != null) { // Add this null check
+	                setFilmDetails(film);
+	            } else {
+	                // Handle the case when film is null
+	                System.err.println("Film not found with mediaId: " + mediaId);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    } else {
+	        try {
+	            Serie serie = DatabaseUtil.getSerieById(mediaId);
+	            DatabaseUtil.calculateTotalSeriesViews(mediaId);
+	            if (serie != null) {
+	                setSerieDetails(serie);
+	            } else {
+
+	                System.err.println("Serie not found with mediaId: " + mediaId);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 		loadActorsList();
 		table();
 
@@ -220,11 +246,11 @@ public class MovieSeriesDetailsController {
         	    try {
         	        url = DatabaseUtil.getFilmById(mediaId).getUrl_film();
         	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
-        	        
+
         	        if (!DatabaseUtil.hasUserSeenFilm(userId, mediaId)) {
         	            DatabaseUtil.incrementFilmViews(mediaId);
         	            DatabaseUtil.addUserFilmView(userId, mediaId);
-        	            
+
         	            // Update the views count displayed on the UI
         	            Film updatedFilm = DatabaseUtil.getFilmById(mediaId);
         	            vues.setText(String.valueOf(updatedFilm.getVues()));
@@ -239,7 +265,7 @@ public class MovieSeriesDetailsController {
         actorslist.setCellFactory(listView -> new ActorRoleListCell());
         Utilisateur loggedInUser = DatabaseUtil.readUserFromFile();
 
-        
+
         addfav.setOnAction(e -> {
             try {
                 if (isMovie) {
@@ -315,23 +341,23 @@ public class MovieSeriesDetailsController {
                 }
             }
         });
-        
+
         addgenrefav.setOnAction(e -> {
             int genreId = -1;
             try {
                 if (isMovie) {
                     Film film = DatabaseUtil.getFilmById(mediaId);
-                    genreId = film.getId_genre(); 
+                    genreId = film.getId_genre();
                 } else {
                     Serie serie = DatabaseUtil.getSerieById(mediaId);
-                    genreId = serie.getId_genre(); 
+                    genreId = serie.getId_genre();
                 }
                 addFavoriteGenre(genreId);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         });
-
+        updateVoteCount();
 	}
 
 	private void initializeTableView() {
@@ -376,7 +402,7 @@ public class MovieSeriesDetailsController {
 				List<Commentaire_film> commentaireFilms = DatabaseUtil.getCommentaireFilmsByMediaId(mediaId);
 
 				for (Commentaire_film cf : commentaireFilms) {
-	                System.out.println("Commentaire_film: " + cf.getNom_User() + " - " + cf.getContenu()); 
+	                System.out.println("Commentaire_film: " + cf.getNom_User() + " - " + cf.getContenu());
 					commentaires.add(new CommentaireDisplay(cf.getNom_User(), cf.getContenu(),cf.getComment_id()));
 				}
 			} else {
@@ -392,7 +418,7 @@ public class MovieSeriesDetailsController {
 		}
 
 		tab.setItems(commentaires);
-		
+
 	}
 
 	public void setFilmDetails(Film film) throws SQLException {

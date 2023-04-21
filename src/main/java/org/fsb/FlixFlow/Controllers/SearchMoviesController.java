@@ -1,19 +1,17 @@
 package org.fsb.FlixFlow.Controllers;
 
 import java.sql.SQLException;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.HashMap;
-import javafx.animation.PauseTransition;
-import javafx.util.Duration;
 
 import org.fsb.FlixFlow.Models.Acteur;
 import org.fsb.FlixFlow.Models.Film;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import org.fsb.FlixFlow.Views.PageNavigationUtil;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,6 +25,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 public class SearchMoviesController {
     @FXML
@@ -81,7 +80,7 @@ public class SearchMoviesController {
             title.setWrapText(true);
             title.setMaxWidth(150);
             title.setAlignment(Pos.CENTER);
-            title.setFont(Montessart); 
+            title.setFont(Montessart);
             VBox mediaContainer = new VBox(5);
             mediaContainer.getChildren().addAll(poster, title);
             mediaContainer.setAlignment(Pos.CENTER);
@@ -111,8 +110,8 @@ public class SearchMoviesController {
         	e.printStackTrace();
         	}
         	}
-    
-    
+
+
     private void setupSearchFieldListeners() {
         setDelayedSearchListener(movieTitleSearchTextField);
         setDelayedSearchListener(releaseYearSearchTextField);

@@ -28,5 +28,5 @@ public class CommentaireDisplay {
 	public void setComment_id(int comment_id) {
 		this.comment_id = comment_id;
 	}
-	
+
 }

@@ -1,7 +1,9 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import org.fsb.FlixFlow.Models.Commentaire_episode;
-import org.fsb.FlixFlow.Models.Commentaire_saison;
 import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
@@ -15,16 +17,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 
-import java.sql.SQLException;
-import java.util.List;
-
 public class EpisodeLayoutController {
 
     @FXML
     private ListView<String> episodeListView;
     @FXML
     private Label average;
-    
+    @FXML
+    private Label vote;
+
     @FXML
     private TextField txtcomment;
 
@@ -36,16 +37,16 @@ public class EpisodeLayoutController {
 
     @FXML
     private Label VUES;
-    
+
     @FXML
     private Button addcommentbtn;
 
     @FXML
     private Button delbtn;
-    
+
     @FXML
     private Button modifbtn;
-    
+
     @FXML
 	private Slider episodeRatingSlider;
 
@@ -72,7 +73,7 @@ public class EpisodeLayoutController {
 
             for (Episode episode : episodes) {
                 episodeListView.getItems().add("Episode " + episode.getNum_episode());
-               
+
             }
 
             episodeListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -90,7 +91,7 @@ public class EpisodeLayoutController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        listcomments.setCellFactory(param -> new ListCell<Commentaire_episode>() {
+        listcomments.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Commentaire_episode item, boolean empty) {
                 super.updateItem(item, empty);
@@ -103,7 +104,7 @@ public class EpisodeLayoutController {
             }
         });
 		submitEpisodeRatingButton.setOnAction(event -> submitEpisodeRating());
-		
+
     }
     private void addComment(int id_episode) {
         int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
@@ -180,7 +181,7 @@ public class EpisodeLayoutController {
         episodeWebView.getEngine().load(episode.getUrl_episode());
         double averageScore = DatabaseUtil.calculateAverageEpisodeScore(episode.getId_episode());
         average.setText(String.format("%.2f", averageScore));
-     
+
 
         // Load comments for the selected episode
         try {
@@ -197,7 +198,8 @@ public class EpisodeLayoutController {
         delbtn.setOnAction(event -> deleteComment(id_episode));
         modifbtn.setOnAction(event -> modifyComment(id_episode));
         updateCommentList(id_episode);
-        
+        updateVoteCount(id_episode);
+
         try {
             int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
             if (!DatabaseUtil.hasUserSeenEpisode(userId, episode.getId_episode())) {
@@ -213,6 +215,14 @@ public class EpisodeLayoutController {
                     }
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private void updateVoteCount(int episodeId) {
+        try {
+            int totalRatings = DatabaseUtil.getTotalRatingsForEpisode(episodeId);
+            vote.setText(String.valueOf(totalRatings));
         } catch (SQLException e) {
             e.printStackTrace();
         }

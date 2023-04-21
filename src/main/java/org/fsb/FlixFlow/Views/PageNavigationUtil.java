@@ -5,9 +5,9 @@ import java.io.IOException;
 import org.fsb.FlixFlow.Controllers.MovieSeriesDetailsController;
 import org.fsb.FlixFlow.Controllers.UserDashboardController;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.application.Platform;
 
 public class PageNavigationUtil {
 

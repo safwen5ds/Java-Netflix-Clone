@@ -12,7 +12,7 @@ public class Acteur {
 	public Acteur(int id_acteur, String nom) {
 		this.id_acteur = id_acteur;
 		this.nom = nom;
-       
+
 	}
 
 	public int getId_acteur() {
@@ -39,7 +39,7 @@ public class Acteur {
 		this.url_image = url_image;
 	}
 
-	
 
-    
+
+
 }

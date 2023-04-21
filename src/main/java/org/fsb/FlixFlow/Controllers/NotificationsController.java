@@ -20,12 +20,11 @@ public class NotificationsController {
 
     @FXML
     private void initialize() {
-        // Add notifications to the ListView
         notificationsList.setItems(notifications);
     }
 
     public void addNotification(Notification notification) {
-        String notificationText = String.format("New episode released: %s, S%dE%d", notification.getSerieNom(), notification.getIdSerie(), notification.getNumEpisode());
+        String notificationText = String.format("New episode released: %s, S%dE%d", notification.getSerieNom(), notification.getNum_saison(), notification.getNumEpisode());
         notifications.add(notificationText);
     }
 }

@@ -18,7 +18,7 @@ public class SaisonController {
 	@FXML
 	private VBox seasonsContainer;
 
-	
+
 
 	private final IntegerProperty mediaIdProperty = new SimpleIntegerProperty();
 	private final IntegerProperty serieIdProperty = new SimpleIntegerProperty();
@@ -70,7 +70,7 @@ public class SaisonController {
 
 	    try {
 	        List<Saison> seasons = DatabaseUtil.getSaisonBySerieId(serieId);
-	        
+
 	        System.out.println("Seasons: " + seasons);
 
 	        // Clear previous seasons

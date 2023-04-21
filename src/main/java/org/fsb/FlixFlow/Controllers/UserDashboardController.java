@@ -1,30 +1,22 @@
 package org.fsb.FlixFlow.Controllers;
 
 import java.io.IOException;
-import javafx.scene.control.Alert;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Models.Notification;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
-import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class UserDashboardController {
 
@@ -40,11 +32,9 @@ public class UserDashboardController {
     private ImageView profileicon;
 
 	public UserDashboardController() {
-		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
-	    List<Episode> todaysEpisodes = DatabaseUtil.fetchTodaysEpisodes(userId);
-	    showNewEpisodeAlerts(todaysEpisodes);
+
 	}
-	
+
 	 @FXML
 	    public void initialize() {
 		 int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
@@ -58,7 +48,7 @@ public class UserDashboardController {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/HomePage.fxml"));
 			loader.setControllerFactory(param -> new HomePageController(this));
 			Parent homePage = loader.load();
-			contentPane.getChildren().clear(); 
+			contentPane.getChildren().clear();
 			contentPane.getChildren().add(homePage);
 
 		} catch (IOException e) {
@@ -113,7 +103,7 @@ public class UserDashboardController {
 
 
 
-	
+
 
 	public void handleFavoriteClick() {
 		try {
@@ -131,7 +121,7 @@ public class UserDashboardController {
 	public void handleScheduleClick() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/schedule.fxml"));
-			loader.setControllerFactory(param -> new ScheduleController(this));
+			loader.setControllerFactory(param -> new ScheduleController());
 			Parent recentPage = loader.load();
 			contentPane.getChildren().clear();
 			contentPane.getChildren().add(recentPage);
@@ -166,7 +156,7 @@ public class UserDashboardController {
 	        e.printStackTrace();
 	    }
 	}
-	
+
 	public void showNewEpisodeAlerts(List<Episode> episodes) {
 	    for (Episode episode : episodes) {
 	        Platform.runLater(() -> {

@@ -1,35 +1,17 @@
 package org.fsb.FlixFlow.Controllers;
 
-import org.fsb.FlixFlow.Models.Commentaire_episode;
-import javafx.application.Application;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.collections.*;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.*;
-import javafx.scene.layout.*;
-import java.sql.SQLException;
-import java.util.List;
-import javafx.stage.Stage;
-import javafx.util.Callback;
-import org.fsb.FlixFlow.Models.Commentaire_saison;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
+import org.fsb.FlixFlow.Models.Commentaire_saison;
 import org.fsb.FlixFlow.Models.Saison;
-import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -41,6 +23,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 public class SeasonLayoutController {
 
@@ -50,12 +33,16 @@ public class SeasonLayoutController {
     private Button delbtn;
     @FXML
     private Label average;
-    
-    @FXML 
+    @FXML
+    private Label vote;
+    @FXML
+    private Label nbreps;
+
+    @FXML
     private Button modifbtn;
 	@FXML
 	private Button addfav;
-	
+
 	@FXML
 	private Slider saisonRatingSlider;
 
@@ -108,7 +95,7 @@ public class SeasonLayoutController {
 
 	 @FXML
 	    public void initialize() {
-		 listcomment.setCellFactory(param -> new ListCell<Commentaire_saison>() {
+		 listcomment.setCellFactory(param -> new ListCell<>() {
 	            @Override
 	            protected void updateItem(Commentaire_saison item, boolean empty) {
 	                super.updateItem(item, empty);
@@ -120,7 +107,7 @@ public class SeasonLayoutController {
 	                }
 	            }
 	        });
-		 
+
 	        watchnow.setOnAction(event -> openEpisodeLayout());
 	        submitSaisonRatingButton.setOnAction(event -> submitSaisonRating());
 	        addcommentbtn.setOnAction(event -> addComment());
@@ -129,7 +116,7 @@ public class SeasonLayoutController {
 	        updateCommentList();
 	    }
 
-	
+
 
 	    private void addComment() {
 	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
@@ -179,7 +166,7 @@ public class SeasonLayoutController {
 	        }
 	    }
 
-	
+
 	    private void submitSaisonRating() {
 	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
 	        int rating = (int) Math.round(saisonRatingSlider.getValue());
@@ -232,6 +219,25 @@ public class SeasonLayoutController {
 			videoweb.getEngine().load(season.getUrl_video());
 		}
 		updateCommentList();
-		
+		updateVoteCount();
+		updateTotalEpisodes();
 	}
+	private void updateVoteCount() {
+	    try {
+	        int voteCount = DatabaseUtil.getVoteCountForSeason(saisonId);
+	        vote.setText(String.valueOf(voteCount));
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	private void updateTotalEpisodes() {
+	    try {
+	        int totalEpisodes = DatabaseUtil.getTotalEpisodesForSeason(saisonId);
+	        nbreps.setText(String.valueOf(totalEpisodes));
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
 }

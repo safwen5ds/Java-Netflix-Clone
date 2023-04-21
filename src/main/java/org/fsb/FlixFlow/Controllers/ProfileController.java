@@ -1,16 +1,16 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.time.ZoneId;
+
+import org.fsb.FlixFlow.Models.Utilisateur;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.time.ZoneId;
-
-import org.fsb.FlixFlow.Models.Utilisateur;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 public class ProfileController {
 
@@ -42,7 +42,7 @@ public class ProfileController {
     @FXML
     private void initialize() {
         loadUserInfo();
-        
+
         updateButton.setOnAction(e -> updateUserInfo());
         deleteButton.setOnAction(e -> deleteUserProfile());
     }
