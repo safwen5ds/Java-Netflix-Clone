@@ -6,9 +6,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Role_serie {
-    private IntegerProperty id_acteur;
-    private IntegerProperty id_saison;
-    private StringProperty role_type;
+    private final IntegerProperty id_acteur;
+    private final IntegerProperty id_saison;
+    private final StringProperty role_type;
 
     public Role_serie() {
         id_acteur = new SimpleIntegerProperty();

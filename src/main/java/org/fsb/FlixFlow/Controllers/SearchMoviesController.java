@@ -52,7 +52,7 @@ public class SearchMoviesController {
 
     @FXML
     private FlowPane moviesFlowPane;
-    private UserDashboardController userDashboardController;
+    private final UserDashboardController userDashboardController;
 
     private ObservableList<Film> masterData;
 

@@ -41,13 +41,13 @@ import javafx.stage.Stage;
 
 public class MovieSeriesDetailsController {
 
-	private int mediaId;
-	private boolean isMovie;
+	private final int mediaId;
+	private final boolean isMovie;
 	@FXML
     private Label average;
 	  @FXML
 	    private Button addgenrefav;
-	private UserDashboardController userDashboardController;
+	private final UserDashboardController userDashboardController;
 
 	public MovieSeriesDetailsController(int mediaId, boolean isMovie, UserDashboardController userDashboardController) {
 		this.mediaId = mediaId;

@@ -396,16 +396,15 @@ public class DatabaseUtil {
 
 	public static void storeUserToFile(Utilisateur user) {
 		try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(USER_FILE), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(user.getId_utilisateur())
-					.append(",").append(user.getNom())
-					.append(",").append(user.getPrenom())
-					.append(",").append(user.getEmail())
-					.append(",").append(user.getMot_de_passe())
-					.append(",").append(DATE_FORMAT.format(user.getDate_de_naissance()))
-					.append(",").append(user.getType());
+			String sb = user.getId_utilisateur() +
+					"," + user.getNom() +
+					"," + user.getPrenom() +
+					"," + user.getEmail() +
+					"," + user.getMot_de_passe() +
+					"," + DATE_FORMAT.format(user.getDate_de_naissance()) +
+					"," + user.getType();
 
-			String line = sb.toString().replace("\n", "").replace("\r", "");
+			String line = sb.replace("\n", "").replace("\r", "");
 			writer.write(line);
 		} catch (IOException e) {
 			e.printStackTrace();

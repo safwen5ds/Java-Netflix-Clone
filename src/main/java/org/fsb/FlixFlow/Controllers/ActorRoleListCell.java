@@ -15,11 +15,11 @@ import javafx.scene.layout.HBox;
 
 
 public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
-	private HBox content;
-    private Button favoriteButton;
-    private ImageView imageView;
-    private Label nameLabel;
-    private Label roleLabel;
+	private final HBox content;
+    private final Button favoriteButton;
+    private final ImageView imageView;
+    private final Label nameLabel;
+    private final Label roleLabel;
     public ActorRoleListCell() {
         super();
         imageView = new ImageView();

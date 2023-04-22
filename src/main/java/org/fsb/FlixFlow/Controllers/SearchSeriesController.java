@@ -54,7 +54,7 @@ public class SearchSeriesController {
     @FXML
     private FlowPane seriesFlowPane;
 
-    private UserDashboardController userDashboardController;
+    private final UserDashboardController userDashboardController;
     private ObservableList<Serie> masterData;
     Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 

@@ -21,7 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class HomePageController {
-	private UserDashboardController userDashboardController;
+	private final UserDashboardController userDashboardController;
 
 	public HomePageController(UserDashboardController userDashboardController) {
 		this.userDashboardController = userDashboardController;

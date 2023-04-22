@@ -12,7 +12,7 @@ public class NotificationsController {
     @FXML
     private ListView<String> notificationsList;
 
-    private ObservableList<String> notifications;
+    private final ObservableList<String> notifications;
 
     public NotificationsController() {
         notifications = FXCollections.observableArrayList();
