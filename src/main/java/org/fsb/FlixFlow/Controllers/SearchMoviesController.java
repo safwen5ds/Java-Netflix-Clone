@@ -1,16 +1,5 @@
 package org.fsb.FlixFlow.Controllers;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.fsb.FlixFlow.Models.Acteur;
-import org.fsb.FlixFlow.Models.Film;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import org.fsb.FlixFlow.Views.PageNavigationUtil;
-
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,6 +15,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import org.fsb.FlixFlow.Models.Acteur;
+import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Views.PageNavigationUtil;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SearchMoviesController {
     @FXML

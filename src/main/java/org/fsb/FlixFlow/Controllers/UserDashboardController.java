@@ -1,12 +1,5 @@
 package org.fsb.FlixFlow.Controllers;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.fsb.FlixFlow.Models.Episode;
-import org.fsb.FlixFlow.Models.Notification;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +10,12 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.fsb.FlixFlow.Models.Episode;
+import org.fsb.FlixFlow.Models.Notification;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
+import java.io.IOException;
+import java.util.List;
 
 public class UserDashboardController {
 

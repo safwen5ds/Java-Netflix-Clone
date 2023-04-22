@@ -1,9 +1,5 @@
 package org.fsb.FlixFlow.Controllers;
 
-import java.sql.SQLException;
-
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -12,6 +8,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
+import java.sql.SQLException;
 
 
 public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {

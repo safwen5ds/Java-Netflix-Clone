@@ -1,7 +1,5 @@
 package org.fsb.FlixFlow.Models;
 
-import java.util.Date;
-
 public class Episode {
 	private int id_episode;
 	private int id_saison;

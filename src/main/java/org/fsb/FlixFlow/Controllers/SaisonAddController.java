@@ -5,9 +5,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import javafx.scene.control.TableView;
 import org.fsb.FlixFlow.Models.Saison;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import java.net.URL;
 import java.sql.SQLException;

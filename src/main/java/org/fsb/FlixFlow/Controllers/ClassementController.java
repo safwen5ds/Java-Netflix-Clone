@@ -8,11 +8,10 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.time.LocalDate;
-
 import org.fsb.FlixFlow.Models.SeriesRanking;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
+import java.time.LocalDate;
 
 public class ClassementController {
     @FXML

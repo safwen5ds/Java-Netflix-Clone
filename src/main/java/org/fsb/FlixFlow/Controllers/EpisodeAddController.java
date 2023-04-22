@@ -5,13 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.TableView;
 import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class EpisodeAddController implements Initializable {

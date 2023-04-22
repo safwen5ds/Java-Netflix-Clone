@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.fsb.FlixFlow.Controllers.SerieAddController"
       spacing="10">

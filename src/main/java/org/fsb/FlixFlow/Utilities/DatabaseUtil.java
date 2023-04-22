@@ -1,52 +1,26 @@
 package org.fsb.FlixFlow.Utilities;
 
-import java.io.BufferedReader;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.fsb.FlixFlow.Controllers.ActorRoleDisplay;
-import org.fsb.FlixFlow.Models.Acteur;
-import org.fsb.FlixFlow.Models.Commentaire_episode;
-import org.fsb.FlixFlow.Models.Commentaire_film;
-import org.fsb.FlixFlow.Models.Commentaire_saison;
-import org.fsb.FlixFlow.Models.Commentaire_serie;
-import org.fsb.FlixFlow.Models.Episode;
-import org.fsb.FlixFlow.Models.Film;
-import org.fsb.FlixFlow.Models.Notification;
-import org.fsb.FlixFlow.Models.Producteur;
-import org.fsb.FlixFlow.Models.Role_film;
-import org.fsb.FlixFlow.Models.Role_serie;
-import org.fsb.FlixFlow.Models.Saison;
-import org.fsb.FlixFlow.Models.Serie;
-import org.fsb.FlixFlow.Models.SeriesRanking;
-import org.fsb.FlixFlow.Models.Utilisateur;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Slider;
+import org.fsb.FlixFlow.Controllers.ActorRoleDisplay;
+import org.fsb.FlixFlow.Models.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseUtil {
 	private static final String DB_URL = "jdbc:oracle:thin:@localhost:1521:xe";

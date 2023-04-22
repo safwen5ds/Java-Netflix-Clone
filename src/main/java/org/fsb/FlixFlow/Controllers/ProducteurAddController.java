@@ -1,12 +1,14 @@
 package org.fsb.FlixFlow.Controllers;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.fsb.FlixFlow.Models.Producteur;
-import javafx.fxml.FXML;
-import javafx.scene.layout.AnchorPane;
 
 public class ProducteurAddController {
 	 @FXML

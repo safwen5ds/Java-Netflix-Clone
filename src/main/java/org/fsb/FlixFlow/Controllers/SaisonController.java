@@ -1,18 +1,17 @@
 package org.fsb.FlixFlow.Controllers;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
-import org.fsb.FlixFlow.Models.Saison;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import org.fsb.FlixFlow.Models.Saison;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 public class SaisonController {
 	@FXML

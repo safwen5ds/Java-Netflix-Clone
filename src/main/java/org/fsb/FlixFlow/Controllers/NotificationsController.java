@@ -1,11 +1,10 @@
 package org.fsb.FlixFlow.Controllers;
 
-import org.fsb.FlixFlow.Models.Notification;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import org.fsb.FlixFlow.Models.Notification;
 
 public class NotificationsController {
 

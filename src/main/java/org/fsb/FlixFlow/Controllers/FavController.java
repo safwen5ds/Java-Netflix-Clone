@@ -1,10 +1,9 @@
 package org.fsb.FlixFlow.Controllers;
 
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 public class FavController {
     @FXML

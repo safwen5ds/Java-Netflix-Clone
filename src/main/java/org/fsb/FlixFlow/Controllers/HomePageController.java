@@ -1,13 +1,5 @@
 package org.fsb.FlixFlow.Controllers;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import org.fsb.FlixFlow.Models.Film;
-import org.fsb.FlixFlow.Models.Serie;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import org.fsb.FlixFlow.Views.PageNavigationUtil;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -19,6 +11,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Models.Serie;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Views.PageNavigationUtil;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class HomePageController {
 	private final UserDashboardController userDashboardController;

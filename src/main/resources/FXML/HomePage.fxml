@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
 <VBox prefHeight="1000.0" prefWidth="3000" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.HomePageController" >
    <children>
       <AnchorPane prefHeight="689.0" prefWidth="1097.0" >

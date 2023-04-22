@@ -8,7 +8,6 @@ import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import java.sql.SQLException;
-import java.util.Date;
 
 public class UserAddController {
     @FXML

@@ -1,17 +1,5 @@
 package org.fsb.FlixFlow.Controllers;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
-import org.fsb.FlixFlow.Models.CommentaireDisplay;
-import org.fsb.FlixFlow.Models.Commentaire_film;
-import org.fsb.FlixFlow.Models.Commentaire_serie;
-import org.fsb.FlixFlow.Models.Film;
-import org.fsb.FlixFlow.Models.Serie;
-import org.fsb.FlixFlow.Models.Utilisateur;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,16 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
@@ -38,6 +18,12 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.fsb.FlixFlow.Models.*;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 public class MovieSeriesDetailsController {
 
