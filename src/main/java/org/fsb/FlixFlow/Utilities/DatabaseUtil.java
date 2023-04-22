@@ -1269,7 +1269,7 @@ public class DatabaseUtil {
 	}
 
 	public static boolean insertActeur(Acteur acteur) {
-		String sql = "INSERT INTO acteur (id_acteur, nom) VALUES (?, ?)";
+		String sql = "INSERT INTO acteur (id_acteur, nom) VALUES (?, ?) ";
 		try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, acteur.getId_acteur());
 			pstmt.setString(2, acteur.getNom());
@@ -1401,20 +1401,21 @@ public class DatabaseUtil {
 	}
 
 	public static void createFilm(Film film) throws SQLException {
-		String query = "INSERT INTO film (nom, annee_sortie, url_film, url_image, url_video, vues, id_genre, id_langue, id_pays_origine, id_producteur, synopsis) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO film (id_film,nom, annee_sortie, url_film, url_image, url_video, vues, id_genre, id_langue, id_pays_origine, id_producteur, synopsis) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (Connection conn = getConnection(); PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-
-			preparedStatement.setString(1, film.getNom());
-			preparedStatement.setInt(2, film.getAnnee_sortie());
-			preparedStatement.setString(3, film.getUrl_film());
-			preparedStatement.setString(4, film.getUrl_image());
-			preparedStatement.setString(5, film.getUrl_video());
-			preparedStatement.setInt(6, film.getVues());
-			preparedStatement.setInt(7, film.getId_genre());
-			preparedStatement.setInt(8, film.getId_langue());
-			preparedStatement.setInt(9, film.getId_pays_origine());
-			preparedStatement.setInt(10, film.getId_producteur());
-			preparedStatement.setString(11, film.getSynopsis());
+			
+			preparedStatement.setInt(1, film.getId_film());
+			preparedStatement.setString(2, film.getNom());
+			preparedStatement.setInt(3, film.getAnnee_sortie());
+			preparedStatement.setString(4, film.getUrl_film());
+			preparedStatement.setString(5, film.getUrl_image());
+			preparedStatement.setString(6, film.getUrl_video());
+			preparedStatement.setInt(7, film.getVues());
+			preparedStatement.setInt(8, film.getId_genre());
+			preparedStatement.setInt(9, film.getId_langue());
+			preparedStatement.setInt(10, film.getId_pays_origine());
+			preparedStatement.setInt(11, film.getId_producteur());
+			preparedStatement.setString(12, film.getSynopsis());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -1487,16 +1488,16 @@ public class DatabaseUtil {
 	}
 
 	public static void createEpisode(Episode episode) throws SQLException {
-		String query = "INSERT INTO episode (id_saison, id_serie, num_episode, date_diffusion, synopsis, url_episode, vues) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO episode (id_episode,id_saison, id_serie, num_episode, date_diffusion, synopsis, url_episode, vues) VALUES (?,?, ?, ?, ?, ?, ?, ?)";
 		try (Connection conn = getConnection(); PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-
-			preparedStatement.setInt(1, episode.getId_saison());
-			preparedStatement.setInt(2, episode.getId_serie());
-			preparedStatement.setInt(3, episode.getNum_episode());
-			preparedStatement.setDate(4, episode.getDate_diffusion());
-			preparedStatement.setString(5, episode.getSynopsis());
-			preparedStatement.setString(6, episode.getUrl_episode());
-			preparedStatement.setInt(7, episode.getVues());
+			preparedStatement.setInt(1, episode.getId_episode());
+			preparedStatement.setInt(2, episode.getId_saison());
+			preparedStatement.setInt(3, episode.getId_serie());
+			preparedStatement.setInt(4, episode.getNum_episode());
+			preparedStatement.setDate(5, episode.getDate_diffusion());
+			preparedStatement.setString(6, episode.getSynopsis());
+			preparedStatement.setString(7, episode.getUrl_episode());
+			preparedStatement.setInt(8, episode.getVues());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -1521,7 +1522,7 @@ public class DatabaseUtil {
 				episode.setSynopsis(resultSet.getString("synopsis"));
 				episode.setUrl_episode(resultSet.getString("url_episode"));
 				episode.setVues(resultSet.getInt("vues"));
-
+				System.out.println(episode.toString());
 				episodes.add(episode);
 			}
 		} catch (SQLException e) {
@@ -1587,22 +1588,25 @@ public class DatabaseUtil {
 	}
 
 	public static void addSaison(Saison saison) throws SQLException {
-		String query = "INSERT INTO saison (id_serie, num_saison, date_debut, synopsis, url_image, url_video, vues) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		try (Connection conn = getConnection(); PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+	    String query = "INSERT INTO saison (id_saison, id_serie, num_saison, date_debut, synopsis, url_image, url_video, vues) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	    try (Connection conn = getConnection();
+	         PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+	        
+	        preparedStatement.setInt(1, saison.getId_saison());
+	        preparedStatement.setInt(2, saison.getId_serie());
+	        preparedStatement.setInt(3, saison.getNum_saison());
+	        preparedStatement.setDate(4, (Date) saison.getDate_debut());
+	        preparedStatement.setString(5, saison.getSynopsis());
+	        preparedStatement.setString(6, saison.getUrl_image());
+	        preparedStatement.setString(7, saison.getUrl_video());
+	        preparedStatement.setInt(8, saison.getVues());
 
-			preparedStatement.setInt(1, saison.getId_serie());
-			preparedStatement.setInt(2, saison.getNum_saison());
-			preparedStatement.setDate(3, new java.sql.Date(saison.getDate_debut().getTime()));
-			preparedStatement.setString(4, saison.getSynopsis());
-			preparedStatement.setString(5, saison.getUrl_image());
-			preparedStatement.setString(6, saison.getUrl_video());
-			preparedStatement.setInt(7, saison.getVues());
-
-			preparedStatement.executeUpdate();
-		} catch (SQLException e) {
-			throw new SQLException("Error while adding saison", e);
-		}
+	        preparedStatement.executeUpdate();
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while adding saison", e);
+	    }
 	}
+
 
 	public static Saison getSaisonById(int id_saison) throws SQLException {
 		String query = "SELECT * FROM saison WHERE id_saison = ?";
@@ -1664,52 +1668,82 @@ public class DatabaseUtil {
 	}
 
 	public static List<Saison> getAllSeasons() throws SQLException {
-		List<Saison> saisons = new ArrayList<>();
-		String query = "SELECT * FROM saison";
+	    List<Saison> saisons = new ArrayList<>();
+	    String query = "SELECT * FROM saison";
 
-		try (Connection conn = getConnection();
-				PreparedStatement preparedStatement = conn.prepareStatement(query);
-				ResultSet resultSet = preparedStatement.executeQuery()) {
+	    try (Connection conn = getConnection();
+	            PreparedStatement preparedStatement = conn.prepareStatement(query);
+	            ResultSet resultSet = preparedStatement.executeQuery()) {
 
-			while (resultSet.next()) {
-				Saison saison = new Saison();
-				saison.setId_saison(resultSet.getInt("id_saison"));
-				saison.setId_serie(resultSet.getInt("id_serie"));
-				saison.setNum_saison(resultSet.getInt("num_saison"));
-				saison.setDate_debut(resultSet.getDate("date_debut"));
-				saison.setSynopsis(resultSet.getString("synopsis"));
-				saison.setUrl_image(resultSet.getString("url_image"));
-				saison.setUrl_video(resultSet.getString("url_video"));
-				saison.setVues(resultSet.getInt("vues"));
+	        while (resultSet.next()) {
+	            Saison saison = new Saison();
+	            saison.setId_saison(resultSet.getInt("id_saison"));
+	            saison.setId_serie(resultSet.getInt("id_serie"));
+	            saison.setNum_saison(resultSet.getInt("num_saison"));
+	            saison.setDate_debut(resultSet.getDate("date_debut"));
+	            saison.setSynopsis(resultSet.getString("synopsis"));
+	            saison.setUrl_image(resultSet.getString("url_image"));
+	            saison.setUrl_video(resultSet.getString("url_video"));
+	            saison.setVues(resultSet.getInt("vues"));
 
-				saisons.add(saison);
-			}
-		} catch (SQLException e) {
-			throw new SQLException("Error while getting all saisons", e);
-		}
-		return saisons;
+	            saisons.add(saison);
+	        }
+	    } catch (SQLException e) {
+	        throw new SQLException("Error while getting all saisons", e);
+	    }
+	    
+	    System.out.println("Fetched saisons: " + saisons);
+
+	    return saisons;
 	}
 
 	public static void addSerie(Serie serie) throws SQLException {
-		String query = "INSERT INTO serie (nom, annee_sortie, url_image, url_video, vues, id_genre, id_langue, id_pays_origine, id_producteur, synopsis) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO serie (id_serie,nom, annee_sortie, url_image, url_video, vues, id_genre, id_langue, id_pays_origine, id_producteur, synopsis) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (Connection conn = getConnection(); PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-
-			preparedStatement.setString(1, serie.getNom());
-			preparedStatement.setInt(2, serie.getAnnee_sortie());
-			preparedStatement.setString(3, serie.getUrl_image());
-			preparedStatement.setString(4, serie.getUrl_video());
-			preparedStatement.setInt(5, serie.getVues());
-			preparedStatement.setInt(6, serie.getId_genre());
-			preparedStatement.setInt(7, serie.getId_langue());
-			preparedStatement.setInt(8, serie.getId_pays_origine());
-			preparedStatement.setInt(9, serie.getId_producteur());
-			preparedStatement.setString(10, serie.getSynopsis());
+			preparedStatement.setInt(1, serie.getId_serie());
+			preparedStatement.setString(2, serie.getNom());
+			preparedStatement.setInt(3, serie.getAnnee_sortie());
+			preparedStatement.setString(4, serie.getUrl_image());
+			preparedStatement.setString(5, serie.getUrl_video());
+			preparedStatement.setInt(6, serie.getVues());
+			preparedStatement.setInt(7, serie.getId_genre());
+			preparedStatement.setInt(8, serie.getId_langue());
+			preparedStatement.setInt(9, serie.getId_pays_origine());
+			preparedStatement.setInt(10, serie.getId_producteur());
+			preparedStatement.setString(11, serie.getSynopsis());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new SQLException("Error while adding Serie", e);
 		}
 	}
+	public static List<Serie> getAllSeries() throws SQLException {
+        List<Serie> series = new ArrayList<>();
+        
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM serie");
+
+            while (resultSet.next()) {
+                Serie serie = new Serie();
+                serie.setId_serie(resultSet.getInt("id_serie"));
+                serie.setNom(resultSet.getString("nom"));
+                serie.setAnnee_sortie(resultSet.getInt("annee_sortie"));
+                serie.setUrl_image(resultSet.getString("url_image"));
+                serie.setUrl_video(resultSet.getString("url_video"));
+                serie.setVues(resultSet.getInt("vues"));
+                serie.setId_genre(resultSet.getInt("id_genre"));
+                serie.setId_langue(resultSet.getInt("id_langue"));
+                serie.setId_pays_origine(resultSet.getInt("id_pays_origine"));
+                serie.setId_producteur(resultSet.getInt("id_producteur"));
+                serie.setSynopsis(resultSet.getString("synopsis"));
+
+                series.add(serie);
+            }
+        }
+        
+        return series;
+    }
 
 	public static Serie getSerie(int id_serie) throws SQLException {
 		String query = "SELECT * FROM serie WHERE id_serie = ?";
@@ -1874,5 +1908,93 @@ public class DatabaseUtil {
 			throw new SQLException("Error while deleting role_serie", e);
 		}
 	}
+	public static List<Role_serie> getAllRoleSeries() throws SQLException {
+        String query = "SELECT * FROM role_serie";
+        List<Role_serie> roleSeries = new ArrayList<>();
+        
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                int id_acteur = resultSet.getInt("id_acteur");
+                int id_serie = resultSet.getInt("id_serie");
+                int id_saison = resultSet.getInt("id_saison");
+                String role_type = resultSet.getString("role_type");
+                String url_image = resultSet.getString("url_image");
+
+                Role_serie roleSerie = new Role_serie(id_acteur, id_serie,id_saison, role_type, url_image);
+                roleSeries.add(roleSerie);
+            }
+        }
+        
+        return roleSeries;
+    }
+
+    public static void deleteRoleSerie(Role_serie roleSerie) throws SQLException {
+        String query = "DELETE FROM role_serie WHERE id_acteur = ? AND id_serie = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, roleSerie.getId_acteur());
+            preparedStatement.setInt(2, roleSerie.getId_serie());
+            preparedStatement.executeUpdate();
+        }
+    }
+    
+    public static List<Role_film> getAllRoleFilms() throws SQLException {
+        String query = "SELECT * FROM role_film";
+        List<Role_film> roleFilms = new ArrayList<>();
+        
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                int id_acteur = resultSet.getInt("id_acteur");
+                int id_film = resultSet.getInt("id_film");
+                String role_type = resultSet.getString("role_type");
+                String url_image = resultSet.getString("url_image");
+
+                Role_film roleFilm = new Role_film(id_acteur, id_film, role_type, url_image);
+                roleFilms.add(roleFilm);
+            }
+        }
+        
+        return roleFilms;
+    }
+
+    public static void deleteRoleFilm(Role_film roleFilm) throws SQLException {
+        String query = "DELETE FROM role_film WHERE id_acteur = ? AND id_film = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, roleFilm.getId_acteur());
+            preparedStatement.setInt(2, roleFilm.getId_film());
+            preparedStatement.executeUpdate();
+        }
+    }
+    public ObservableList<Utilisateur> getAllUtilisateurs() throws SQLException {
+        ObservableList<Utilisateur> utilisateurList = FXCollections.observableArrayList();
+        try (Connection connection = getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM utilisateur")) {
+
+            while (rs.next()) {
+                Utilisateur utilisateur = new Utilisateur();
+                utilisateur.setId_utilisateur(rs.getInt("id_utilisateur"));
+                utilisateur.setNom(rs.getString("nom"));
+                utilisateur.setPrenom(rs.getString("prenom"));
+                utilisateur.setEmail(rs.getString("email"));
+                utilisateur.setMot_de_passe(rs.getString("mot_de_passe"));
+                utilisateur.setDate_de_naissance(rs.getDate("date_de_naissance"));
+                utilisateur.setType(rs.getString("type"));
+                utilisateurList.add(utilisateur);
+            }
+        }
+        return utilisateurList;
+    }
 
 }

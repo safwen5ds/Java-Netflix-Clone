@@ -3,73 +3,171 @@ package org.fsb.FlixFlow.Controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import javafx.scene.control.cell.PropertyValueFactory;
+
 
 import java.net.URL;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
-public class FilmAddController implements Initializable {
-
+public class FilmAddController {
 	@FXML
-	private TableView<Film> filmTable;
-
-	private ObservableList<Film> films;
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		try {
-			films = FXCollections.observableArrayList(org.fsb.FlixFlow.Utilities.DatabaseUtil.getAllFilms());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			films = FXCollections.observableArrayList();
-		}
-
-		filmTable.setItems(films);
-
-	}
-
+	private TextField idTextField;
 	@FXML
-	private void addFilm() {
+	private TextField nameTextField;
+	@FXML
+	private TextField releaseYearTextField;
+	@FXML
+	private TextField imageUrlTextField;
+	@FXML
+	private TextField videoUrlTextField;
+	@FXML
+	private TextField genreIdTextField;
+	@FXML
+	private TextField languageIdTextField;
+	@FXML
+	private TextField countryIdTextField;
+	@FXML
+	private TextField producerIdTextField;
+	@FXML
+	private TextField synopsisTextField;
+	@FXML
+    private TableView<Film> FilmTableView;
+    @FXML
+    private TableColumn<Film, Integer> idColumn;
+    @FXML
+    private TableColumn<Film, String> NameColumn;
+    @FXML
+    private TableColumn<Film, Integer> ReleaseYearColumn;
+    @FXML
+    private TableColumn<Film, String> Image_URLColumn;
+    @FXML
+    private TableColumn<Film, String> Video_URLColumn;
+    @FXML
+    private TableColumn<Film, Integer> Genre_IDColumn;
+    @FXML
+    private TableColumn<Film, Integer> Language_IDColumn;
+    @FXML
+    private TableColumn<Film, Integer> Country_IDColumn;
+    @FXML
+    private TableColumn<Film, Integer> Producer_IDColumn;
+    @FXML
+    private TableColumn<Film, String> SynopsisColumn;
+    
+    public void initialize() {
+    	idColumn.setCellValueFactory(new PropertyValueFactory<>("id_film"));
+        NameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        ReleaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("annee_sortie"));
+        Image_URLColumn.setCellValueFactory(new PropertyValueFactory<>("url_image")); 
+        Video_URLColumn.setCellValueFactory(new PropertyValueFactory<>("url_video")); 
+        Genre_IDColumn.setCellValueFactory(new PropertyValueFactory<>("id_genre"));
+        Language_IDColumn.setCellValueFactory(new PropertyValueFactory<>("id_langue"));
+        Country_IDColumn.setCellValueFactory(new PropertyValueFactory<>("id_pays_origine"));
+        Producer_IDColumn.setCellValueFactory(new PropertyValueFactory<>("id_producteur"));
+        SynopsisColumn.setCellValueFactory(new PropertyValueFactory<>("synopsis"));
+        FilmTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                Film selectedFilm = FilmTableView.getSelectionModel().getSelectedItem();
+                idTextField.setText(String.valueOf(selectedFilm.getId_film()));
+                nameTextField.setText(selectedFilm.getNom());
+                releaseYearTextField.setText(String.valueOf(selectedFilm.getAnnee_sortie()));
+                imageUrlTextField.setText(selectedFilm.getUrl_image());
+                videoUrlTextField.setText(selectedFilm.getUrl_video());
+                genreIdTextField.setText(String.valueOf(selectedFilm.getId_genre()));
+                languageIdTextField.setText(String.valueOf(selectedFilm.getId_langue()));
+                countryIdTextField.setText(String.valueOf(selectedFilm.getId_pays_origine()));
+                producerIdTextField.setText(String.valueOf(selectedFilm.getId_producteur()));
+                synopsisTextField.setText(selectedFilm.getSynopsis());
+            }
+        });
 
-		Film newFilm = new Film();
+        refreshTable();
+    }
+    private void refreshTable() {
+        try {
+            ObservableList<Film> Films = FXCollections.observableArrayList(DatabaseUtil.getAllFilms());
+            System.out.println("Films data: " + Films);
+            Films.sort(Comparator.comparing(Film::getId_film));
+            FilmTableView.setItems(Films);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-		try {
-			org.fsb.FlixFlow.Utilities.DatabaseUtil.createFilm(newFilm);
-			films.add(newFilm);
-		} catch (SQLException e) {
-			e.printStackTrace();
 
-		}
-	}
+    @FXML
+    private void createFilm() {
+        try {
+            Film Film = new Film();
+            if (idTextField.getText().matches("\\d+")) { 
+                int id = Integer.parseInt(idTextField.getText());
+                Film.setId_film(id);
+            } else {
+                System.out.println(" Not Cool !");
+            }
+         
+            Film.setNom(nameTextField.getText());
+            Film.setAnnee_sortie(Integer.parseInt(releaseYearTextField.getText()));
+            Film.setUrl_image(imageUrlTextField.getText());
+            Film.setUrl_video(videoUrlTextField.getText());
+            Film.setId_genre(Integer.parseInt(genreIdTextField.getText()));
+            Film.setVues(0);
+            Film.setId_langue(Integer.parseInt(languageIdTextField.getText()));
+            Film.setId_pays_origine(Integer.parseInt(countryIdTextField.getText()));
+            Film.setId_producteur(Integer.parseInt(producerIdTextField.getText()));
+            Film.setSynopsis(synopsisTextField.getText());
+
+            DatabaseUtil.createFilm(Film);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            
+            System.err.println("Invalid input. Please check your input fields and try again.");
+        }
+        refreshTable();
+    }
+
+
+	
 
 	@FXML
 	private void updateFilm() {
-		Film selectedFilm = filmTable.getSelectionModel().getSelectedItem();
-		if (selectedFilm != null) {
+		try {
+			Film Film = new Film();
+			Film.setId_film(Integer.parseInt(idTextField.getText()));
+			Film.setNom(nameTextField.getText());
+			Film.setAnnee_sortie(Integer.parseInt(releaseYearTextField.getText()));
+			Film.setUrl_image(imageUrlTextField.getText());
+			Film.setUrl_video(videoUrlTextField.getText());
+			Film.setId_genre(Integer.parseInt(genreIdTextField.getText()));
+			Film.setId_langue(Integer.parseInt(languageIdTextField.getText()));
+			Film.setId_pays_origine(Integer.parseInt(countryIdTextField.getText()));
+			Film.setId_producteur(Integer.parseInt(producerIdTextField.getText()));
+			Film.setSynopsis(synopsisTextField.getText());
 
-			try {
-				org.fsb.FlixFlow.Utilities.DatabaseUtil.updateFilm(selectedFilm);
-			} catch (SQLException e) {
-				e.printStackTrace();
-
-			}
+			DatabaseUtil.updateFilm(Film);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		refreshTable();
 	}
 
 	@FXML
 	private void deleteFilm() {
-		Film selectedFilm = filmTable.getSelectionModel().getSelectedItem();
-		if (selectedFilm != null) {
-			try {
-				org.fsb.FlixFlow.Utilities.DatabaseUtil.deleteFilm(selectedFilm.getId_film());
-				films.remove(selectedFilm);
-			} catch (SQLException e) {
-				e.printStackTrace();
-
-			}
+		try {
+			int id = Integer.parseInt(idTextField.getText());
+			DatabaseUtil.deleteFilm(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		refreshTable();
 	}
 }
+

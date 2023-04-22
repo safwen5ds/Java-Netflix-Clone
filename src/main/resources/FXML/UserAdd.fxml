@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.fsb.FlixFlow.Controllers.UserAddController"
       spacing="10">
@@ -19,8 +19,21 @@
         <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
         <PasswordField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
         <DatePicker fx:id="birthDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-        <TextField fx:id="typeTextField" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+        <ComboBox fx:id="userTypeComboBox" />
     </GridPane>
 
     <Button text="Add" onAction="#addUtilisateur"/>
+
+    <Label text="Utilisateur List" />
+    <TableView fx:id="utilisateurTableView">
+        <columns>
+            <TableColumn fx:id="id_utilisateurColumn" text="ID"/>
+            <TableColumn fx:id="nomColumn" text="First Name"/>
+            <TableColumn fx:id="prenomColumn" text="Last Name"/>
+            <TableColumn fx:id="emailColumn" text="Email"/>
+            <TableColumn fx:id="mot_de_passeColumn" text="Password"/>
+            <TableColumn fx:id="date_de_naissanceColumn" text="Birth Date"/>
+            <TableColumn fx:id="typeColumn" text="Type"/>
+        </columns>
+    </TableView>
 </VBox>

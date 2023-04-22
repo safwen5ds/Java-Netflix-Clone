@@ -3,10 +3,12 @@ package org.fsb.FlixFlow.Controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.fsb.FlixFlow.Models.Producteur;
 
@@ -38,6 +40,19 @@ public class ProducteurAddController {
 		producteurs = FXCollections.observableArrayList(org.fsb.FlixFlow.Utilities.DatabaseUtil.getAllProducteurs());
 		producteurTable.setItems(producteurs);
 	}
+	private void showAlert(String message) {
+	    Alert alert = new Alert(AlertType.ERROR);
+	    alert.setTitle("Error");
+	    alert.setHeaderText(null);
+	    alert.setContentText(message);
+	    alert.showAndWait();
+	}
+	private void refreshTable() {
+	    producteurs.clear();
+	    producteurs.addAll(org.fsb.FlixFlow.Utilities.DatabaseUtil.getAllProducteurs());
+	    producteurTable.refresh();
+	}
+
 
 	@FXML
 	private void addProducteur() {
@@ -48,8 +63,9 @@ public class ProducteurAddController {
 		if (org.fsb.FlixFlow.Utilities.DatabaseUtil.insertProducteur(newProducteur)) {
 			producteurs.add(newProducteur);
 		} else {
-
+			showAlert("Erreur add Producteur ! ");
 		}
+		refreshTable();
 	}
 
 	@FXML
@@ -65,9 +81,10 @@ public class ProducteurAddController {
 				selectedProducteur.setId_producteur(id);
 				selectedProducteur.setNom(name);
 			} else {
-
+				showAlert("Erreur update Producteur ! ");
 			}
 		}
+		refreshTable();
 	}
 
 	@FXML
@@ -78,8 +95,9 @@ public class ProducteurAddController {
 			if (org.fsb.FlixFlow.Utilities.DatabaseUtil.deleteProducteur(selectedProducteur.getId_producteur())) {
 				producteurs.remove(selectedProducteur);
 			} else {
-
+				showAlert("Erreur delete Producteur ! ");
 			}
 		}
+		refreshTable();
 	}
 }

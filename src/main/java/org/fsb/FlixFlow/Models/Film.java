@@ -50,6 +50,7 @@ public class Film {
 		return id_film;
 	}
 
+
 	public void setId_film(int id_film) {
 		this.id_film = id_film;
 	}

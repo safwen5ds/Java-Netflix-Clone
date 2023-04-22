@@ -1,21 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.SaisonAddController" spacing="10">
-    <HBox spacing="10">
-        <!-- Additional fields for season details -->
-    </HBox>
-    <HBox spacing="10">
-        <Button fx:id="addButton" text="Add" onAction="#addSeason" />
-        <Button fx:id="updateButton" text="Update" onAction="#updateSeason" />
-        <Button fx:id="deleteButton" text="Delete" onAction="#deleteSeason" />
+    <GridPane hgap="10" vgap="10">
+        <Label text="ID Saison:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="idSaisonField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label text="ID Serie:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="idSerieField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Num Saison:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="numSaisonField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Label text="Date Debut:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <DatePicker fx:id="dateDebutPicker" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <Label text="Synopsis:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextField fx:id="synopsisField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        <Label text="URL Image:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <TextField fx:id="urlImageField" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+        <Label text="URL Video:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+        <TextField fx:id="urlVideoField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+      
+    </GridPane>
+    <HBox spacing="10" alignment="BASELINE_CENTER">
+        <Button text="Add" onAction="#addSeason" />
+        <Button text="Update" onAction="#updateSeason" />
+        <Button text="Delete" onAction="#deleteSeason" />
     </HBox>
     <TableView fx:id="seasonTable">
         <columns>
-            <!-- TableColumn elements for each season attribute -->
+            <TableColumn fx:id="idSaisonColumn" text="ID Saison" />
+            <TableColumn fx:id="idSerieColumn" text="ID Serie" />
+            <TableColumn fx:id="numSaisonColumn" text="Num Saison" />
+            <TableColumn fx:id="dateDebutColumn" text="Date Debut" />
+            <TableColumn fx:id="synopsisColumn" text="Synopsis" />
+            <TableColumn fx:id="urlImageColumn" text="URL Image" />
+            <TableColumn fx:id="urlVideoColumn" text="URL Video" />
         </columns>
     </TableView>
 </VBox>

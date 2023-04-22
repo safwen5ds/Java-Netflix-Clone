@@ -1,60 +1,52 @@
 package org.fsb.FlixFlow.Models;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 public class Role_serie {
-	private final IntegerProperty id_acteur;
-	private final IntegerProperty id_saison;
-	private final StringProperty role_type;
-
-	public Role_serie() {
-		id_acteur = new SimpleIntegerProperty();
-		id_saison = new SimpleIntegerProperty();
-		role_type = new SimpleStringProperty();
+    private int id_acteur;
+    private int id_serie;
+    private int id_saison;
+    private String role_type;
+    private String url_image;
+	public Role_serie(int id_acteur, int id_serie, int id_saison, String role_type, String url_image) {
+		super();
+		this.id_acteur = id_acteur;
+		this.id_serie = id_serie;
+		this.id_saison = id_saison;
+		this.role_type = role_type;
+		this.url_image = url_image;
 	}
-
-	public Role_serie(int id_acteur, int id_saison, String role_type) {
-		this.id_acteur = new SimpleIntegerProperty(id_acteur);
-		this.id_saison = new SimpleIntegerProperty(id_saison);
-		this.role_type = new SimpleStringProperty(role_type);
-	}
-
 	public int getId_acteur() {
-		return id_acteur.get();
-	}
-
-	public void setId_acteur(int id_acteur) {
-		this.id_acteur.set(id_acteur);
-	}
-
-	public IntegerProperty id_acteurProperty() {
 		return id_acteur;
 	}
-
+	public int getId_serie() {
+		return id_serie;
+	}
 	public int getId_saison() {
-		return id_saison.get();
-	}
-
-	public void setId_saison(int id_saison) {
-		this.id_saison.set(id_saison);
-	}
-
-	public IntegerProperty id_saisonProperty() {
 		return id_saison;
 	}
-
 	public String getRole_type() {
-		return role_type.get();
-	}
-
-	public void setRole_type(String role_type) {
-		this.role_type.set(role_type);
-	}
-
-	public StringProperty role_typeProperty() {
 		return role_type;
 	}
+	public String getUrl_image() {
+		return url_image;
+	}
+	public void setId_acteur(int id_acteur) {
+		this.id_acteur = id_acteur;
+	}
+	public void setId_serie(int id_serie) {
+		this.id_serie = id_serie;
+	}
+	public void setId_saison(int id_saison) {
+		this.id_saison = id_saison;
+	}
+	public void setRole_type(String role_type) {
+		this.role_type = role_type;
+	}
+	public void setUrl_image(String url_image) {
+		this.url_image = url_image;
+	}
+	
+   
+    
 }

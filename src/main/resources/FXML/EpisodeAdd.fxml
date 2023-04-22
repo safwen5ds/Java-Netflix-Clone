@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.EpisodeAddController" spacing="10">
-    <HBox spacing="10">
-        <!-- Additional fields for episode details -->
-    </HBox>
+    <GridPane hgap="10" vgap="10">
+        <Label text="ID Episode:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="idEpisodeField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        
+        <Label text="ID Saison:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="idSaisonField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        
+        <Label text="ID Serie:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <TextField fx:id="idSerieField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        
+        <Label text="Num Episode:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <TextField fx:id="numEpisodeField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+        <Label text="Date Diffusion:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <DatePicker fx:id="dateDiffusionField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <Label text="Synopsis:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <TextField fx:id="synopsisField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+        <Label text="URL Episode:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <TextField fx:id="urlEpisodeField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+    </GridPane>
     <HBox spacing="10">
         <Button fx:id="addButton" text="Add" onAction="#addEpisode" />
         <Button fx:id="updateButton" text="Update" onAction="#updateEpisode" />
@@ -15,7 +40,16 @@
     </HBox>
     <TableView fx:id="episodeTable">
         <columns>
-            <!-- TableColumn elements for each episode attribute -->
-        </columns>
-    </TableView>
+            <TableColumn fx:id="idEpisodeColumn" text="ID Episode" />
+            <TableColumn fx:id="idSaisonColumn" text="ID Saison" />
+            <TableColumn fx:id="idSerieColumn" text="ID Serie" />
+            <TableColumn fx:id="numEpisodeColumn" text="Num Episode" />
+            <TableColumn fx:id="dateDiffusionColumn" text="Date Diffusion" />
+            <TableColumn fx:id="synopsisColumn" text="Synopsis" />
+            <TableColumn fx:id="urlEpisodeColumn" text="URL Episode" />
+
+</columns>
+</TableView>
 </VBox>
+
+            

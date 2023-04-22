@@ -6,14 +6,18 @@
     <TableView fx:id="roleSerieTableView" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
         <columns>
             <TableColumn fx:id="id_acteurColumn" prefWidth="150.0" text="Id Acteur" />
+            <TableColumn fx:id="id_serieColumn" prefWidth="150.0" text="Id Serie" />
             <TableColumn fx:id="id_saisonColumn" prefWidth="150.0" text="Id Saison" />
             <TableColumn fx:id="role_typeColumn" prefWidth="150.0" text="Role Type" />
+            <TableColumn fx:id="url_imageColumn" prefWidth="150.0" text="Role Type" />
         </columns>
     </TableView>
     <HBox layoutX="14.0" layoutY="218.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
         <TextField fx:id="id_acteurTextField" promptText="Id Acteur" />
+        <TextField fx:id="id_serieTextField" promptText="Id Saison" />
         <TextField fx:id="id_saisonTextField" promptText="Id Saison" />
         <TextField fx:id="role_typeTextField" promptText="Role Type" />
+        <TextField fx:id="url_imageTextField" promptText="url_image" />
         <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddAction" text="Add" />
         <Button fx:id="updateButton" mnemonicParsing="false" onAction="#handleUpdateAction" text="Update" />
         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="Delete" />

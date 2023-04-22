@@ -2,21 +2,22 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.fsb.FlixFlow.Controllers.Role_FilmAddController">
-    <VBox>
-        <Label text="Add / Update Role Film"/>
-        <GridPane>
-            <Label text="Id Acteur" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <Label text="Id Film" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <Label text="Role Type" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextField fx:id="idActeurTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <TextField fx:id="idFilmTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <TextField fx:id="roleTypeTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-        </GridPane>
-        <HBox spacing="10">
-            <Button text="Add" onAction="#addRoleFilm"/>
-            <Button text="Update" onAction="#updateRoleFilm"/>
-            <Button text="Delete" onAction="#deleteRoleFilm"/>
-        </HBox>
-    </VBox>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.Role_FilmAddController">
+    <TableView fx:id="roleFilmTableView" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+        <columns>
+            <TableColumn fx:id="id_acteurColumn" prefWidth="150.0" text="Id Acteur" />
+            <TableColumn fx:id="id_filmColumn" prefWidth="150.0" text="Id Film" />
+            <TableColumn fx:id="role_typeColumn" prefWidth="150.0" text="Role Type" />
+            <TableColumn fx:id="url_imageColumn" prefWidth="150.0" text="Url Image" />
+        </columns>
+    </TableView>
+    <HBox layoutX="14.0" layoutY="218.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+        <TextField fx:id="id_acteurTextField" promptText="Id Acteur" />
+        <TextField fx:id="id_filmTextField" promptText="Id Film" />
+        <TextField fx:id="role_typeTextField" promptText="Role Type" />
+        <TextField fx:id="url_imageTextField" promptText="Url Image" />
+        <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddAction" text="Add" />
+        <Button fx:id="updateButton" mnemonicParsing="false" onAction="#handleUpdateAction" text="Update" />
+        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="Delete" />
+    </HBox>
 </AnchorPane>
