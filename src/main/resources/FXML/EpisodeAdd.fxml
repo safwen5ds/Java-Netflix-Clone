@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.EpisodeAddController" spacing="10">
+    <HBox spacing="10">
+        <!-- Additional fields for episode details -->
+    </HBox>
+    <HBox spacing="10">
+        <Button fx:id="addButton" text="Add" onAction="#addEpisode" />
+        <Button fx:id="updateButton" text="Update" onAction="#updateEpisode" />
+        <Button fx:id="deleteButton" text="Delete" onAction="#deleteEpisode" />
+    </HBox>
+    <TableView fx:id="episodeTable">
+        <columns>
+            <!-- TableColumn elements for each episode attribute -->
+        </columns>
+    </TableView>
+</VBox>

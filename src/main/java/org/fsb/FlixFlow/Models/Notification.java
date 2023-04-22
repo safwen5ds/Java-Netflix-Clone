@@ -12,7 +12,7 @@ public class Notification {
     private int Num_saison;
 
     public Notification() {
-		// TODO Auto-generated constructor stub
+
 	}
 
     public Notification(int idEpisode, int idSerie, int numEpisode, Date dateDiffusion, String serieNom, int num_saison) {

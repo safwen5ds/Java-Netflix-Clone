@@ -210,7 +210,6 @@ public class SeasonLayoutController {
 		    double averageScore = DatabaseUtil.calculateAverageSeasonScore(season.getId_saison());
 			average.setText(String.format("%.2f", averageScore));
 
-			// Set image for the Rectangle
 			String imageUrl = season.getUrl_image();
 			Image imageContent = new Image(imageUrl);
 			ImagePattern pattern = new ImagePattern(imageContent);

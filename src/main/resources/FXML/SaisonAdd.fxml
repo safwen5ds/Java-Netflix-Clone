@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.SaisonAddController" spacing="10">
+    <HBox spacing="10">
+        <!-- Additional fields for season details -->
+    </HBox>
+    <HBox spacing="10">
+        <Button fx:id="addButton" text="Add" onAction="#addSeason" />
+        <Button fx:id="updateButton" text="Update" onAction="#updateSeason" />
+        <Button fx:id="deleteButton" text="Delete" onAction="#deleteSeason" />
+    </HBox>
+    <TableView fx:id="seasonTable">
+        <columns>
+            <!-- TableColumn elements for each season attribute -->
+        </columns>
+    </TableView>
+</VBox>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.ProducteurAddController" spacing="10">
+    <HBox spacing="10">
+        <Label text="ID:" />
+        <TextField fx:id="idField" />
+        <Label text="Name:" />
+        <TextField fx:id="nameField" />
+    </HBox>
+    <HBox spacing="10">
+        <Button fx:id="addButton" text="Add" onAction="#addProducteur" />
+        <Button fx:id="updateButton" text="Update" onAction="#updateProducteur" />
+        <Button fx:id="deleteButton" text="Delete" onAction="#deleteProducteur" />
+    </HBox>
+    <TableView fx:id="producteurTable">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="75"/>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
+        </columns>
+    </TableView>
+</VBox>

@@ -82,7 +82,7 @@ public class EpisodeLayoutController {
                     try {
 						onEpisodeSelected(episodes.get(selectedIndex));
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
+
 						e.printStackTrace();
 					}
                 }
@@ -182,8 +182,6 @@ public class EpisodeLayoutController {
         double averageScore = DatabaseUtil.calculateAverageEpisodeScore(episode.getId_episode());
         average.setText(String.format("%.2f", averageScore));
 
-
-        // Load comments for the selected episode
         try {
             List<Commentaire_episode> comments = DatabaseUtil.getCommentaireEpisodesByMediaId(episode.getId_episode());
             listcomments.getItems().clear();

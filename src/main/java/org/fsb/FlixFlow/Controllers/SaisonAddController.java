@@ -1,0 +1,79 @@
+package org.fsb.FlixFlow.Controllers;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Models.Saison;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+
+public class SaisonAddController implements Initializable {
+
+    @FXML
+    private TableView<Saison> seasonTable;
+
+
+    private ObservableList<Saison> seasons;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        try {
+            seasons = FXCollections.observableArrayList(DatabaseUtil.getAllSeasons());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            seasons = FXCollections.observableArrayList();
+        }
+
+        seasonTable.setItems(seasons);
+
+    }
+
+    @FXML
+    private void addSeason(ActionEvent event) {
+
+        Saison newSeason = new Saison(/* Add constructor parameters based on user input */);
+
+        try {
+            DatabaseUtil.addSaison(newSeason);
+            seasons.add(newSeason);
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    @FXML
+    private void updateSeason(ActionEvent event) {
+        Saison selectedSeason = seasonTable.getSelectionModel().getSelectedItem();
+        if (selectedSeason != null) {
+
+
+            try {
+                DatabaseUtil.updateSaison(selectedSeason);
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
+        }
+    }
+
+    @FXML
+    private void deleteSeason(ActionEvent event) {
+        Saison selectedSeason = seasonTable.getSelectionModel().getSelectedItem();
+        if (selectedSeason != null) {
+            try {
+                DatabaseUtil.deleteSaison(selectedSeason.getId_saison());
+                seasons.remove(selectedSeason);
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
+        }
+    }
+}

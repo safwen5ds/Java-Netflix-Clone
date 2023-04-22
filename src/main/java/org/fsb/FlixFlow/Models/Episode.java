@@ -7,7 +7,7 @@ public class Episode {
 	private int id_saison;
 	private int id_serie;
 	private int num_episode;
-	private Date date_diffusion;
+	private java.sql.Date date_diffusion;
 	private String synopsis;
 	private String url_episode;
 	private int Num_saison;
@@ -18,7 +18,7 @@ public class Episode {
 		super();
 	}
 
-	public Episode(int id_episode, int id_saison, int id_serie, int num_episode, Date date_diffusion, String synopsis,
+	public Episode(int id_episode, int id_saison, int id_serie, int num_episode, java.sql.Date date_diffusion, String synopsis,
 			String url_episode, int num_saison, String nom_serie, int vues) {
 		super();
 		this.id_episode = id_episode;
@@ -65,11 +65,11 @@ public class Episode {
 		this.num_episode = num_episode;
 	}
 
-	public Date getDate_diffusion() {
+	public java.sql.Date getDate_diffusion() {
 		return date_diffusion;
 	}
 
-	public void setDate_diffusion(Date date_diffusion) {
+	public void setDate_diffusion(java.sql.Date date_diffusion) {
 		this.date_diffusion = date_diffusion;
 	}
 

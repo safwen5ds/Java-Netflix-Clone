@@ -15,13 +15,12 @@ public class FavController {
 
     @FXML
     private void initialize() {
-        // Load the data from the tables
+
         loadActors();
         loadFilms();
         loadSeries();
         loadGenres();
 
-        // Set up search functionality
         actorSearch.textProperty().addListener((observable, oldValue, newValue) -> filterActors(newValue));
         filmSearch.textProperty().addListener((observable, oldValue, newValue) -> filterFilms(newValue));
         seriesSearch.textProperty().addListener((observable, oldValue, newValue) -> filterSeries(newValue));
@@ -44,8 +43,6 @@ public class FavController {
         genresList.setItems(DatabaseUtil.getData("SELECT nom FROM preferences_genre JOIN genre ON preferences_genre.id_genre=genre.id_genre"));
     }
 
-
-    // ...
 
     private void filterActors(String search) {
         actorsList.setItems(DatabaseUtil.getData("SELECT nom FROM preferences_acteur JOIN acteur ON preferences_acteur.id_acteur=acteur.id_acteur WHERE LOWER(nom) LIKE '%" + search.toLowerCase() + "%'"));

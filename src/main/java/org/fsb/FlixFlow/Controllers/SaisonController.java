@@ -73,7 +73,6 @@ public class SaisonController {
 
 	        System.out.println("Seasons: " + seasons);
 
-	        // Clear previous seasons
 	        seasonsContainer.getChildren().clear();
 
 	        for (Saison season : seasons) {

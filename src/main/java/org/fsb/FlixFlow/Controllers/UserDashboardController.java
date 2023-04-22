@@ -83,7 +83,6 @@ public class UserDashboardController {
 	        NotificationsController notificationsController = new NotificationsController();
 	        loader.setControllerFactory(param -> notificationsController);
 
-	        // Fetch notifications from the database
 	        List<Notification> userNotifications = DatabaseUtil.getEpisodeNotifications();
 	        for (Notification notification : userNotifications) {
 	            notificationsController.addNotification(notification);
@@ -156,6 +155,19 @@ public class UserDashboardController {
 	        e.printStackTrace();
 	    }
 	}
+	public void handleRankClick() {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Classement.fxml"));
+	        ClassementController classementController = new ClassementController();
+	        loader.setControllerFactory(param -> classementController);
+	        Parent recentPage = loader.load();
+	        contentPane.getChildren().clear();
+	        contentPane.getChildren().add(recentPage);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 
 	public void showNewEpisodeAlerts(List<Episode> episodes) {
 	    for (Episode episode : episodes) {
@@ -168,6 +180,131 @@ public class UserDashboardController {
 	        });
 	    }
 	}
+	  @FXML
+	    void handleaddepisode() {
+		  try {
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/EpisodeAdd.fxml"));
+		        EpisodeAddController  episodeAddController = new  EpisodeAddController();
+		        loader.setControllerFactory(param ->  episodeAddController);
+		        Parent recentPage = loader.load();
+		        contentPane.getChildren().clear();
+		        contentPane.getChildren().add(recentPage);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	    }
+
+	    @FXML
+	    void handleaddfilm() {
+	    	try {
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/FilmAdd.fxml"));
+		        FilmAddController filmAddController = new FilmAddController();
+		        loader.setControllerFactory(param -> filmAddController);
+		        Parent recentPage = loader.load();
+		        contentPane.getChildren().clear();
+		        contentPane.getChildren().add(recentPage);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	    }
+
+	    @FXML
+	    void handleaddproducteur() {
+	    	try {
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/ProducteurAdd.fxml"));
+		        ProducteurAddController producteurAddController = new ProducteurAddController();
+		        loader.setControllerFactory(param -> producteurAddController);
+		        Parent recentPage = loader.load();
+		        contentPane.getChildren().clear();
+		        contentPane.getChildren().add(recentPage);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	    }
+
+	    @FXML
+	    void handleaddsaison() {
+	    	try {
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SaisonAdd.fxml"));
+		        SaisonAddController saisonAddController = new SaisonAddController();
+		        loader.setControllerFactory(param -> saisonAddController);
+		        Parent recentPage = loader.load();
+		        contentPane.getChildren().clear();
+		        contentPane.getChildren().add(recentPage);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	    }
+
+	    @FXML
+	    void handleaddserie() {
+	    	try {
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SerieAdd.fxml"));
+		        SerieAddController serieAddController = new SerieAddController();
+		        loader.setControllerFactory(param -> serieAddController);
+		        Parent recentPage = loader.load();
+		        contentPane.getChildren().clear();
+		        contentPane.getChildren().add(recentPage);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	    }
+
+	    @FXML
+	    void handleadduser() {
+	    	try {
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/UserAdd.fxml"));
+		        UserAddController userAddController = new UserAddController();
+		        loader.setControllerFactory(param -> userAddController);
+		        Parent recentPage = loader.load();
+		        contentPane.getChildren().clear();
+		        contentPane.getChildren().add(recentPage);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	    }
+
+	    @FXML
+	    void hendleaddactor() {
+	    	try {
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/ActeurAdd.fxml"));
+		        ActeurAddController acteurAddController = new ActeurAddController();
+		        loader.setControllerFactory(param -> acteurAddController);
+		        Parent recentPage = loader.load();
+		        contentPane.getChildren().clear();
+		        contentPane.getChildren().add(recentPage);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	    }
+	    
+	    @FXML
+	    void handlerole_film() {
+	    	try {
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Role_FilmAdd.fxml"));
+		        Role_FilmAddController role_FilmAddController  = new Role_FilmAddController();
+		        loader.setControllerFactory(param -> role_FilmAddController);
+		        Parent recentPage = loader.load();
+		        contentPane.getChildren().clear();
+		        contentPane.getChildren().add(recentPage);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	    }
+
+	    @FXML
+	    void handlerole_saison() {
+	    	try {
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Role_SerieAdd.fxml"));
+		        Role_SerieAddController role_SerieAddController  = new Role_SerieAddController ();
+		        loader.setControllerFactory(param -> role_SerieAddController );
+		        Parent recentPage = loader.load();
+		        contentPane.getChildren().clear();
+		        contentPane.getChildren().add(recentPage);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+	    }
 
 
 

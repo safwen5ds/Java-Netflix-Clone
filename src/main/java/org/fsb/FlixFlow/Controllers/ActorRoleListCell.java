@@ -25,13 +25,12 @@ public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
         imageView = new ImageView();
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(50); // Set the preferred width of the image
-        // imageView.setFitHeight(50); // Alternatively, set the preferred height and let the width adjust accordingly
+
 
         nameLabel = new Label();
         roleLabel = new Label();
         favoriteButton = new Button("Add to Favorite");
 
-        // Add an action to the favoriteButton
         favoriteButton.setOnAction(event -> {
             ActorRoleDisplay currentItem = getItem();
             int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
@@ -65,7 +64,6 @@ public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
             nameLabel.setText(item.getActorName());
             roleLabel.setText(item.getRoleType());
 
-            // Show the favorite button
             favoriteButton.setVisible(true);
 
             setGraphic(content);

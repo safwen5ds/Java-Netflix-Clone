@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.fsb.FlixFlow.Controllers.Role_FilmAddController">
+    <VBox>
+        <Label text="Add / Update Role Film"/>
+        <GridPane>
+            <Label text="Id Acteur" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="Id Film" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="Role Type" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="idActeurTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <TextField fx:id="idFilmTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <TextField fx:id="roleTypeTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        </GridPane>
+        <HBox spacing="10">
+            <Button text="Add" onAction="#addRoleFilm"/>
+            <Button text="Update" onAction="#updateRoleFilm"/>
+            <Button text="Delete" onAction="#deleteRoleFilm"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

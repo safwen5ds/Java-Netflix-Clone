@@ -49,7 +49,6 @@ public class MovieSeriesDetailsController {
 	    private Button addgenrefav;
 	private UserDashboardController userDashboardController;
 
-	// Modify the constructor
 	public MovieSeriesDetailsController(int mediaId, boolean isMovie, UserDashboardController userDashboardController) {
 		this.mediaId = mediaId;
 		this.isMovie = isMovie;
@@ -201,7 +200,7 @@ public class MovieSeriesDetailsController {
 	            if (film != null) { // Add this null check
 	                setFilmDetails(film);
 	            } else {
-	                // Handle the case when film is null
+
 	                System.err.println("Film not found with mediaId: " + mediaId);
 	            }
 	        } catch (SQLException e) {
@@ -251,7 +250,6 @@ public class MovieSeriesDetailsController {
         	            DatabaseUtil.incrementFilmViews(mediaId);
         	            DatabaseUtil.addUserFilmView(userId, mediaId);
 
-        	            // Update the views count displayed on the UI
         	            Film updatedFilm = DatabaseUtil.getFilmById(mediaId);
         	            vues.setText(String.valueOf(updatedFilm.getVues()));
         	        }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.FilmAddController" spacing="10">
+    <HBox spacing="10">
+        <!-- Additional fields for film details -->
+    </HBox>
+    <HBox spacing="10">
+        <Button fx:id="addButton" text="Add" onAction="#addFilm" />
+        <Button fx:id="updateButton" text="Update" onAction="#updateFilm" />
+        <Button fx:id="deleteButton" text="Delete" onAction="#deleteFilm" />
+    </HBox>
+    <TableView fx:id="filmTable">
+        <columns>
+            <!-- TableColumn elements for each film attribute -->
+        </columns>
+    </TableView>
+</VBox>

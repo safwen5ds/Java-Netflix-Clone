@@ -60,7 +60,6 @@ public class ProfileController {
         }
     }
 
- // ProfileController.java
 
     private void updateUserInfo() {
         if (user != null) {

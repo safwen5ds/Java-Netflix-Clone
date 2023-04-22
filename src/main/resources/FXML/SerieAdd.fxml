@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.fsb.FlixFlow.Controllers.SerieAddController"
+      spacing="10">
+    <Label text="Serie CRUD Operations" />
+    <GridPane hgap="10" vgap="10">
+        <Label text="ID" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <Label text="Release Year" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <!-- Add other input labels here -->
+
+        <TextField fx:id="idTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <TextField fx:id="nameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <TextField fx:id="releaseYearTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <!-- Add other input fields here -->
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Create" onAction="#createSerie"/>
+        <Button text="Read" onAction="#readSerie"/>
+        <Button text="Update" onAction="#updateSerie"/>
+        <Button text="Delete" onAction="#deleteSerie"/>
+    </HBox>
+</VBox>

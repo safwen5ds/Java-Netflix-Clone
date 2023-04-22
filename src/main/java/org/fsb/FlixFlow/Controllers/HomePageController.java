@@ -123,7 +123,7 @@ public class HomePageController {
 	}
 
 	public void loadSerie(List<Serie> series, FlowPane sortedByViewsPane2) {
-		// TODO Auto-generated method stub
+
 		for (Serie serie : series) {
 			ImageView poster = new ImageView(new Image(serie.getUrl_image()));
 			poster.setFitHeight(250);
@@ -147,7 +147,7 @@ public class HomePageController {
 	}
 
 	public void loadFilm(List<Film> movies, FlowPane sortedByViewsPane2) {
-		// TODO Auto-generated method stub
+
 		for (Film film : movies) {
 			ImageView poster = new ImageView(new Image(film.getUrl_image()));
 			poster.setFitHeight(250);
