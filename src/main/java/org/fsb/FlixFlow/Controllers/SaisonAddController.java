@@ -15,65 +15,63 @@ import java.util.ResourceBundle;
 
 public class SaisonAddController implements Initializable {
 
-    @FXML
-    private TableView<Saison> seasonTable;
+	@FXML
+	private TableView<Saison> seasonTable;
 
+	private ObservableList<Saison> seasons;
 
-    private ObservableList<Saison> seasons;
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		try {
+			seasons = FXCollections.observableArrayList(DatabaseUtil.getAllSeasons());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			seasons = FXCollections.observableArrayList();
+		}
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        try {
-            seasons = FXCollections.observableArrayList(DatabaseUtil.getAllSeasons());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            seasons = FXCollections.observableArrayList();
-        }
+		seasonTable.setItems(seasons);
 
-        seasonTable.setItems(seasons);
+	}
 
-    }
+	@FXML
+	private void addSeason(ActionEvent event) {
 
-    @FXML
-    private void addSeason(ActionEvent event) {
+		Saison newSeason = new Saison(/* Add constructor parameters based on user input */);
 
-        Saison newSeason = new Saison(/* Add constructor parameters based on user input */);
+		try {
+			DatabaseUtil.addSaison(newSeason);
+			seasons.add(newSeason);
+		} catch (SQLException e) {
+			e.printStackTrace();
 
-        try {
-            DatabaseUtil.addSaison(newSeason);
-            seasons.add(newSeason);
-        } catch (SQLException e) {
-            e.printStackTrace();
+		}
+	}
 
-        }
-    }
+	@FXML
+	private void updateSeason(ActionEvent event) {
+		Saison selectedSeason = seasonTable.getSelectionModel().getSelectedItem();
+		if (selectedSeason != null) {
 
-    @FXML
-    private void updateSeason(ActionEvent event) {
-        Saison selectedSeason = seasonTable.getSelectionModel().getSelectedItem();
-        if (selectedSeason != null) {
+			try {
+				DatabaseUtil.updateSaison(selectedSeason);
+			} catch (SQLException e) {
+				e.printStackTrace();
 
+			}
+		}
+	}
 
-            try {
-                DatabaseUtil.updateSaison(selectedSeason);
-            } catch (SQLException e) {
-                e.printStackTrace();
+	@FXML
+	private void deleteSeason(ActionEvent event) {
+		Saison selectedSeason = seasonTable.getSelectionModel().getSelectedItem();
+		if (selectedSeason != null) {
+			try {
+				DatabaseUtil.deleteSaison(selectedSeason.getId_saison());
+				seasons.remove(selectedSeason);
+			} catch (SQLException e) {
+				e.printStackTrace();
 
-            }
-        }
-    }
-
-    @FXML
-    private void deleteSeason(ActionEvent event) {
-        Saison selectedSeason = seasonTable.getSelectionModel().getSelectedItem();
-        if (selectedSeason != null) {
-            try {
-                DatabaseUtil.deleteSaison(selectedSeason.getId_saison());
-                seasons.remove(selectedSeason);
-            } catch (SQLException e) {
-                e.printStackTrace();
-
-            }
-        }
-    }
+			}
+		}
+	}
 }

@@ -16,8 +16,8 @@ public class Episode {
 		super();
 	}
 
-	public Episode(int id_episode, int id_saison, int id_serie, int num_episode, java.sql.Date date_diffusion, String synopsis,
-			String url_episode, int num_saison, String nom_serie, int vues) {
+	public Episode(int id_episode, int id_saison, int id_serie, int num_episode, java.sql.Date date_diffusion,
+			String synopsis, String url_episode, int num_saison, String nom_serie, int vues) {
 		super();
 		this.id_episode = id_episode;
 		this.id_saison = id_saison;

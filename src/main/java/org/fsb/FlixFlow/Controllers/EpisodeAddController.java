@@ -15,66 +15,63 @@ import java.util.ResourceBundle;
 
 public class EpisodeAddController implements Initializable {
 
-    @FXML
-    private TableView<Episode> episodeTable;
+	@FXML
+	private TableView<Episode> episodeTable;
 
+	private ObservableList<Episode> episodes;
 
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		try {
+			episodes = FXCollections.observableArrayList(DatabaseUtil.getAllEpisodes());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			episodes = FXCollections.observableArrayList();
+		}
 
-    private ObservableList<Episode> episodes;
+		episodeTable.setItems(episodes);
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        try {
-            episodes = FXCollections.observableArrayList(DatabaseUtil.getAllEpisodes());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            episodes = FXCollections.observableArrayList();
-        }
+	}
 
-        episodeTable.setItems(episodes);
+	@FXML
+	private void addEpisode(ActionEvent event) {
 
-    }
+		Episode newEpisode = new Episode();
 
-    @FXML
-    private void addEpisode(ActionEvent event) {
+		try {
+			DatabaseUtil.createEpisode(newEpisode);
+			episodes.add(newEpisode);
+		} catch (SQLException e) {
+			e.printStackTrace();
 
-        Episode newEpisode = new Episode();
+		}
+	}
 
-        try {
-            DatabaseUtil.createEpisode(newEpisode);
-            episodes.add(newEpisode);
-        } catch (SQLException e) {
-            e.printStackTrace();
-          
-        }
-    }
+	@FXML
+	private void updateEpisode(ActionEvent event) {
+		Episode selectedEpisode = episodeTable.getSelectionModel().getSelectedItem();
+		if (selectedEpisode != null) {
 
-    @FXML
-    private void updateEpisode(ActionEvent event) {
-        Episode selectedEpisode = episodeTable.getSelectionModel().getSelectedItem();
-        if (selectedEpisode != null) {
-          
+			try {
+				DatabaseUtil.updateEpisode(selectedEpisode);
+			} catch (SQLException e) {
+				e.printStackTrace();
 
-            try {
-                DatabaseUtil.updateEpisode(selectedEpisode);
-            } catch (SQLException e) {
-                e.printStackTrace();
-         
-            }
-        }
-    }
+			}
+		}
+	}
 
-    @FXML
-    private void deleteEpisode(ActionEvent event) {
-        Episode selectedEpisode = episodeTable.getSelectionModel().getSelectedItem();
-        if (selectedEpisode != null) {
-            try {
-                DatabaseUtil.deleteEpisode(selectedEpisode.getId_episode());
-                episodes.remove(selectedEpisode);
-            } catch (SQLException e) {
-                e.printStackTrace();
-        
-            }
-        }
-    }
+	@FXML
+	private void deleteEpisode(ActionEvent event) {
+		Episode selectedEpisode = episodeTable.getSelectionModel().getSelectedItem();
+		if (selectedEpisode != null) {
+			try {
+				DatabaseUtil.deleteEpisode(selectedEpisode.getId_episode());
+				episodes.remove(selectedEpisode);
+			} catch (SQLException e) {
+				e.printStackTrace();
+
+			}
+		}
+	}
 }

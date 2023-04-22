@@ -10,38 +10,38 @@ import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import java.sql.SQLException;
 
 public class UserAddController {
-    @FXML
-    private TextField firstNameTextField;
+	@FXML
+	private TextField firstNameTextField;
 
-    @FXML
-    private TextField lastNameTextField;
+	@FXML
+	private TextField lastNameTextField;
 
-    @FXML
-    private TextField emailTextField;
+	@FXML
+	private TextField emailTextField;
 
-    @FXML
-    private PasswordField passwordTextField;
+	@FXML
+	private PasswordField passwordTextField;
 
-    @FXML
-    private DatePicker birthDatePicker;
+	@FXML
+	private DatePicker birthDatePicker;
 
-    @FXML
-    private TextField typeTextField;
+	@FXML
+	private TextField typeTextField;
 
-    @FXML
-    private void addUtilisateur() {
-        try {
-            Utilisateur utilisateur = new Utilisateur();
-            utilisateur.setNom(firstNameTextField.getText());
-            utilisateur.setPrenom(lastNameTextField.getText());
-            utilisateur.setEmail(emailTextField.getText());
-            utilisateur.setMot_de_passe(passwordTextField.getText());
-            utilisateur.setDate_de_naissance(java.sql.Date.valueOf(birthDatePicker.getValue()));
-            utilisateur.setType(typeTextField.getText());
+	@FXML
+	private void addUtilisateur() {
+		try {
+			Utilisateur utilisateur = new Utilisateur();
+			utilisateur.setNom(firstNameTextField.getText());
+			utilisateur.setPrenom(lastNameTextField.getText());
+			utilisateur.setEmail(emailTextField.getText());
+			utilisateur.setMot_de_passe(passwordTextField.getText());
+			utilisateur.setDate_de_naissance(java.sql.Date.valueOf(birthDatePicker.getValue()));
+			utilisateur.setType(typeTextField.getText());
 
-            DatabaseUtil.addUtilisateur(utilisateur);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+			DatabaseUtil.addUtilisateur(utilisateur);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

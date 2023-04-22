@@ -39,7 +39,4 @@ public class Acteur {
 		this.url_image = url_image;
 	}
 
-
-
-
 }

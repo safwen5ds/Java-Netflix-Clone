@@ -14,43 +14,44 @@ import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import java.time.LocalDate;
 
 public class ClassementController {
-    @FXML
-    private DatePicker startDatePicker;
+	@FXML
+	private DatePicker startDatePicker;
 
-    @FXML
-    private DatePicker endDatePicker;
-    @FXML
-    private Button searchButton;
+	@FXML
+	private DatePicker endDatePicker;
+	@FXML
+	private Button searchButton;
 
-    @FXML
-    private TableView<SeriesRanking> seriesRankingTable;
+	@FXML
+	private TableView<SeriesRanking> seriesRankingTable;
 
-    @FXML
-    private TableColumn<SeriesRanking, Integer> rankColumn;
+	@FXML
+	private TableColumn<SeriesRanking, Integer> rankColumn;
 
-    @FXML
-    private TableColumn<SeriesRanking, String> nomColumn;
+	@FXML
+	private TableColumn<SeriesRanking, String> nomColumn;
 
-    @FXML
-    private TableColumn<SeriesRanking, Integer> viewsColumn;
+	@FXML
+	private TableColumn<SeriesRanking, Integer> viewsColumn;
 
-    public void initialize() {
-        rankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));
-        nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        viewsColumn.setCellValueFactory(new PropertyValueFactory<>("views"));
-    }
+	public void initialize() {
+		rankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));
+		nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
+		viewsColumn.setCellValueFactory(new PropertyValueFactory<>("views"));
+	}
 
-    @FXML
-    public void SeriesRanking() {
-        LocalDate startDate = startDatePicker.getValue();
-        LocalDate endDate = endDatePicker.getValue();
+	@FXML
+	public void SeriesRanking() {
+		LocalDate startDate = startDatePicker.getValue();
+		LocalDate endDate = endDatePicker.getValue();
 
-        if (startDate == null || endDate == null) {
-            
-            return;
-        }
+		if (startDate == null || endDate == null) {
 
-        ObservableList<SeriesRanking> seriesRankings = FXCollections.observableArrayList(DatabaseUtil.getSeriesRanking(startDate, endDate));
-        seriesRankingTable.setItems(seriesRankings);
-    }
+			return;
+		}
+
+		ObservableList<SeriesRanking> seriesRankings = FXCollections
+				.observableArrayList(DatabaseUtil.getSeriesRanking(startDate, endDate));
+		seriesRankingTable.setItems(seriesRankings);
+	}
 }

@@ -1,17 +1,17 @@
 package org.fsb.FlixFlow.Models;
 
 public class SeriesRanking {
-    private int idSerie;
-    private String nom;
-    private int views;
-    private int rank;
+	private int idSerie;
+	private String nom;
+	private int views;
+	private int rank;
 
-    public SeriesRanking(int idSerie, String nom, int views, int rank) {
-        this.idSerie = idSerie;
-        this.nom = nom;
-        this.views = views;
-        this.rank = rank;
-    }
+	public SeriesRanking(int idSerie, String nom, int views, int rank) {
+		this.idSerie = idSerie;
+		this.nom = nom;
+		this.views = views;
+		this.rank = rank;
+	}
 
 	public int getIdSerie() {
 		return idSerie;
@@ -45,5 +45,4 @@ public class SeriesRanking {
 		this.rank = rank;
 	}
 
-   
 }

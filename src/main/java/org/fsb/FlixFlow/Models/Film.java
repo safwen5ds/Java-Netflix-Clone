@@ -182,6 +182,4 @@ public class Film {
 		Nom_acteur = nom_acteur;
 	}
 
-
-
 }

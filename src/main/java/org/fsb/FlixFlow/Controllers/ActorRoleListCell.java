@@ -12,63 +12,62 @@ import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import java.sql.SQLException;
 
-
 public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
 	private final HBox content;
-    private final Button favoriteButton;
-    private final ImageView imageView;
-    private final Label nameLabel;
-    private final Label roleLabel;
-    public ActorRoleListCell() {
-        super();
-        imageView = new ImageView();
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(50); // Set the preferred width of the image
+	private final Button favoriteButton;
+	private final ImageView imageView;
+	private final Label nameLabel;
+	private final Label roleLabel;
 
+	public ActorRoleListCell() {
+		super();
+		imageView = new ImageView();
+		imageView.setPreserveRatio(true);
+		imageView.setFitWidth(50); // Set the preferred width of the image
 
-        nameLabel = new Label();
-        roleLabel = new Label();
-        favoriteButton = new Button("Add to Favorite");
+		nameLabel = new Label();
+		roleLabel = new Label();
+		favoriteButton = new Button("Add to Favorite");
 
-        favoriteButton.setOnAction(event -> {
-            ActorRoleDisplay currentItem = getItem();
-            int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
-            int actorId = currentItem.getActorid();
+		favoriteButton.setOnAction(event -> {
+			ActorRoleDisplay currentItem = getItem();
+			int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+			int actorId = currentItem.getActorid();
 
-            try {
-                DatabaseUtil.addPreference(userId, actorId);
-                showAlert(AlertType.INFORMATION, "Success", "Actor added to favorites.");
-            } catch (SQLException e) {
-                showAlert(AlertType.ERROR, "Error", "The actor is already in your favorites.");
-            }
-        });
+			try {
+				DatabaseUtil.addPreference(userId, actorId);
+				showAlert(AlertType.INFORMATION, "Success", "Actor added to favorites.");
+			} catch (SQLException e) {
+				showAlert(AlertType.ERROR, "Error", "The actor is already in your favorites.");
+			}
+		});
 
-        content = new HBox(imageView, nameLabel, roleLabel, favoriteButton);
-        content.setSpacing(10);
-    }
+		content = new HBox(imageView, nameLabel, roleLabel, favoriteButton);
+		content.setSpacing(10);
+	}
 
+	private void showAlert(AlertType alertType, String title, String content) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(content);
+		alert.showAndWait();
+	}
 
-    private void showAlert(AlertType alertType, String title, String content) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-    @Override
-    protected void updateItem(ActorRoleDisplay item, boolean empty) {
-        super.updateItem(item, empty);
-        if (item != null && !empty) {
-            imageView.setImage(new Image(item.getUrlImage()));
-            nameLabel.setText(item.getActorName());
-            roleLabel.setText(item.getRoleType());
+	@Override
+	protected void updateItem(ActorRoleDisplay item, boolean empty) {
+		super.updateItem(item, empty);
+		if (item != null && !empty) {
+			imageView.setImage(new Image(item.getUrlImage()));
+			nameLabel.setText(item.getActorName());
+			roleLabel.setText(item.getRoleType());
 
-            favoriteButton.setVisible(true);
+			favoriteButton.setVisible(true);
 
-            setGraphic(content);
-        } else {
-            setGraphic(null);
-        }
-    }
+			setGraphic(content);
+		} else {
+			setGraphic(null);
+		}
+	}
 
 }

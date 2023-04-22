@@ -14,65 +14,63 @@ import java.util.ResourceBundle;
 
 public class FilmAddController implements Initializable {
 
-    @FXML
-    private TableView<Film> filmTable;
+	@FXML
+	private TableView<Film> filmTable;
 
+	private ObservableList<Film> films;
 
-    private ObservableList<Film> films;
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		try {
+			films = FXCollections.observableArrayList(org.fsb.FlixFlow.Utilities.DatabaseUtil.getAllFilms());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			films = FXCollections.observableArrayList();
+		}
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        try {
-            films = FXCollections.observableArrayList(org.fsb.FlixFlow.Utilities.DatabaseUtil.getAllFilms());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            films = FXCollections.observableArrayList();
-        }
+		filmTable.setItems(films);
 
-        filmTable.setItems(films);
+	}
 
-    }
+	@FXML
+	private void addFilm(ActionEvent event) {
 
-    @FXML
-    private void addFilm(ActionEvent event) {
+		Film newFilm = new Film(/* Add constructor parameters based on user input */);
 
-        Film newFilm = new Film(/* Add constructor parameters based on user input */);
+		try {
+			org.fsb.FlixFlow.Utilities.DatabaseUtil.createFilm(newFilm);
+			films.add(newFilm);
+		} catch (SQLException e) {
+			e.printStackTrace();
 
-        try {
-            org.fsb.FlixFlow.Utilities.DatabaseUtil.createFilm(newFilm);
-            films.add(newFilm);
-        } catch (SQLException e) {
-            e.printStackTrace();
+		}
+	}
 
-        }
-    }
+	@FXML
+	private void updateFilm(ActionEvent event) {
+		Film selectedFilm = filmTable.getSelectionModel().getSelectedItem();
+		if (selectedFilm != null) {
 
-    @FXML
-    private void updateFilm(ActionEvent event) {
-        Film selectedFilm = filmTable.getSelectionModel().getSelectedItem();
-        if (selectedFilm != null) {
+			try {
+				org.fsb.FlixFlow.Utilities.DatabaseUtil.updateFilm(selectedFilm);
+			} catch (SQLException e) {
+				e.printStackTrace();
 
+			}
+		}
+	}
 
-            try {
-                org.fsb.FlixFlow.Utilities.DatabaseUtil.updateFilm(selectedFilm);
-            } catch (SQLException e) {
-                e.printStackTrace();
+	@FXML
+	private void deleteFilm(ActionEvent event) {
+		Film selectedFilm = filmTable.getSelectionModel().getSelectedItem();
+		if (selectedFilm != null) {
+			try {
+				org.fsb.FlixFlow.Utilities.DatabaseUtil.deleteFilm(selectedFilm.getId_film());
+				films.remove(selectedFilm);
+			} catch (SQLException e) {
+				e.printStackTrace();
 
-            }
-        }
-    }
-
-    @FXML
-    private void deleteFilm(ActionEvent event) {
-        Film selectedFilm = filmTable.getSelectionModel().getSelectedItem();
-        if (selectedFilm != null) {
-            try {
-                org.fsb.FlixFlow.Utilities.DatabaseUtil.deleteFilm(selectedFilm.getId_film());
-                films.remove(selectedFilm);
-            } catch (SQLException e) {
-                e.printStackTrace();
-
-            }
-        }
-    }
+			}
+		}
+	}
 }

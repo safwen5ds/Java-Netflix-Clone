@@ -23,17 +23,17 @@ public class SeasonLayoutController {
 
 	@FXML
 	private Button addcommentbtn;
-    @FXML
-    private Button delbtn;
-    @FXML
-    private Label average;
-    @FXML
-    private Label vote;
-    @FXML
-    private Label nbreps;
+	@FXML
+	private Button delbtn;
+	@FXML
+	private Label average;
+	@FXML
+	private Label vote;
+	@FXML
+	private Label nbreps;
 
-    @FXML
-    private Button modifbtn;
+	@FXML
+	private Button modifbtn;
 	@FXML
 	private Button addfav;
 
@@ -82,116 +82,114 @@ public class SeasonLayoutController {
 	private int saisonId;
 
 	private int serieId;
+
 	public void setIds(int saisonId, int serieId) {
-	    this.saisonId = saisonId;
-	    this.serieId = serieId;
+		this.saisonId = saisonId;
+		this.serieId = serieId;
 	}
 
-	 @FXML
-	    public void initialize() {
-		 listcomment.setCellFactory(param -> new ListCell<>() {
-	            @Override
-	            protected void updateItem(Commentaire_saison item, boolean empty) {
-	                super.updateItem(item, empty);
+	@FXML
+	public void initialize() {
+		listcomment.setCellFactory(param -> new ListCell<>() {
+			@Override
+			protected void updateItem(Commentaire_saison item, boolean empty) {
+				super.updateItem(item, empty);
 
-	                if (empty || item == null) {
-	                    setText(null);
-	                } else {
-	                    setText(item.getNom_User() + " : " + item.getContenu());
-	                }
-	            }
-	        });
+				if (empty || item == null) {
+					setText(null);
+				} else {
+					setText(item.getNom_User() + " : " + item.getContenu());
+				}
+			}
+		});
 
-	        watchnow.setOnAction(event -> openEpisodeLayout());
-	        submitSaisonRatingButton.setOnAction(event -> submitSaisonRating());
-	        addcommentbtn.setOnAction(event -> addComment());
-	        delbtn.setOnAction(event -> deleteComment());
-	        modifbtn.setOnAction(event -> modifyComment());
-	        updateCommentList();
-	    }
+		watchnow.setOnAction(event -> openEpisodeLayout());
+		submitSaisonRatingButton.setOnAction(event -> submitSaisonRating());
+		addcommentbtn.setOnAction(event -> addComment());
+		delbtn.setOnAction(event -> deleteComment());
+		modifbtn.setOnAction(event -> modifyComment());
+		updateCommentList();
+	}
 
+	private void addComment() {
+		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+		String content = commentinput.getText();
 
+		try {
+			DatabaseUtil.addCommentForSeason(userId, saisonId, content);
+			updateCommentList();
+			commentinput.clear();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-	    private void addComment() {
-	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
-	        String content = commentinput.getText();
+	private void deleteComment() {
+		Commentaire_saison selectedComment = listcomment.getSelectionModel().getSelectedItem();
+		if (selectedComment != null) {
+			try {
+				DatabaseUtil.deleteCommentForSeason(selectedComment.getComment_id());
+				updateCommentList();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-	        try {
-	            DatabaseUtil.addCommentForSeason(userId, saisonId, content);
-	            updateCommentList();
-	            commentinput.clear();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+	private void modifyComment() {
+		Commentaire_saison selectedComment = listcomment.getSelectionModel().getSelectedItem();
+		if (selectedComment != null) {
+			String newContent = commentinput.getText();
+			try {
+				DatabaseUtil.updateCommentForSeason(selectedComment.getComment_id(), newContent);
+				updateCommentList();
+				commentinput.clear();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-	    private void deleteComment() {
-	        Commentaire_saison selectedComment = listcomment.getSelectionModel().getSelectedItem();
-	        if (selectedComment != null) {
-	            try {
-	                DatabaseUtil.deleteCommentForSeason(selectedComment.getComment_id());
-	                updateCommentList();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
+	private void updateCommentList() {
+		try {
+			List<Commentaire_saison> comments = DatabaseUtil.getCommentaireSaisonsByMediaId(saisonId);
+			listcomment.getItems().setAll(comments);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-	    private void modifyComment() {
-	        Commentaire_saison selectedComment = listcomment.getSelectionModel().getSelectedItem();
-	        if (selectedComment != null) {
-	            String newContent = commentinput.getText();
-	            try {
-	                DatabaseUtil.updateCommentForSeason(selectedComment.getComment_id(), newContent);
-	                updateCommentList();
-	                commentinput.clear();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
+	private void submitSaisonRating() {
+		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+		int rating = (int) Math.round(saisonRatingSlider.getValue());
+		DatabaseUtil.submitSaisonRating(userId, saisonId, rating);
+		updateAverageScore();
+	}
 
-	    private void updateCommentList() {
-	        try {
-	            List<Commentaire_saison> comments = DatabaseUtil.getCommentaireSaisonsByMediaId(saisonId);
-	            listcomment.getItems().setAll(comments);
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
-
-
-	    private void submitSaisonRating() {
-	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
-	        int rating = (int) Math.round(saisonRatingSlider.getValue());
-	        DatabaseUtil.submitSaisonRating(userId, saisonId, rating);
-	        updateAverageScore();
-	    }
-	    private void updateAverageScore() {
-	        try {
-	            double averageScore = DatabaseUtil.calculateAverageSeasonScore(saisonId);
-	            average.setText(String.format("%.2f", averageScore));
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+	private void updateAverageScore() {
+		try {
+			double averageScore = DatabaseUtil.calculateAverageSeasonScore(saisonId);
+			average.setText(String.format("%.2f", averageScore));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void openEpisodeLayout() {
-	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/episode.fxml"));
-	        Parent root = loader.load();
-	        EpisodeLayoutController controller = loader.getController();
-	        controller.initData(saisonId, serieId);
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/episode.fxml"));
+			Parent root = loader.load();
+			EpisodeLayoutController controller = loader.getController();
+			controller.initData(saisonId, serieId);
 
-	        Scene scene = new Scene(root);
-	        Stage stage = new Stage();
-	        stage.setScene(scene);
-	        stage.show();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
+			Scene scene = new Scene(root);
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-
 
 	public void initData(Saison season) throws SQLException {
 		if (season != null) {
@@ -201,7 +199,7 @@ public class SeasonLayoutController {
 			seasonSynopsistext.setText(season.getSynopsis());
 			seasonDate_debutLabel.setText("Date: " + season.getDate_debut());
 			seasonViewsLabel.setText("Views: " + season.getVues());
-		    double averageScore = DatabaseUtil.calculateAverageSeasonScore(season.getId_saison());
+			double averageScore = DatabaseUtil.calculateAverageSeasonScore(season.getId_saison());
 			average.setText(String.format("%.2f", averageScore));
 
 			String imageUrl = season.getUrl_image();
@@ -215,22 +213,23 @@ public class SeasonLayoutController {
 		updateVoteCount();
 		updateTotalEpisodes();
 	}
+
 	private void updateVoteCount() {
-	    try {
-	        int voteCount = DatabaseUtil.getVoteCountForSeason(saisonId);
-	        vote.setText(String.valueOf(voteCount));
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	}
-	private void updateTotalEpisodes() {
-	    try {
-	        int totalEpisodes = DatabaseUtil.getTotalEpisodesForSeason(saisonId);
-	        nbreps.setText(String.valueOf(totalEpisodes));
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			int voteCount = DatabaseUtil.getVoteCountForSeason(saisonId);
+			vote.setText(String.valueOf(voteCount));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
+	private void updateTotalEpisodes() {
+		try {
+			int totalEpisodes = DatabaseUtil.getTotalEpisodesForSeason(saisonId);
+			nbreps.setText(String.valueOf(totalEpisodes));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

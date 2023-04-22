@@ -30,9 +30,9 @@ public class MovieSeriesDetailsController {
 	private final int mediaId;
 	private final boolean isMovie;
 	@FXML
-    private Label average;
-	  @FXML
-	    private Button addgenrefav;
+	private Label average;
+	@FXML
+	private Button addgenrefav;
 	private final UserDashboardController userDashboardController;
 
 	public MovieSeriesDetailsController(int mediaId, boolean isMovie, UserDashboardController userDashboardController) {
@@ -44,29 +44,26 @@ public class MovieSeriesDetailsController {
 	@FXML
 	private Button Watchtrailer;
 	@FXML
-    private Label vote;
+	private Label vote;
 	@FXML
 	private Slider ratingSlider;
 
 	@FXML
 	private Button submitRating;
 
+	@FXML
+	private ListView<ActorRoleDisplay> actorslist;
 
-	 @FXML
-	 private ListView<ActorRoleDisplay> actorslist;
+	@FXML
+	private TextField txtcomment;
 
+	@FXML
+	private Button commentbtn;
+	@FXML
+	private Button modifyCommentButton;
 
-	    @FXML
-	    private TextField txtcomment;
-
-	    @FXML
-	    private Button commentbtn;
-	    @FXML
-	    private Button modifyCommentButton;
-
-	    @FXML
-	    private Button deleteCommentButton;
-
+	@FXML
+	private Button deleteCommentButton;
 
 	@FXML
 	private Button addfav;
@@ -123,89 +120,89 @@ public class MovieSeriesDetailsController {
 	private Button watchButton;
 
 	private void addFavoriteGenre(int genreId) {
-	    try {
-	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
-	        if (DatabaseUtil.isGenreFavExists(userId, genreId)) {
-	            Alert alert = new Alert(AlertType.WARNING);
-	            alert.setTitle("Warning");
-	            alert.setHeaderText(null);
-	            alert.setContentText("This genre is already in your favorites.");
-	            alert.showAndWait();
-	        } else {
-	            DatabaseUtil.addPreferenceGenre(userId, genreId);
-	            Alert alert = new Alert(AlertType.INFORMATION);
-	            alert.setTitle("Information");
-	            alert.setHeaderText(null);
-	            alert.setContentText("Genre added to your favorites.");
-	            alert.showAndWait();
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+			if (DatabaseUtil.isGenreFavExists(userId, genreId)) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Warning");
+				alert.setHeaderText(null);
+				alert.setContentText("This genre is already in your favorites.");
+				alert.showAndWait();
+			} else {
+				DatabaseUtil.addPreferenceGenre(userId, genreId);
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Information");
+				alert.setHeaderText(null);
+				alert.setContentText("Genre added to your favorites.");
+				alert.showAndWait();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void updateAverageRating() {
-	    try {
-	        double averageScore;
-	        int voteCount;
-	        if (isMovie) {
-	            averageScore = DatabaseUtil.calculateAverageFilmScore(mediaId);
-	          
-	        } else {
-	            averageScore = DatabaseUtil.calculateAverageSeriesScore(mediaId);
-	           
-	        }
-	        average.setText(String.format("%.2f", averageScore));
-	 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	}
-	private void updateVoteCount() {
-	    try {
-	        int voteCount;
-	        if (isMovie) {
-	            voteCount = DatabaseUtil.getVoteCountForFilm(mediaId);
-	        } else {
-	            voteCount = DatabaseUtil.getVoteCountForSeries(mediaId);
-	        }
-	        vote.setText(String.valueOf(voteCount));
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			double averageScore;
+			int voteCount;
+			if (isMovie) {
+				averageScore = DatabaseUtil.calculateAverageFilmScore(mediaId);
+
+			} else {
+				averageScore = DatabaseUtil.calculateAverageSeriesScore(mediaId);
+
+			}
+			average.setText(String.format("%.2f", averageScore));
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
+	private void updateVoteCount() {
+		try {
+			int voteCount;
+			if (isMovie) {
+				voteCount = DatabaseUtil.getVoteCountForFilm(mediaId);
+			} else {
+				voteCount = DatabaseUtil.getVoteCountForSeries(mediaId);
+			}
+			vote.setText(String.valueOf(voteCount));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@FXML
 	public void initialize() throws SQLException {
-	    initializeTableView();
+		initializeTableView();
 
-	    if (isMovie) {
-	        try {
-	            Film film = DatabaseUtil.getFilmById(mediaId);
-	            if (film != null) { // Add this null check
-	                setFilmDetails(film);
-	            } else {
+		if (isMovie) {
+			try {
+				Film film = DatabaseUtil.getFilmById(mediaId);
+				if (film != null) { // Add this null check
+					setFilmDetails(film);
+				} else {
 
-	                System.err.println("Film not found with mediaId: " + mediaId);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    } else {
-	        try {
-	            Serie serie = DatabaseUtil.getSerieById(mediaId);
-	            DatabaseUtil.calculateTotalSeriesViews(mediaId);
-	            if (serie != null) {
-	                setSerieDetails(serie);
-	            } else {
+					System.err.println("Film not found with mediaId: " + mediaId);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				Serie serie = DatabaseUtil.getSerieById(mediaId);
+				DatabaseUtil.calculateTotalSeriesViews(mediaId);
+				if (serie != null) {
+					setSerieDetails(serie);
+				} else {
 
-	                System.err.println("Serie not found with mediaId: " + mediaId);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+					System.err.println("Serie not found with mediaId: " + mediaId);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		loadActorsList();
 		table();
 
@@ -220,128 +217,122 @@ public class MovieSeriesDetailsController {
 			openUrlInNewWindow(url);
 		});
 
-        if (!isMovie)
-        {
-        	watchButton.setOnAction(event -> openSaisonPage());
-        }
-        else
-        {
-        	watchButton.setOnAction(e -> {
-        	    String url = null;
-        	    try {
-        	        url = DatabaseUtil.getFilmById(mediaId).getUrl_film();
-        	        int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+		if (!isMovie) {
+			watchButton.setOnAction(event -> openSaisonPage());
+		} else {
+			watchButton.setOnAction(e -> {
+				String url = null;
+				try {
+					url = DatabaseUtil.getFilmById(mediaId).getUrl_film();
+					int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
 
-        	        if (!DatabaseUtil.hasUserSeenFilm(userId, mediaId)) {
-        	            DatabaseUtil.incrementFilmViews(mediaId);
-        	            DatabaseUtil.addUserFilmView(userId, mediaId);
+					if (!DatabaseUtil.hasUserSeenFilm(userId, mediaId)) {
+						DatabaseUtil.incrementFilmViews(mediaId);
+						DatabaseUtil.addUserFilmView(userId, mediaId);
 
-        	            Film updatedFilm = DatabaseUtil.getFilmById(mediaId);
-        	            vues.setText(String.valueOf(updatedFilm.getVues()));
-        	        }
-        	    } catch (SQLException e1) {
-        	        e1.printStackTrace();
-        	    }
-        	    openUrlInNewWindow(url);
-        	});
+						Film updatedFilm = DatabaseUtil.getFilmById(mediaId);
+						vues.setText(String.valueOf(updatedFilm.getVues()));
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				openUrlInNewWindow(url);
+			});
 
-        }
-        actorslist.setCellFactory(listView -> new ActorRoleListCell());
-        Utilisateur loggedInUser = DatabaseUtil.readUserFromFile();
+		}
+		actorslist.setCellFactory(listView -> new ActorRoleListCell());
+		Utilisateur loggedInUser = DatabaseUtil.readUserFromFile();
 
+		addfav.setOnAction(e -> {
+			try {
+				if (isMovie) {
+					DatabaseUtil.addPreferenceFilm(loggedInUser.getId_utilisateur(), mediaId);
+				} else {
+					DatabaseUtil.addPreferenceSerie(loggedInUser.getId_utilisateur(), mediaId);
+				}
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		});
+		submitRating.setOnAction(event -> {
+			DatabaseUtil.submitRating(ratingSlider, isMovie, mediaId);
+			updateAverageRating();
+		});
 
-        addfav.setOnAction(e -> {
-            try {
-                if (isMovie) {
-                    DatabaseUtil.addPreferenceFilm(loggedInUser.getId_utilisateur(), mediaId);
-                } else {
-                    DatabaseUtil.addPreferenceSerie(loggedInUser.getId_utilisateur(), mediaId);
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        });
-        submitRating.setOnAction(event -> {
-            DatabaseUtil.submitRating(ratingSlider, isMovie, mediaId);
-            updateAverageRating();
-        });
+		commentbtn.setOnAction(e -> {
+			Utilisateur User;
+			try {
+				User = DatabaseUtil.readUserFromFile();
+				String content = txtcomment.getText();
+				if (!content.isEmpty()) {
+					if (isMovie) {
+						DatabaseUtil.addCommentForFilm(User.getId_utilisateur(), mediaId, content);
+					} else {
+						DatabaseUtil.addCommentForSeries(User.getId_utilisateur(), mediaId, content);
+					}
+					txtcomment.clear();
+					table();
+				}
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		});
 
+		modifyCommentButton.setOnAction(e -> {
+			CommentaireDisplay selectedComment = tab.getSelectionModel().getSelectedItem();
+			if (selectedComment != null) {
+				try {
+					int comment_id = selectedComment.getComment_id();
+					String newContent = txtcomment.getText();
+					if (!newContent.isEmpty()) {
+						if (isMovie) {
+							DatabaseUtil.updateCommentForFilm(comment_id, newContent);
+						} else {
+							DatabaseUtil.updateCommentForSeries(comment_id, newContent);
+						}
+						txtcomment.clear();
+						table();
+					}
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 
-        commentbtn.setOnAction(e -> {
-            Utilisateur User;
-            try {
-                User = DatabaseUtil.readUserFromFile();
-                String content = txtcomment.getText();
-                if (!content.isEmpty()) {
-                    if (isMovie) {
-                        DatabaseUtil.addCommentForFilm(User.getId_utilisateur(), mediaId, content);
-                    } else {
-                        DatabaseUtil.addCommentForSeries(User.getId_utilisateur(), mediaId, content);
-                    }
-                    txtcomment.clear();
-                    table();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        });
+		deleteCommentButton.setOnAction(e -> {
+			CommentaireDisplay selectedComment = tab.getSelectionModel().getSelectedItem();
+			if (selectedComment != null) {
+				try {
+					int comment_id = selectedComment.getComment_id();
+					if (isMovie) {
+						DatabaseUtil.deleteCommentForFilm(comment_id);
+					} else {
+						DatabaseUtil.deleteCommentForSeries(comment_id);
+					}
+					initializeTableView();
+					table();
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 
-
-        modifyCommentButton.setOnAction(e -> {
-            CommentaireDisplay selectedComment = tab.getSelectionModel().getSelectedItem();
-            if (selectedComment != null) {
-                try {
-                    int comment_id = selectedComment.getComment_id();
-                    String newContent = txtcomment.getText();
-                    if (!newContent.isEmpty()) {
-                        if (isMovie) {
-                            DatabaseUtil.updateCommentForFilm(comment_id, newContent);
-                        } else {
-                            DatabaseUtil.updateCommentForSeries(comment_id, newContent);
-                        }
-                        txtcomment.clear();
-                        table();
-                    }
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        deleteCommentButton.setOnAction(e -> {
-            CommentaireDisplay selectedComment = tab.getSelectionModel().getSelectedItem();
-            if (selectedComment != null) {
-                try {
-                    int comment_id = selectedComment.getComment_id();
-                    if (isMovie) {
-                        DatabaseUtil.deleteCommentForFilm(comment_id);
-                    } else {
-                        DatabaseUtil.deleteCommentForSeries(comment_id);
-                    }
-                    initializeTableView();
-                    table();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        addgenrefav.setOnAction(e -> {
-            int genreId = -1;
-            try {
-                if (isMovie) {
-                    Film film = DatabaseUtil.getFilmById(mediaId);
-                    genreId = film.getId_genre();
-                } else {
-                    Serie serie = DatabaseUtil.getSerieById(mediaId);
-                    genreId = serie.getId_genre();
-                }
-                addFavoriteGenre(genreId);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        });
-        updateVoteCount();
+		addgenrefav.setOnAction(e -> {
+			int genreId = -1;
+			try {
+				if (isMovie) {
+					Film film = DatabaseUtil.getFilmById(mediaId);
+					genreId = film.getId_genre();
+				} else {
+					Serie serie = DatabaseUtil.getSerieById(mediaId);
+					genreId = serie.getId_genre();
+				}
+				addFavoriteGenre(genreId);
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		});
+		updateVoteCount();
 	}
 
 	private void initializeTableView() {
@@ -360,23 +351,23 @@ public class MovieSeriesDetailsController {
 			return myRow;
 		});
 	}
-	private void loadActorsList() {
-	    try {
-	        List<ActorRoleDisplay> actorRoles;
-	        if (isMovie) {
-	            actorRoles = DatabaseUtil.getActorRolesForMovie(mediaId);
-	        } else {
-	            actorRoles = DatabaseUtil.getActorRolesForSeries(mediaId);
-	        }
-	        actorslist.getItems().clear();
-	        for (ActorRoleDisplay actorRole : actorRoles) {
-	            actorslist.getItems().add(actorRole);
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	}
 
+	private void loadActorsList() {
+		try {
+			List<ActorRoleDisplay> actorRoles;
+			if (isMovie) {
+				actorRoles = DatabaseUtil.getActorRolesForMovie(mediaId);
+			} else {
+				actorRoles = DatabaseUtil.getActorRolesForSeries(mediaId);
+			}
+			actorslist.getItems().clear();
+			for (ActorRoleDisplay actorRole : actorRoles) {
+				actorslist.getItems().add(actorRole);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void table() {
 		ObservableList<CommentaireDisplay> commentaires = FXCollections.observableArrayList();
@@ -386,15 +377,15 @@ public class MovieSeriesDetailsController {
 				List<Commentaire_film> commentaireFilms = DatabaseUtil.getCommentaireFilmsByMediaId(mediaId);
 
 				for (Commentaire_film cf : commentaireFilms) {
-	                System.out.println("Commentaire_film: " + cf.getNom_User() + " - " + cf.getContenu());
-					commentaires.add(new CommentaireDisplay(cf.getNom_User(), cf.getContenu(),cf.getComment_id()));
+					System.out.println("Commentaire_film: " + cf.getNom_User() + " - " + cf.getContenu());
+					commentaires.add(new CommentaireDisplay(cf.getNom_User(), cf.getContenu(), cf.getComment_id()));
 				}
 			} else {
 				List<Commentaire_serie> commentaireSeries = DatabaseUtil.getCommentaireSeriesByMediaId(mediaId);
 
 				for (Commentaire_serie cs : commentaireSeries) {
-	                System.out.println("Commentaire_serie: " + cs.getNom_User() + " - " + cs.getContenu());
-					commentaires.add(new CommentaireDisplay(cs.getNom_User(), cs.getContenu(),cs.getComment_id()));
+					System.out.println("Commentaire_serie: " + cs.getNom_User() + " - " + cs.getContenu());
+					commentaires.add(new CommentaireDisplay(cs.getNom_User(), cs.getContenu(), cs.getComment_id()));
 				}
 			}
 		} catch (SQLException e) {
@@ -418,8 +409,8 @@ public class MovieSeriesDetailsController {
 		producteur.setText(film.getNom_producteur());
 		pays.setText(film.getNom_producteur());
 		table();
-		 double averageScore = DatabaseUtil.calculateAverageFilmScore(film.getId_film());
-		 average.setText(String.format("%.2f", averageScore));
+		double averageScore = DatabaseUtil.calculateAverageFilmScore(film.getId_film());
+		average.setText(String.format("%.2f", averageScore));
 
 	}
 

@@ -27,11 +27,8 @@ public class ScheduleController implements Initializable {
 		List<Episode> episodes = DatabaseUtil.fetchTodaysEpisodes(userId);
 
 		for (Episode episode : episodes) {
-			episodesListView.getItems().add(
-					"Series: " + episode.getNom_serie() +
-							" | Episode: " + episode.getNum_episode() +
-							" | Date: " + episode.getDate_diffusion()
-			);
+			episodesListView.getItems().add("Series: " + episode.getNom_serie() + " | Episode: "
+					+ episode.getNum_episode() + " | Date: " + episode.getDate_diffusion());
 		}
 	}
 }
