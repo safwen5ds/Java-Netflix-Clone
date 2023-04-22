@@ -2,7 +2,6 @@ package org.fsb.FlixFlow.Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
@@ -34,7 +33,7 @@ public class SaisonAddController implements Initializable {
 	}
 
 	@FXML
-	private void addSeason(ActionEvent event) {
+	private void addSeason() {
 
 		Saison newSeason = new Saison(/* Add constructor parameters based on user input */);
 
@@ -48,7 +47,7 @@ public class SaisonAddController implements Initializable {
 	}
 
 	@FXML
-	private void updateSeason(ActionEvent event) {
+	private void updateSeason() {
 		Saison selectedSeason = seasonTable.getSelectionModel().getSelectedItem();
 		if (selectedSeason != null) {
 
@@ -62,7 +61,7 @@ public class SaisonAddController implements Initializable {
 	}
 
 	@FXML
-	private void deleteSeason(ActionEvent event) {
+	private void deleteSeason() {
 		Saison selectedSeason = seasonTable.getSelectionModel().getSelectedItem();
 		if (selectedSeason != null) {
 			try {

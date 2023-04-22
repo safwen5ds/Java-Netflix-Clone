@@ -1131,9 +1131,6 @@ public class DatabaseUtil {
 	public static List<Episode> fetchTodaysEpisodes(int userId) {
 		List<Episode> episodes = new ArrayList<>();
 
-		LocalDate today = LocalDate.now();
-		java.sql.Date todaySql = java.sql.Date.valueOf(today);
-
 		String selectEpisodesQuery = "SELECT E.ID_EPISODE, E.ID_SERIE, E.NUM_EPISODE, E.DATE_DIFFUSION, S.NOM, SA.NUM_SAISON FROM EPISODE E INNER JOIN SERIE S ON E.ID_SERIE = S.ID_SERIE INNER JOIN SAISON SA ON E.ID_SAISON = SA.ID_SAISON WHERE E.DATE_DIFFUSION = TRUNC(SYSDATE) AND E.ID_SERIE IN ( SELECT P.ID_SERIE FROM PREFERENCES_SERIE P UNION SELECT SC.ID_SERIE FROM SCORE_SERIE SC WHERE SC.SCORE >= 5)";
 
 		try (Connection connection = getConnection();

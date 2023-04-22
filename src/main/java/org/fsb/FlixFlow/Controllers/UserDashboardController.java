@@ -55,7 +55,7 @@ public class UserDashboardController {
 		}
 	}
 
-	@SuppressWarnings("exports")
+
 	public HBox getContentPane() {
 		return contentPane;
 	}

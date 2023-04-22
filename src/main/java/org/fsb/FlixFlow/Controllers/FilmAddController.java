@@ -2,7 +2,6 @@ package org.fsb.FlixFlow.Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
@@ -33,9 +32,9 @@ public class FilmAddController implements Initializable {
 	}
 
 	@FXML
-	private void addFilm(ActionEvent event) {
+	private void addFilm() {
 
-		Film newFilm = new Film(/* Add constructor parameters based on user input */);
+		Film newFilm = new Film();
 
 		try {
 			org.fsb.FlixFlow.Utilities.DatabaseUtil.createFilm(newFilm);
@@ -47,7 +46,7 @@ public class FilmAddController implements Initializable {
 	}
 
 	@FXML
-	private void updateFilm(ActionEvent event) {
+	private void updateFilm() {
 		Film selectedFilm = filmTable.getSelectionModel().getSelectedItem();
 		if (selectedFilm != null) {
 
@@ -61,7 +60,7 @@ public class FilmAddController implements Initializable {
 	}
 
 	@FXML
-	private void deleteFilm(ActionEvent event) {
+	private void deleteFilm() {
 		Film selectedFilm = filmTable.getSelectionModel().getSelectedItem();
 		if (selectedFilm != null) {
 			try {

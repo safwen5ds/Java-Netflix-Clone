@@ -2,7 +2,6 @@ package org.fsb.FlixFlow.Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
@@ -34,7 +33,7 @@ public class EpisodeAddController implements Initializable {
 	}
 
 	@FXML
-	private void addEpisode(ActionEvent event) {
+	private void addEpisode() {
 
 		Episode newEpisode = new Episode();
 
@@ -48,7 +47,7 @@ public class EpisodeAddController implements Initializable {
 	}
 
 	@FXML
-	private void updateEpisode(ActionEvent event) {
+	private void updateEpisode() {
 		Episode selectedEpisode = episodeTable.getSelectionModel().getSelectedItem();
 		if (selectedEpisode != null) {
 
@@ -62,7 +61,7 @@ public class EpisodeAddController implements Initializable {
 	}
 
 	@FXML
-	private void deleteEpisode(ActionEvent event) {
+	private void deleteEpisode() {
 		Episode selectedEpisode = episodeTable.getSelectionModel().getSelectedItem();
 		if (selectedEpisode != null) {
 			try {

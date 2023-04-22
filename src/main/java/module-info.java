@@ -2,6 +2,8 @@ module org.fsb.FlixFlow {
 	requires javafx.controls;
 	requires javafx.fxml;
 	requires de.jensd.fx.glyphs.fontawesome;
+	requires transitive javafx.graphics;
+	requires transitive java.sql;
 
 	opens org.fsb.FlixFlow to javafx.fxml, de.jensd.fx.glyphs.fontawesome;
 
@@ -17,6 +19,5 @@ module org.fsb.FlixFlow {
 
 	requires javafx.media;
 	requires javafx.web;
-	requires java.sql;
 
 }

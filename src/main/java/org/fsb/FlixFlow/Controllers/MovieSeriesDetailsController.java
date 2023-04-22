@@ -144,7 +144,6 @@ public class MovieSeriesDetailsController {
 	private void updateAverageRating() {
 		try {
 			double averageScore;
-			int voteCount;
 			if (isMovie) {
 				averageScore = DatabaseUtil.calculateAverageFilmScore(mediaId);
 
