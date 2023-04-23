@@ -1241,11 +1241,8 @@ public class DatabaseUtil {
 
 	public static List<SeriesRanking> getSeriesRanking(LocalDate startDate, LocalDate endDate) {
 		List<SeriesRanking> seriesRankings = new ArrayList<>();
-		String sql = "WITH series_views AS (" + "  SELECT s.ID_SERIE, s.NOM, COUNT(uv.ID_VUE) AS VIEWS"
-				+ "  FROM \"ADMIN\".\"SERIE\" s" + "  JOIN \"ADMIN\".\"EPISODE\" e ON s.ID_SERIE = e.ID_SERIE"
-				+ "  JOIN \"ADMIN\".\"UTILISATEUR_VUE\" uv ON e.ID_EPISODE = uv.ID_EPISODE"
-				+ "  WHERE uv.DATE_CREATION BETWEEN ? AND ?" + "  GROUP BY s.ID_SERIE, s.NOM)"
-				+ "SELECT ID_SERIE, NOM, VIEWS, RANK() OVER (ORDER BY VIEWS DESC) AS RANK FROM series_views";
+		String sql = "WITH series_views AS (SELECT s.ID_SERIE, s.NOM, COUNT(uv.ID_VUE) AS VIEWS FROM \"ADMIN\".\"SERIE\" s JOIN \"ADMIN\".\"EPISODE\" e ON s.ID_SERIE = e.ID_SERIE JOIN \"ADMIN\".\"UTILISATEUR_VUE\" uv ON e.ID_EPISODE = uv.ID_EPISODE WHERE uv.DATE_CREATION BETWEEN ? AND ? GROUP BY s.ID_SERIE, s.NOM) SELECT ID_SERIE, NOM, VIEWS, RANK() OVER (ORDER BY VIEWS DESC) AS RANK FROM series_views";
+
 
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
