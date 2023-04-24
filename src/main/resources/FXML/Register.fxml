@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.UserAddControllerRegister">
+   <children>
+      <ImageView fx:id="img" fitHeight="602.0" fitWidth="1170.0" layoutX="-230.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images_Videos/106187248.jpg" />
+         </image>
+      </ImageView>
+      <Pane layoutX="601.0" prefHeight="601.0" prefWidth="599.0" styleClass="root" stylesheets="@Styles/Login.css">
+         <children>
+            <Label fx:id="lab1" layoutX="222.0" layoutY="80.0" style="-fx-font-family: bebas neue;" styleClass="title-label" stylesheets="@Styles/Login.css" text="Hi New User !" />
+            <TextField fx:id="firstNameTextField" layoutX="166.0" layoutY="174.0" prefHeight="25.0" prefWidth="267.0" promptText="Name" styleClass="input-field" />
+            <TextField fx:id="lastNameTextField" layoutX="166.0" layoutY="236.0" prefHeight="25.0" prefWidth="267.0" promptText="Surname" styleClass="input-field" />
+            <TextField fx:id="emailTextField" layoutX="166.0" layoutY="288.0" prefHeight="25.0" prefWidth="267.0" promptText="Email" styleClass="input-field" />
+            <DatePicker fx:id="birthDatePicker" layoutX="166.0" layoutY="411.0" prefHeight="25.0" prefWidth="267.0" promptText="07/04/2023" styleClass="input-field" stylesheets="@Styles/Login.css" />
+            <PasswordField fx:id="passwordTextField" layoutX="166.0" layoutY="348.0" prefHeight="25.0" prefWidth="267.0" promptText="Password" styleClass="input-field" />
+            <Button fx:id="inputjoin" layoutX="261.0" layoutY="486.0" mnemonicParsing="false" style="-fx-font-family: bebas neue; -fx-font-weight: bold;" stylesheets="@Styles/Login.css" text="Join Now !" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

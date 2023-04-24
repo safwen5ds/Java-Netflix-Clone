@@ -1,0 +1,59 @@
+.root {
+    -fx-font-family: "Segoe UI";
+    -fx-base: #36393F;
+    -fx-background-color: #36393F;
+}
+
+.button {
+    -fx-background-color: #2F3136;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: #2F3136;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+}
+
+.button:hover {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #ff0000;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: #202225;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #3E4045;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+HBox {
+    -fx-background-color: #202225;
+    -fx-padding: 5px;
+}
+
+VBox {
+    -fx-background-color: #202225;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+.scroll-pane .corner {
+    -fx-background-color: transparent;
+}
+
+.content {
+    -fx-background-color: #36393F;
+    -fx-padding: 20px;
+}
+
+HBox#contentPane {
+    -fx-spacing: 20px;
+}

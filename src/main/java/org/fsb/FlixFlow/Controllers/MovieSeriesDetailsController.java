@@ -1,6 +1,29 @@
 package org.fsb.FlixFlow.Controllers;
 
+
+
+
 import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import uk.co.caprica.vlcj.player.base.MediaPlayer;
+import uk.co.caprica.vlcj.player.base.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
+import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.fsb.FlixFlow.Utilities.ImageViewVideoSurface;
+import org.fsb.FlixFlow.Utilities.JavaFXFullScreenStrategy;
+import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
+import uk.co.caprica.vlcj.player.base.MediaPlayer;
+import uk.co.caprica.vlcj.player.base.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+
+import java.nio.file.Paths;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,9 +34,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -40,6 +65,10 @@ public class MovieSeriesDetailsController {
 		this.isMovie = isMovie;
 		this.userDashboardController = userDashboardController;
 	}
+	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
+	Font bebasNeueFont1 = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 50);
+	Font bebasNeueFont2 = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 90);
+
 
 	@FXML
 	private Button Watchtrailer;
@@ -47,6 +76,10 @@ public class MovieSeriesDetailsController {
 	private Label vote;
 	@FXML
 	private Slider ratingSlider;
+	@FXML
+	private ImageView m1;
+	@FXML
+	private ImageView m2;
 
 	@FXML
 	private Button submitRating;
@@ -118,6 +151,10 @@ public class MovieSeriesDetailsController {
 
 	@FXML
 	private Button watchButton;
+	@FXML
+	private Label v1;
+	@FXML
+	private Label v2;
 
 	private void addFavoriteGenre(int genreId) {
 		try {
@@ -159,21 +196,36 @@ public class MovieSeriesDetailsController {
 	}
 
 	private void updateVoteCount() {
-		try {
-			int voteCount;
-			if (isMovie) {
-				voteCount = DatabaseUtil.getVoteCountForFilm(mediaId);
-			} else {
-				voteCount = DatabaseUtil.getVoteCountForSeries(mediaId);
+		
+			try {
+				int voteCount;
+				if (isMovie) {
+					voteCount = DatabaseUtil.getVoteCountForFilm(mediaId);
+				} else {
+					voteCount = DatabaseUtil.getVoteCountForSeries(mediaId);
+				}
+				if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+				{
+                v1.setFont(bebasNeueFont2);
+				vote.setText(String.valueOf(voteCount));
+				vote.setFont(bebasNeueFont2);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			vote.setText(String.valueOf(voteCount));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		
+		
 	}
 
 	@FXML
 	public void initialize() throws SQLException {
+		commentbtn.setFont(bebasNeueFont);
+        deleteCommentButton.setFont(bebasNeueFont);
+        modifyCommentButton.setFont(bebasNeueFont);
+        watchButton.setFont(bebasNeueFont);
+        Watchtrailer.setFont(bebasNeueFont);
+        addfav.setFont(bebasNeueFont);
+        submitRating.setFont(bebasNeueFont);
 		initializeTableView();
 
 		if (isMovie) {
@@ -230,7 +282,13 @@ public class MovieSeriesDetailsController {
 						DatabaseUtil.addUserFilmView(userId, mediaId);
 
 						Film updatedFilm = DatabaseUtil.getFilmById(mediaId);
-						vues.setText(String.valueOf(updatedFilm.getVues()));
+						if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+						{
+							v2.setFont(bebasNeueFont2);
+							vues.setText(String.valueOf(updatedFilm.getVues()));
+							vues.setFont(bebasNeueFont2);
+						}
+						
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
@@ -331,7 +389,10 @@ public class MovieSeriesDetailsController {
 				ex.printStackTrace();
 			}
 		});
-		updateVoteCount();
+
+			updateVoteCount();
+
+	
 	}
 
 	private void initializeTableView() {
@@ -397,50 +458,80 @@ public class MovieSeriesDetailsController {
 
 	public void setFilmDetails(Film film) throws SQLException {
 		titre.setText(film.getNom());
+		titre.setFont(bebasNeueFont1);
 		ImagePattern pattern = new ImagePattern(new Image(film.getUrl_image()));
 		backdropImage.setFill(pattern);
 		annee.setText(String.valueOf(film.getAnnee_sortie()));
+		annee.setFont(bebasNeueFont);
 		posterImage.setFill(pattern);
 		synopsisArea.setText(film.getSynopsis());
-		vues.setText(String.valueOf(film.getVues()));
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+		{
+			v2.setFont(bebasNeueFont2);
+			vues.setText(String.valueOf(film.getVues()));
+			vues.setFont(bebasNeueFont2);
+		}
+
 		genre.setText(film.getNom_genre());
+		genre.setFont(bebasNeueFont);
 		langue.setText(film.getNom_langue());
+		langue.setFont(bebasNeueFont);
 		producteur.setText(film.getNom_producteur());
-		pays.setText(film.getNom_producteur());
+		producteur.setFont(bebasNeueFont);
+		pays.setText(film.getNom_pays());
+		pays.setFont(bebasNeueFont);
 		table();
 		double averageScore = DatabaseUtil.calculateAverageFilmScore(film.getId_film());
 		average.setText(String.format("%.2f", averageScore));
+		average.setFont(bebasNeueFont);
 
 	}
 
 	public void setSerieDetails(Serie serie) throws SQLException {
 		titre.setText(serie.getNom());
+		titre.setFont(bebasNeueFont1);
 		ImagePattern pattern = new ImagePattern(new Image(serie.getUrl_image()));
 		backdropImage.setFill(pattern);
 		annee.setText(String.valueOf(serie.getAnnee_sortie()));
+		annee.setFont(bebasNeueFont);
 		posterImage.setFill(pattern);
 		synopsisArea.setText(serie.getSynopsis());
 		DatabaseUtil.calculateTotalSeriesViews(mediaId);
-		vues.setText(String.valueOf(serie.getVues()));
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+		{
+			v2.setFont(bebasNeueFont2);
+			vues.setText(String.valueOf(serie.getVues()));
+			vues.setFont(bebasNeueFont2);
+		}
+
 		genre.setText(serie.getNom_genre());
+		genre.setFont(bebasNeueFont);
 		langue.setText(serie.getNom_langue());
+		langue.setFont(bebasNeueFont);
 		producteur.setText(serie.getNom_producteur());
+		producteur.setFont(bebasNeueFont);
 		pays.setText(serie.getNom_pays());
+		pays.setFont(bebasNeueFont);
 		table();
 		double averageScore = DatabaseUtil.calculateAverageSeriesScore(serie.getId_serie());
 		average.setText(String.format("%.2f", averageScore));
+		average.setFont(bebasNeueFont);
 	}
 
 	private void openUrlInNewWindow(String url) {
-		Stage newWindow = new Stage();
-		newWindow.initModality(Modality.APPLICATION_MODAL);
-		final WebView webView = new WebView();
-		WebEngine webEngine = webView.getEngine();
-		webEngine.load(url);
-		newWindow.setOnHidden(e -> webView.getEngine().load(null));
-		newWindow.setScene(new Scene(webView));
-		newWindow.show();
+	    Stage newWindow = new Stage();
+	    newWindow.initModality(Modality.APPLICATION_MODAL);
+	    final WebView webView = new WebView();
+	    WebEngine webEngine = webView.getEngine();
+	    webEngine.load(url);
+	    newWindow.setOnHidden(e -> webView.getEngine().load(null));
+	    newWindow.setScene(new Scene(new StackPane(webView), 800, 600));
+	    newWindow.show();
 	}
+
+
+
+
 
 	private void openSaisonPage() {
 		try {

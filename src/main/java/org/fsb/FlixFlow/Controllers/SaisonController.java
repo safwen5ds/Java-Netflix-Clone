@@ -4,8 +4,12 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 import org.fsb.FlixFlow.Models.Saison;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
@@ -64,25 +68,49 @@ public class SaisonController {
 	public void loadData(int mediaId, int serieId) {
 		setMediaId(mediaId);
 		setSerieId(serieId);
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+		{
+			try {
+				List<Saison> seasons = DatabaseUtil.getSaisonBySerieId(serieId);
 
-		try {
-			List<Saison> seasons = DatabaseUtil.getSaisonBySerieId(serieId);
+				System.out.println("Seasons: " + seasons);
 
-			System.out.println("Seasons: " + seasons);
+				seasonsContainer.getChildren().clear();
 
-			seasonsContainer.getChildren().clear();
+				for (Saison season : seasons) {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SeasonLayout.fxml"));
+					AnchorPane seasonLayout = loader.load();
+					SeasonLayoutController seasonLayoutController = loader.getController();
+					seasonLayoutController.initData(season);
 
-			for (Saison season : seasons) {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SeasonLayout.fxml"));
-				AnchorPane seasonLayout = loader.load();
-				SeasonLayoutController seasonLayoutController = loader.getController();
-				seasonLayoutController.initData(season);
-
-				seasonsContainer.getChildren().add(seasonLayout);
+					seasonsContainer.getChildren().add(seasonLayout);
+				}
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException | IOException e) {
-			e.printStackTrace();
+		}else
+		{
+			try {
+				List<Saison> seasons = DatabaseUtil.getSaisonBySerieId(serieId);
+
+				System.out.println("Seasons: " + seasons);
+
+				seasonsContainer.getChildren().clear();
+
+				for (Saison season : seasons) {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/SeasonLayout_Others.fxml"));
+					AnchorPane seasonLayout = loader.load();
+					SeasonLayoutController seasonLayoutController = loader.getController();
+					seasonLayoutController.initData(season);
+
+					seasonsContainer.getChildren().add(seasonLayout);
+				}
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
+			}
 		}
+
+		
 	}
 
 }

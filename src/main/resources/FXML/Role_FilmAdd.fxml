@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.Role_FilmAddController">
-    <TableView fx:id="roleFilmTableView" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.Role_FilmAddController">
+   <HBox layoutX="12.0" layoutY="14.0" spacing="10.0">
+      <children>
+         <TextField fx:id="id_acteurTextField" promptText="Id Acteur" />
+         <TextField fx:id="id_filmTextField" promptText="Id Film" />
+         <TextField fx:id="role_typeTextField" promptText="Role Type" />
+         <TextField fx:id="url_imageTextField" promptText="Url Image" />
+         <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddAction" text="Add" />
+         <Button fx:id="updateButton" mnemonicParsing="false" onAction="#handleUpdateAction" text="Update" />
+         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="Delete" />
+      </children>
+   </HBox>
+    <TableView fx:id="roleFilmTableView" layoutX="14.0" layoutY="50.0" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="50.0">
         <columns>
             <TableColumn fx:id="id_acteurColumn" prefWidth="150.0" text="Id Acteur" />
             <TableColumn fx:id="id_filmColumn" prefWidth="150.0" text="Id Film" />
@@ -11,13 +27,4 @@
             <TableColumn fx:id="url_imageColumn" prefWidth="150.0" text="Url Image" />
         </columns>
     </TableView>
-    <HBox layoutX="14.0" layoutY="218.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
-        <TextField fx:id="id_acteurTextField" promptText="Id Acteur" />
-        <TextField fx:id="id_filmTextField" promptText="Id Film" />
-        <TextField fx:id="role_typeTextField" promptText="Role Type" />
-        <TextField fx:id="url_imageTextField" promptText="Url Image" />
-        <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddAction" text="Add" />
-        <Button fx:id="updateButton" mnemonicParsing="false" onAction="#handleUpdateAction" text="Update" />
-        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="Delete" />
-    </HBox>
 </AnchorPane>

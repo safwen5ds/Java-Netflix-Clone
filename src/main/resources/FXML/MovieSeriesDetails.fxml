@@ -1,114 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.effect.GaussianBlur?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1900.0" prefWidth="1280.0" stylesheets="@../style/movie-style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.MovieSeriesDetailsController">
-    <children>
-      <Rectangle fx:id="backdropImage" fill="#c4c4c4" height="2000.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0">
-         <effect>
-            <GaussianBlur radius="30.0" />
-         </effect></Rectangle>
-        <Rectangle fill="#000000b2" height="2000.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0" />
-      <BorderPane prefHeight="674.0" prefWidth="1280.0">
-         <center>
-            <VBox alignment="TOP_CENTER" fillWidth="false" spacing="80.0" BorderPane.alignment="CENTER">
-               <children>
-                  <HBox alignment="CENTER" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="607.0" prefWidth="1120.0" spacing="34.0">
-                     <children>
-                        <Rectangle fx:id="posterImage" arcHeight="7.0" arcWidth="7.0" fill="#c4c4c4" height="607.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="439.0" />
-                        <VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="607.0" prefWidth="646.0" spacing="40.0">
-                           <children>
-                              <VBox spacing="13.0" />
-                              <VBox prefHeight="200.0" prefWidth="400.0">
-                                 <children>
-                                 <HBox>
-                                 <Label text="Titre:" />
-                                    <Label fx:id="titre" text="Label" />
-                                 </HBox>
-                                 <HBox>
-                                  <Label text="Annee de Sortie :" />
-                                    <Label fx:id="annee" text="Label" />
-                                 </HBox>
-                                   <HBox>
-                                  <Label text="vues : " />
-                                    <Label fx:id="vues" text="Label" />
-                                 </HBox> 
-                                   
-                                      <HBox>
-                               <Label text="Genre : " />
-                                    <Label fx:id="genre" text="Label" />
-                                       <Button fx:id="addgenrefav" mnemonicParsing="false" text="addgenrefav" />
-                                 </HBox> 
-                                 
-                                   <HBox>
-                               <Label text="Langue :" />
-                                    <Label fx:id="langue" text="Label" />
-                                 </HBox> 
-                                 
-                                 <HBox>
-                                <Label text="Pays Origine :" />
-                                    <Label fx:id="pays" text="Label" />
-                                 </HBox> 
-                                    <HBox>
-                                <Label text="Producteur :" />
-                                    <Label fx:id="producteur" text="Label" />
-                                 </HBox>
-                                    <Label text="Nbr De Vote : " />
-                                    <Label fx:id="vote" text="Label" /> 
-                                    
-                                   
-                                   
-                                    
-                                 </children>
-                              </VBox>
-                              <Label text="Average :" />
-                              <Label fx:id="average" text="Label" />
-                              <VBox spacing="24.0">
-                                 <children>
-                                    <HBox prefHeight="26.0" prefWidth="10" spacing="16.0" translateX="-50.0">
-                                       <children>
-                                          <Button fx:id="watchButton" focusTraversable="false" layoutX="104.0" layoutY="10.0" mnemonicParsing="false" text="Watch Now" />
-                                          <Button fx:id="Watchtrailer" focusTraversable="false" layoutX="104.0" layoutY="10.0" mnemonicParsing="false" text="Watch Trailer" />
-                                          <Button fx:id="addfav" focusTraversable="false" mnemonicParsing="false" text="Add to Favorite" />
-                                         <Slider fx:id="ratingSlider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-										<Button fx:id="submitRating" mnemonicParsing="false" text="Submit Rating" />
+<?import javafx.scene.text.Font?>
 
-                                       </children>
-                                    </HBox>
-                                    <Label id="overview-label" fx:id="synopsis" focusTraversable="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="647.0" text="Synopsis :" wrapText="true" />
-                                 </children>
-                              </VBox>
-                              <VBox>
-                                 <children>
-                                    <Label fx:id="synopsisArea" text="Label" translateY="-40.0" />
-                                 </children>
-                              </VBox>
-                              
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <ListView fx:id="actorslist" prefHeight="410.0" prefWidth="952.0" />
-                  <Button fx:id="deleteCommentButton" mnemonicParsing="false" text="delete" translateX="325.0" translateY="216.0" />
-                  <Button fx:id="modifyCommentButton" mnemonicParsing="false" text="Modify" translateX="260.0" translateY="110.0" />
-                  <Button fx:id="commentbtn" mnemonicParsing="false" text="add comment" translateX="175.0" translateY="5.0" />
-                  <TextField fx:id="txtcomment" prefHeight="26.0" prefWidth="631.0" translateX="-200.0" translateY="-100.0" />
-                  <TableView fx:id="tab" prefHeight="410.0" prefWidth="1066.0" translateY="-156.0">
-                    <columns>
-                      <TableColumn fx:id="prenom" prefWidth="221.60005795955658" text="Prenom" />
-                      <TableColumn fx:id="commentaire" prefWidth="844.7998962402344" text="Commentaire" />
-                    </columns>
-                  </TableView>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2500.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.MovieSeriesDetailsController">
+   <children>
+      <AnchorPane prefHeight="2500.0" prefWidth="1280.0">
+         <children>
+            <Rectangle fx:id="backdropImage" fill="#c4c4c4" height="2500.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0">
+               <effect>
+             <GaussianBlur radius="30.0" />
+               </effect>
+            </Rectangle>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="2500.0" stroke="BLACK" strokeType="INSIDE" width="1280.0">
+               <effect>
+                  <GaussianBlur />
+               </effect>
+            </Rectangle>
+            <Rectangle fx:id="posterImage" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="607.0" layoutX="140.0" layoutY="77.0" stroke="BLACK" strokeType="INSIDE" width="439.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="521.0" layoutX="619.0" layoutY="78.0" stroke="WHITE" strokeLineCap="ROUND" strokeType="OUTSIDE" strokeWidth="5.0" width="447.0">
+               <effect>
+                  <Blend />
+               </effect></Rectangle>
+            <VBox layoutX="652.0" layoutY="75.0" style="-fx-background-color: transparent;">
+               <children>
+                  <Label fx:id="titre" prefHeight="107.0" prefWidth="697.0" text="Titre" textFill="#fffffff7">
+                     <font>
+                        <Font size="73.0" />
+                     </font>
+                  </Label>
                </children>
-               <BorderPane.margin>
-                  <Insets left="80.0" right="80.0" top="16.0" />
-               </BorderPane.margin>
             </VBox>
-            
-         </center>
-      </BorderPane>
-    </children>
-</StackPane>
+            <Label fx:id="annee" layoutX="690.0" layoutY="207.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="genre" layoutX="690.0" layoutY="259.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="langue" layoutX="690.0" layoutY="309.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="pays" layoutX="690.0" layoutY="360.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="producteur" layoutX="690.0" layoutY="406.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <VBox layoutX="140.0" layoutY="707.0" prefHeight="107.0" prefWidth="906.0">
+               <children>
+                  <Label fx:id="synopsisArea" text="Label" />
+               </children>
+            </VBox>
+            <Button fx:id="watchButton" layoutX="929.0" layoutY="218.0" mnemonicParsing="false" text="Watch Now !" />
+            <Button fx:id="Watchtrailer" layoutX="928.0" layoutY="283.0" mnemonicParsing="false" text="Watch Trailer" />
+            <Button fx:id="addfav" layoutX="934.0" layoutY="358.0" mnemonicParsing="false" text="Add to Fav" />
+            <Button fx:id="addgenrefav" contentDisplay="GRAPHIC_ONLY" layoutX="785.0" layoutY="252.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="38.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Add to Fav" textFill="TRANSPARENT" />
+            <ListView fx:id="actorslist" layoutX="139.0" layoutY="833.0" prefHeight="259.0" prefWidth="906.0" />
+            <TableView fx:id="tab" layoutX="140.0" layoutY="1179.0" prefHeight="312.0" prefWidth="906.0">
+              <columns>
+                <TableColumn fx:id="prenom" prefWidth="190.3999481201172" text="Surname" />
+                <TableColumn fx:id="commentaire" prefWidth="560.0000610351562" text="Comment" />
+              </columns>
+            </TableView>
+            <TextField fx:id="txtcomment" layoutX="140.0" layoutY="1119.0" prefHeight="26.0" prefWidth="270.0" />
+            <Button fx:id="commentbtn" layoutX="454.0" layoutY="1119.0" mnemonicParsing="false" text="Add" />
+            <Button fx:id="modifyCommentButton" layoutX="515.0" layoutY="1119.0" mnemonicParsing="false" text="Modify" />
+            <Button fx:id="deleteCommentButton" layoutX="589.0" layoutY="1119.0" mnemonicParsing="false" text="Delete" />
+            <Slider fx:id="ratingSlider" blockIncrement="1.0" layoutX="656.0" layoutY="465.0" majorTickUnit="1.0" max="10.0" showTickLabels="true" showTickMarks="true" />
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="submitRating" layoutX="843.0" layoutY="460.0" mnemonicParsing="false" text="Submit" />
+            <ImageView fitHeight="510.0" fitWidth="1017.0" layoutX="139.0" layoutY="1530.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Images_Videos/2777931.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="v1" layoutX="600.0" layoutY="1671.0" text="Votes : " />
+            <Label fx:id="v2" layoutX="594.0" layoutY="1836.0" text="Views : " />
+            <Label fx:id="vote" layoutX="815.0" layoutY="1671.0" text="Label" />
+            <Label fx:id="vues" layoutX="815.0" layoutY="1836.0" text="Label" />
+            <HBox layoutX="953.0" layoutY="462.0" style="-fx-background-color: transparent;">
+               <children>
+                  <ImageView fx:id="m2" fitHeight="32.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Images_Videos/star.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="average" text="Label">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <ImageView fx:id="m1" fitHeight="31.0" fitWidth="26.0" layoutX="816.0" layoutY="257.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Images_Videos/love.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

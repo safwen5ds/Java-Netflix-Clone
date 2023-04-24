@@ -1,37 +1,178 @@
 package org.fsb.FlixFlow.Controllers;
 
 import javafx.application.Platform;
+import javafx.scene.control.Button;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.ColorInput;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.effect.Blend;
+import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import java.util.ArrayList;
+
+
+
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Models.Notification;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class UserDashboardController {
 
-	@FXML
-	private HBox contentPane;
-	@FXML
-	private Button btnhome;
+	 @FXML
+	    private ImageView actor_manager;
 
-	@FXML
-	private ImageView notificon;
+	    @FXML
+	    private BorderPane border;
 
-	@FXML
-	private ImageView profileicon;
+	    @FXML
+	    private Button btnfavorite;
+
+	    @FXML
+	    private Button btnhome;
+
+	    @FXML
+	    private Button btnm1;
+
+	    @FXML
+	    private Button btnm2;
+
+	    @FXML
+	    private Button btnm3;
+
+	    @FXML
+	    private Button btnm4;
+
+	    @FXML
+	    private Button btnm5;
+
+	    @FXML
+	    private Button btnm6;
+
+	    @FXML
+	    private Button btnm7;
+
+	    @FXML
+	    private Button btnm8;
+
+	    @FXML
+	    private Button btnm9;
+
+	    @FXML
+	    private Button btnmovie;
+
+	    @FXML
+	    private Button btnrank;
+
+	    @FXML
+	    private Button btnschedule;
+
+	    @FXML
+	    private Button btnserie;
+
+	    @FXML
+	    private ImageView calen;
+
+	    @FXML
+	    private HBox contentPane;
+
+	    @FXML
+	    private ImageView episode;
+
+	    @FXML
+	    private ImageView film;
+
+	    @FXML
+	    private ImageView flixi;
+
+	    @FXML
+	    private HBox header;
+
+	    @FXML
+	    private ImageView heart;
+
+	    @FXML
+	    private ImageView home;
+
+	    @FXML
+	    private VBox menu;
+
+	    @FXML
+	    private VBox menu2;
+
+	    @FXML
+	    private ImageView movie_manager;
+
+	    @FXML
+	    private ImageView movie_role;
+
+	    @FXML
+	    private ImageView notificon;
+
+	    @FXML
+	    private Pane pane1;
+
+	    @FXML
+	    private Pane pane2;
+
+	    @FXML
+	    private ImageView producer;
+
+	    @FXML
+	    private ImageView profileicon;
+
+	    @FXML
+	    private ImageView rank;
+
+	    @FXML
+	    private ScrollPane scroll2;
+
+	    @FXML
+	    private ScrollPane scrollpane;
+
+	    @FXML
+	    private ImageView season_manager;
+
+	    @FXML
+	    private ImageView serie_role;
+
+	    @FXML
+	    private ImageView serie;
+
+	    @FXML
+	    private ImageView serie_manager;
+
+	    @FXML
+	    private ImageView user_manager;
+	
+	public static Stage dashboardStage;
 
 	public UserDashboardController() {
-
+		
 	}
 
 	@FXML
@@ -39,6 +180,77 @@ public class UserDashboardController {
 		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
 		List<Episode> todaysEpisodes = DatabaseUtil.fetchTodaysEpisodes(userId);
 		showNewEpisodeAlerts(todaysEpisodes);
+		handleHomeClick();
+	    setHoverEffect(btnhome, home);
+	    setHoverEffect(btnfavorite,heart );
+	    setHoverEffect(btnm1, actor_manager);
+	    setHoverEffect(btnm2, producer);
+	    setHoverEffect(btnm3, serie_manager);
+	    setHoverEffect(btnm4, season_manager);
+	    setHoverEffect(btnm5, episode);
+	    setHoverEffect(btnm6, movie_manager);
+	    setHoverEffect(btnm7, user_manager);
+	    setHoverEffect(btnm8, serie_role);
+	    setHoverEffect(btnm9, movie_role);
+	    setHoverEffect(btnmovie, film);
+	    setHoverEffect(btnrank, rank);
+	    setHoverEffect(btnschedule, calen);
+	    setHoverEffect(btnserie, serie);
+	    setFontForAllButtons();
+	}
+	private void setFontForAllButtons() {
+	    Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
+
+	    List<Button> buttons = new ArrayList<>(Arrays.asList(btnfavorite, btnhome, btnm1, btnm2, btnm3, btnm4, btnm5, btnm6, btnm7, btnm8, btnm9, btnmovie, btnrank, btnschedule, btnserie));
+
+	    for (Button button : buttons) {
+	        button.setFont(bebasNeueFont);
+	    }
+	}
+	private void setHoverEffect(Button button1, ImageView imageView) {
+	    Color sourceColor = Color.web("#000000"); 
+	    Color finalColor = Color.web("#AD241B"); 
+
+	    button1.setOnMouseEntered(event -> {
+	        button1.setStyle("-fx-background-color: #ffffff;    -fx-border-radius: 5px;   -fx-background-radius: 5px; -fx-text-fill: #AD241B;");
+	        Image inputImage = imageView.getImage(); 
+	        Image outputImage = reColor(inputImage, sourceColor, finalColor);
+	        imageView.setImage(outputImage);
+	    });
+
+	    button1.setOnMouseExited(event -> {
+	        button1.setStyle("-fx-background-color: #2F3136;-fx-border-radius: 5px;   -fx-background-radius: 5px; -fx-text-fill: #FFFFFF;");
+	        Image inputImage = imageView.getImage(); 
+	        Image originalImage = reColor(inputImage, finalColor, sourceColor);
+	        imageView.setImage(originalImage);
+	    });
+	}
+
+	private static Image reColor(Image inputImage, Color sourceColor, Color finalColor) {
+	    int            W           = (int) inputImage.getWidth();
+	    int            H           = (int) inputImage.getHeight();
+	    WritableImage  outputImage = new WritableImage(W, H);
+	    PixelReader    reader      = inputImage.getPixelReader();
+	    PixelWriter    writer      = outputImage.getPixelWriter();
+	    float          ocR         = (float) sourceColor.getRed();
+	    float          ocG         = (float) sourceColor.getGreen();
+	    float          ocB         = (float) sourceColor.getBlue();
+	    float          ncR         = (float) finalColor.getRed();
+	    float          ncG         = (float) finalColor.getGreen();
+	    float          ncB         = (float) finalColor.getBlue();
+	    java.awt.Color oldColor    = new java.awt.Color(ocR, ocG, ocB);
+	    java.awt.Color newColor    = new java.awt.Color(ncR, ncG, ncB);
+	    for (int y = 0; y < H; y++) {
+	        for (int x = 0; x < W; x++) {
+	            int            argb       = reader.getArgb(x, y);
+	            java.awt.Color pixelColor = new java.awt.Color(argb, true);
+	            writer.setArgb(x, y,
+	                           pixelColor.equals(oldColor) ?
+	                           newColor.getRGB() :
+	                           pixelColor.getRGB());
+	        }
+	    }
+	    return outputImage;
 	}
 
 	@FXML
@@ -62,18 +274,22 @@ public class UserDashboardController {
 
 	@FXML
 	private void handleProfileClick() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Profile.fxml"));
-			Parent profileRoot = loader.load();
-			Scene profileScene = new Scene(profileRoot);
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Profile.fxml"));
+	        ProfileController profileController = new ProfileController(this);
+	        loader.setControllerFactory(param -> profileController);
+	        Parent profileRoot = loader.load();
+	        Scene profileScene = new Scene(profileRoot);
+	        profileScene.getStylesheets()
+			.add(getClass().getResource("/FXML/Styles/Login.css").toExternalForm());
 
-			Stage profileStage = new Stage();
-			profileStage.setScene(profileScene);
-			profileStage.setTitle("Profile");
-			profileStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	        Stage profileStage = new Stage();
+	        profileStage.setScene(profileScene);
+	        profileStage.setTitle("Profile");
+	        profileStage.show();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	public void handleNotificationClick() {
@@ -89,6 +305,8 @@ public class UserDashboardController {
 
 			Parent notificationsRoot = loader.load();
 			Scene notificationsScene = new Scene(notificationsRoot);
+			notificationsScene.getStylesheets()
+				.add(getClass().getResource("/FXML/Styles/Login.css").toExternalForm());
 
 			Stage notificationsStage = new Stage();
 			notificationsStage.setScene(notificationsScene);

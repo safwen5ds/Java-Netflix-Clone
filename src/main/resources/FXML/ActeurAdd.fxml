@@ -1,25 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.fsb.FlixFlow.Controllers.ActeurAddController">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="477.0" prefWidth="844.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.ActeurAddController">
     <VBox>
         <GridPane>
             <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <TextField fx:id="idField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <TextField fx:id="idField" translateX="14.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="nameField" translateX="14.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
         </GridPane>
-        <HBox>
-            <Button text="Add" onAction="#addActeur" />
-            <Button text="Update" onAction="#updateActeur" />
-            <Button text="Delete" onAction="#deleteActeur" />
+        <HBox prefWidth="248.0">
+            <Button onAction="#addActeur" text="Add" />
+            <Button onAction="#updateActeur" text="Update" translateX="12.0" />
+            <Button onAction="#deleteActeur" text="Delete" translateX="22.0" />
         </HBox>
         <TableView fx:id="acteurTable">
             <columns>
-                <TableColumn text="ID" fx:id="idColumn" />
-                <TableColumn text="Name" fx:id="nameColumn" />
+                <TableColumn fx:id="idColumn" prefWidth="113.60003966093063" text="ID" />
+                <TableColumn fx:id="nameColumn" prefWidth="134.39996337890625" text="Name" />
             </columns>
         </TableView>
     </VBox>
+   <ImageView fx:id="im1" fitHeight="394.0" fitWidth="515.0" layoutX="379.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@Images_Videos/dcfda422d633e7086307b93a6827defb.gif" />
+      </image>
+      <effect>
+         <DropShadow />
+      </effect>
+   </ImageView>
 </AnchorPane>

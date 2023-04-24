@@ -1,6 +1,9 @@
 package org.fsb.FlixFlow.Controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
@@ -8,13 +11,24 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import java.io.IOException;
 
+import java.io.IOException;
 import java.time.ZoneId;
 
 public class ProfileController {
 
 	@FXML
 	private TextField SurNameField;
+	
+	@FXML
+	private Button Disconnect;
+	
 
 	@FXML
 	private DatePicker date;
@@ -35,8 +49,11 @@ public class ProfileController {
 	private Button updateButton;
 	private Utilisateur user;
 
-	public ProfileController() {
-	}
+	private UserDashboardController userDashboardController;
+
+    public ProfileController(UserDashboardController userDashboardController) {
+        this.userDashboardController = userDashboardController;
+    }
 
 	@FXML
 	private void initialize() {
@@ -86,5 +103,34 @@ public class ProfileController {
 			}
 		}
 	}
+	
+	public void Disconnect() {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Login.fxml"));
+	        Parent loginRoot = loader.load();
+
+	        Scene loginScene = new Scene(loginRoot);
+
+	        Stage profileStage = (Stage) Disconnect.getScene().getWindow();
+
+	        if (userDashboardController != null && UserDashboardController.dashboardStage != null) {
+	            UserDashboardController.dashboardStage.close();
+	        }
+
+	        Stage loginStage = new Stage();
+	        loginStage.setScene(loginScene);
+	        loginStage.setTitle("Login");
+	        loginStage.show();
+
+	        profileStage.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
+
+
+
 
 }

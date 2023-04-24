@@ -38,6 +38,7 @@ public class ClassementController {
 		rankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));
 		nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
 		viewsColumn.setCellValueFactory(new PropertyValueFactory<>("views"));
+		 searchButton.setOnAction(event -> SeriesRanking());
 	}
 
 	@FXML

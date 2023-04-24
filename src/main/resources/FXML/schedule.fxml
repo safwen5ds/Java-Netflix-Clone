@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.fsb.FlixFlow.Controllers.ScheduleController"
-            prefHeight="400.0" prefWidth="600.0">
-   <ListView fx:id="episodesListView" layoutX="14.0" layoutY="14.0" prefHeight="372.0" prefWidth="572.0"/>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="506.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.ScheduleController">
+   <ListView fx:id="episodesListView" layoutX="46.0" layoutY="60.0" prefHeight="372.0" prefWidth="572.0" />
+   <HBox>
+      <children>
+         <Label text="Schedule" />
+      </children>
+   </HBox>
 </AnchorPane>

@@ -2,11 +2,20 @@ package org.fsb.FlixFlow.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
+import javafx.util.Callback;
+
 import org.fsb.FlixFlow.Models.Commentaire_episode;
 import org.fsb.FlixFlow.Models.Episode;
+import org.fsb.FlixFlow.Models.Vote_episode;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -59,8 +68,28 @@ public class EpisodeLayoutController {
 	private ListView<Commentaire_episode> listcomments;
 
 	private List<Episode> episodes;
+	
+	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 
 	public void initData(int saisonId, int serieId) {
+		 episodeListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+	            @Override
+	            public ListCell<String> call(ListView<String> param) {
+	                return new ListCell<String>() {
+	                    @Override
+	                    protected void updateItem(String item, boolean empty) {
+	                        super.updateItem(item, empty);
+	                        if (item != null && !empty) {
+	                            setText(item);
+	                            setStyle("-fx-background-color: purple; -fx-text-fill: white;");
+	                        } else {
+	                            setText(null);
+	                            setStyle(null);
+	                        }
+	                    }
+	                };
+	            }
+	        });
 		try {
 			episodes = org.fsb.FlixFlow.Utilities.DatabaseUtil.getEpisodeByIds(saisonId, serieId);
 
@@ -97,6 +126,10 @@ public class EpisodeLayoutController {
 			}
 		});
 		submitEpisodeRatingButton.setOnAction(event -> submitEpisodeRating());
+		addcommentbtn.setFont(bebasNeueFont);
+		delbtn.setFont(bebasNeueFont);
+		modifbtn.setFont(bebasNeueFont);
+		submitEpisodeRatingButton.setFont(bebasNeueFont);
 
 	}
 
@@ -162,7 +195,7 @@ public class EpisodeLayoutController {
 	private void updateAverageScore(int episodeId) {
 		try {
 			double averageScore = DatabaseUtil.calculateAverageEpisodeScore(episodeId);
-			average.setText(String.format("%.2f", averageScore));
+			average.setText("Average : "+String.format("%.2f", averageScore));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -170,11 +203,18 @@ public class EpisodeLayoutController {
 
 	private void onEpisodeSelected(Episode episode) throws SQLException {
 		DATE_DIFFUSION.setText("Date: " + episode.getDate_diffusion());
-		VUES.setText("Views: " + episode.getVues());
+		DATE_DIFFUSION.setFont(bebasNeueFont);
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+		{
+			VUES.setText("Views: " + episode.getVues());
+			VUES.setFont(bebasNeueFont);
+		}
 		synopsistext.setText(episode.getSynopsis());
+		synopsistext.setFont(bebasNeueFont);
 		episodeWebView.getEngine().load(episode.getUrl_episode());
 		double averageScore = DatabaseUtil.calculateAverageEpisodeScore(episode.getId_episode());
-		average.setText(String.format("%.2f", averageScore));
+		average.setText("Average : " + String.format("%.2f", averageScore));
+		average.setFont(bebasNeueFont);
 
 		try {
 			List<Commentaire_episode> comments = DatabaseUtil.getCommentaireEpisodesByMediaId(episode.getId_episode());
@@ -187,6 +227,9 @@ public class EpisodeLayoutController {
 		}
 		int id_episode = episode.getId_episode();
 		addcommentbtn.setOnAction(event -> addComment(id_episode));
+		addcommentbtn.setFont(bebasNeueFont);
+		delbtn.setFont(bebasNeueFont);
+		modifbtn.setFont(bebasNeueFont);
 		delbtn.setOnAction(event -> deleteComment(id_episode));
 		modifbtn.setOnAction(event -> modifyComment(id_episode));
 		updateCommentList(id_episode);
@@ -203,7 +246,11 @@ public class EpisodeLayoutController {
 						episode.getId_serie());
 				for (Episode updatedEpisode : updatedEpisodes) {
 					if (updatedEpisode.getId_episode() == episode.getId_episode()) {
-						VUES.setText("Views: " + updatedEpisode.getVues());
+						if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+						{
+							VUES.setFont(bebasNeueFont);
+							VUES.setText("Views: " + updatedEpisode.getVues());
+						}
 						break;
 					}
 				}
@@ -216,10 +263,48 @@ public class EpisodeLayoutController {
 	private void updateVoteCount(int episodeId) {
 		try {
 			int totalRatings = DatabaseUtil.getTotalRatingsForEpisode(episodeId);
-			vote.setText(String.valueOf(totalRatings));
+			if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+			{
+				vote.setFont(bebasNeueFont);
+				vote.setText("Votes : "+String.valueOf(totalRatings));
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public Callback<ListView<String>, ListCell<String>> episodeCellFactory() {
+        return list -> new ListCell<String>() {
+            private final ImageView playIcon;
+
+            {
+                playIcon = new ImageView(new Image("/FXML/play.png"));
+                playIcon.setFitHeight(16);
+                playIcon.setFitWidth(16);
+                setGraphic(playIcon);
+                setContentDisplay(ContentDisplay.RIGHT);
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item);
+                    setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+                    if (isSelected()) {
+                        setStyle("-fx-background-color: #9400D3; -fx-text-fill: white;");
+                        setGraphic(playIcon);
+                    } else {
+                        setGraphic(null);
+                    }
+                }
+            }
+        };
+    }
 
 }

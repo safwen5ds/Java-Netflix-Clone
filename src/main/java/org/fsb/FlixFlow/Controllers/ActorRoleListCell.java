@@ -8,6 +8,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
 import java.sql.SQLException;
@@ -23,11 +24,20 @@ public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
 		super();
 		imageView = new ImageView();
 		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(50); // Set the preferred width of the image
+		imageView.setFitWidth(50);
 
 		nameLabel = new Label();
 		roleLabel = new Label();
+
+
+		Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
+		nameLabel.setFont(bebasNeueFont);
+		roleLabel.setFont(bebasNeueFont);
+		nameLabel.setStyle("-fx-text-fill: white;");
+		roleLabel.setStyle("-fx-text-fill: white;");
+
 		favoriteButton = new Button("Add to Favorite");
+		favoriteButton.setFont(bebasNeueFont);
 
 		favoriteButton.setOnAction(event -> {
 			ActorRoleDisplay currentItem = getItem();
@@ -45,6 +55,7 @@ public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
 		content = new HBox(imageView, nameLabel, roleLabel, favoriteButton);
 		content.setSpacing(10);
 	}
+
 
 	private void showAlert(AlertType alertType, String title, String content) {
 		Alert alert = new Alert(alertType);

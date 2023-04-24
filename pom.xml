@@ -20,6 +20,12 @@
     <artifactId>javafx-fxml</artifactId>
     <version>19</version>
 </dependency>
+<!-- https://mvnrepository.com/artifact/uk.co.caprica/vlcj -->
+        <dependency>
+            <groupId>uk.co.caprica</groupId>
+            <artifactId>vlcj-javafx</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 
         <dependency>
 			<groupId>de.jensd</groupId>

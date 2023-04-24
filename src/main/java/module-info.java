@@ -17,5 +17,7 @@ module org.fsb.FlixFlow {
 
 	requires javafx.media;
 	requires javafx.web;
+	requires java.desktop;
+    requires uk.co.caprica.vlcj;
 
 }

@@ -1,6 +1,7 @@
 package org.fsb.FlixFlow.Controllers;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -64,6 +66,17 @@ public class LoginController {
 	public void initialize() {
 		btnreg.setOnAction(event -> changeScene());
 		btnlogin.setOnAction(event -> changescene2());
+		inputpass.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		    public void handle(MouseEvent event) {
+		        String email = inputemail.getText();
+		        if (!isValidEmail(email)) {
+		            alert1.setText("Email Invalide !");
+		        } else {
+		            alert1.setText("");
+		        }
+		    }
+		});
+
 	}
 
 	private boolean isValidEmail(String email) {
@@ -81,34 +94,44 @@ public class LoginController {
 	}
 
 	private void changescene2() {
-		String email = inputemail.getText();
-		String password = inputpass.getText();
+	    String email = inputemail.getText();
+	    String password = inputpass.getText();
 
-		if (!isValidEmail(email)) {
-			alert1.setText("Email Invalide !");
-			return;
-		}
+	 
+	    if (!DatabaseUtil.checkUserCredentials(email, password)) {
+	        showErrorDialog("Invalid credentials");
+	        return;
+	    }
 
-		if (!DatabaseUtil.checkUserCredentials(email, password)) {
-			showErrorDialog("Invalid credentials");
-			return;
-		}
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/dash.fxml"));
-			Parent secondaryRoot = loader.load();
-			Scene secondaryScene = new Scene(secondaryRoot);
-			secondaryScene.getStylesheets()
-					.add(getClass().getResource("/FXML/Styles/discord_theme.css").toExternalForm());
-			Stage primaryStage = (Stage) btnreg.getScene().getWindow();
-			primaryStage.setScene(secondaryScene);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	    String userType = DatabaseUtil.readUserFromFile().getType();
+	    String fxmlPath;
+	    if ("admin".equals(userType)) {
+	        fxmlPath = "/FXML/dash.fxml";
+	    } else if ("Normal User".equals(userType)) {
+	        fxmlPath = "/FXML/dash_User.fxml";
+	    } else {
+	        fxmlPath = "/FXML/dash_Producer.fxml";
+	    }
+
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+	        Parent secondaryRoot = loader.load();
+	        Scene secondaryScene = new Scene(secondaryRoot);
+	        secondaryScene.getStylesheets()
+	                .add(getClass().getResource("/FXML/Styles/dash_theme.css").toExternalForm());
+	        Stage primaryStage = (Stage) btnlogin.getScene().getWindow();
+	        primaryStage.setScene(secondaryScene);
+
+	        UserDashboardController.dashboardStage = primaryStage;
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 
 	private void changeScene() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/secondary.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Register.fxml"));
 			Parent secondaryRoot = loader.load();
 			Scene secondaryScene = new Scene(secondaryRoot);
 
