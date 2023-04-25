@@ -40,19 +40,20 @@ public class ProducteurAddController {
 		producteurs = FXCollections.observableArrayList(org.fsb.FlixFlow.Utilities.DatabaseUtil.getAllProducteurs());
 		producteurTable.setItems(producteurs);
 	}
+
 	private void showAlert(String message) {
-	    Alert alert = new Alert(AlertType.ERROR);
-	    alert.setTitle("Error");
-	    alert.setHeaderText(null);
-	    alert.setContentText(message);
-	    alert.showAndWait();
-	}
-	private void refreshTable() {
-	    producteurs.clear();
-	    producteurs.addAll(org.fsb.FlixFlow.Utilities.DatabaseUtil.getAllProducteurs());
-	    producteurTable.refresh();
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
+	private void refreshTable() {
+		producteurs.clear();
+		producteurs.addAll(org.fsb.FlixFlow.Utilities.DatabaseUtil.getAllProducteurs());
+		producteurTable.refresh();
+	}
 
 	@FXML
 	private void addProducteur() {

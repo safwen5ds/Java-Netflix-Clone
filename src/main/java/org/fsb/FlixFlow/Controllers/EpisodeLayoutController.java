@@ -65,50 +65,47 @@ public class EpisodeLayoutController {
 	private ListView<Commentaire_episode> listcomments;
 
 	private List<Episode> episodes;
-	
+
 	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 
 	public void initData(int saisonId, int serieId) {
-		 episodeListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-	            @Override
-	            public ListCell<String> call(ListView<String> param) {
-	                return new ListCell<String>() {
-	                    @Override
-	                    protected void updateItem(String item, boolean empty) {
-	                        super.updateItem(item, empty);
-	                        if (item != null && !empty) {
-	                            setText(item);
-	                            setStyle("-fx-background-color: purple; -fx-text-fill: white;");
-	                        } else {
-	                            setText(null);
-	                            setStyle(null);
-	                        }
-	                    }
-	                };
-	            }
-	        });
+		episodeListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+			@Override
+			public ListCell<String> call(ListView<String> param) {
+				return new ListCell<String>() {
+					@Override
+					protected void updateItem(String item, boolean empty) {
+						super.updateItem(item, empty);
+						if (item != null && !empty) {
+							setText(item);
+							setStyle("-fx-background-color: purple; -fx-text-fill: white;");
+						} else {
+							setText(null);
+							setStyle(null);
+						}
+					}
+				};
+			}
+		});
 		try {
 			episodes = org.fsb.FlixFlow.Utilities.DatabaseUtil.getEpisodeByIds(saisonId, serieId);
 
 			for (Episode episode : episodes) {
-			    System.out.println("Adding episode to ListView: " + episode.getNum_episode());
-			    episodeListView.getItems().add(0, "Episode " + episode.getNum_episode());
+				System.out.println("Adding episode to ListView: " + episode.getNum_episode());
+				episodeListView.getItems().add(0, "Episode " + episode.getNum_episode());
 			}
 
-
-
 			episodeListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			    int selectedIndex = episodeListView.getSelectionModel().getSelectedIndex();
-			    int adjustedIndex = episodes.size() - 1 - selectedIndex; 
-			    if (adjustedIndex >= 0) {
-			        try {
-			            onEpisodeSelected(episodes.get(adjustedIndex));
-			        } catch (SQLException e) {
-			            e.printStackTrace();
-			        }
-			    }
+				int selectedIndex = episodeListView.getSelectionModel().getSelectedIndex();
+				int adjustedIndex = episodes.size() - 1 - selectedIndex;
+				if (adjustedIndex >= 0) {
+					try {
+						onEpisodeSelected(episodes.get(adjustedIndex));
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
 			});
-
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -132,7 +129,6 @@ public class EpisodeLayoutController {
 		submitEpisodeRatingButton.setFont(bebasNeueFont);
 		System.out.println("Fetched episodes: " + episodes);
 		System.out.println("Number of episodes: " + episodes.size());
-
 
 	}
 
@@ -198,7 +194,7 @@ public class EpisodeLayoutController {
 	private void updateAverageScore(int episodeId) {
 		try {
 			double averageScore = DatabaseUtil.calculateAverageEpisodeScore(episodeId);
-			average.setText("Average : "+String.format("%.2f", averageScore));
+			average.setText("Average : " + String.format("%.2f", averageScore));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -207,8 +203,7 @@ public class EpisodeLayoutController {
 	private void onEpisodeSelected(Episode episode) throws SQLException {
 		DATE_DIFFUSION.setText("Date: " + episode.getDate_diffusion());
 		DATE_DIFFUSION.setFont(bebasNeueFont);
-		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
-		{
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
 			VUES.setText("Views: " + episode.getVues());
 			VUES.setFont(bebasNeueFont);
 		}
@@ -250,8 +245,7 @@ public class EpisodeLayoutController {
 						episode.getId_serie());
 				for (Episode updatedEpisode : updatedEpisodes) {
 					if (updatedEpisode.getId_episode() == episode.getId_episode()) {
-						if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
-						{
+						if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
 							VUES.setFont(bebasNeueFont);
 							VUES.setText("Views: " + updatedEpisode.getVues());
 						}
@@ -267,10 +261,9 @@ public class EpisodeLayoutController {
 	private void updateVoteCount(int episodeId) {
 		try {
 			int totalRatings = DatabaseUtil.getTotalRatingsForEpisode(episodeId);
-			if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
-			{
+			if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
 				vote.setFont(bebasNeueFont);
-				vote.setText("Votes : "+String.valueOf(totalRatings));
+				vote.setText("Votes : " + String.valueOf(totalRatings));
 			}
 
 		} catch (SQLException e) {
@@ -278,44 +271,45 @@ public class EpisodeLayoutController {
 			showErrorDialog("Error Updating Vote !");
 		}
 	}
-	
+
 	public Callback<ListView<String>, ListCell<String>> episodeCellFactory() {
-        return list -> new ListCell<String>() {
-            private final ImageView playIcon;
+		return list -> new ListCell<String>() {
+			private final ImageView playIcon;
 
-            {
-                playIcon = new ImageView(new Image("/FXML/play.png"));
-                playIcon.setFitHeight(16);
-                playIcon.setFitWidth(16);
-                setGraphic(playIcon);
-                setContentDisplay(ContentDisplay.RIGHT);
-            }
+			{
+				playIcon = new ImageView(new Image("/FXML/play.png"));
+				playIcon.setFitHeight(16);
+				playIcon.setFitWidth(16);
+				setGraphic(playIcon);
+				setContentDisplay(ContentDisplay.RIGHT);
+			}
 
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
+			@Override
+			protected void updateItem(String item, boolean empty) {
+				super.updateItem(item, empty);
 
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    setText(item);
-                    setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
-                    if (isSelected()) {
-                        setStyle("-fx-background-color: #9400D3; -fx-text-fill: white;");
-                        setGraphic(playIcon);
-                    } else {
-                        setGraphic(null);
-                    }
-                }
-            }
-        };
-    }
-	 private void showErrorDialog(String message) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText(null);
-			alert.setContentText(message);
-			alert.showAndWait();
-		}
+				if (empty || item == null) {
+					setText(null);
+					setGraphic(null);
+				} else {
+					setText(item);
+					setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+					if (isSelected()) {
+						setStyle("-fx-background-color: #9400D3; -fx-text-fill: white;");
+						setGraphic(playIcon);
+					} else {
+						setGraphic(null);
+					}
+				}
+			}
+		};
+	}
+
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
 }

@@ -42,69 +42,65 @@ import static uk.co.caprica.vlcj.player.embedded.videosurface.VideoSurfaceAdapte
  */
 public final class ImageViewVideoSurface extends VideoSurface {
 
-    private final ImageView imageView;
+	private final ImageView imageView;
 
-    private final PixelBufferBufferFormatCallback bufferFormatCallback;
+	private final PixelBufferBufferFormatCallback bufferFormatCallback;
 
-    private final PixelBufferRenderCallback renderCallback;
+	private final PixelBufferRenderCallback renderCallback;
 
-    private final PixelBufferVideoSurface videoSurface;
+	private final PixelBufferVideoSurface videoSurface;
 
-    private PixelBuffer<ByteBuffer> pixelBuffer;
+	private PixelBuffer<ByteBuffer> pixelBuffer;
 
-    /**
-     * Create a new {@link VideoSurface} for an {@link ImageView}.
-     *
-     * @param imageView image view used to render the video
-     */
-    public ImageViewVideoSurface(ImageView imageView) {
-        super(getVideoSurfaceAdapter());
-        this.imageView = imageView;
-        this.bufferFormatCallback = new PixelBufferBufferFormatCallback();
-        this.renderCallback = new PixelBufferRenderCallback();
-        this.videoSurface = new PixelBufferVideoSurface();
-    }
+	/**
+	 * Create a new {@link VideoSurface} for an {@link ImageView}.
+	 *
+	 * @param imageView image view used to render the video
+	 */
+	public ImageViewVideoSurface(ImageView imageView) {
+		super(getVideoSurfaceAdapter());
+		this.imageView = imageView;
+		this.bufferFormatCallback = new PixelBufferBufferFormatCallback();
+		this.renderCallback = new PixelBufferRenderCallback();
+		this.videoSurface = new PixelBufferVideoSurface();
+	}
 
-    @Override
-    public void attach(MediaPlayer mediaPlayer) {
-        this.videoSurface.attach(mediaPlayer);
-    }
+	@Override
+	public void attach(MediaPlayer mediaPlayer) {
+		this.videoSurface.attach(mediaPlayer);
+	}
 
-    private class PixelBufferBufferFormatCallback implements BufferFormatCallback {
+	private class PixelBufferBufferFormatCallback implements BufferFormatCallback {
 
-        private int sourceWidth;
-        private int sourceHeight;
+		private int sourceWidth;
+		private int sourceHeight;
 
-        @Override
-        public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
-            this.sourceWidth = sourceWidth;
-            this.sourceHeight = sourceHeight;
-            return new RV32BufferFormat(sourceWidth, sourceHeight);
-        }
+		@Override
+		public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
+			this.sourceWidth = sourceWidth;
+			this.sourceHeight = sourceHeight;
+			return new RV32BufferFormat(sourceWidth, sourceHeight);
+		}
 
-        @Override
-        public void allocatedBuffers(ByteBuffer[] buffers) {
-            PixelFormat<ByteBuffer> pixelFormat = PixelFormat.getByteBgraPreInstance();
-            pixelBuffer = new PixelBuffer<>(sourceWidth, sourceHeight, buffers[0], pixelFormat);
-            imageView.setImage(new WritableImage(pixelBuffer));
-        }
-    }
+		@Override
+		public void allocatedBuffers(ByteBuffer[] buffers) {
+			PixelFormat<ByteBuffer> pixelFormat = PixelFormat.getByteBgraPreInstance();
+			pixelBuffer = new PixelBuffer<>(sourceWidth, sourceHeight, buffers[0], pixelFormat);
+			imageView.setImage(new WritableImage(pixelBuffer));
+		}
+	}
 
-    private class PixelBufferRenderCallback implements RenderCallback {
-        @Override
-        public void display(MediaPlayer mediaPlayer, ByteBuffer[] nativeBuffers, BufferFormat bufferFormat) {
-            Platform.runLater(() -> pixelBuffer.updateBuffer(pb -> null));
-        }
-    }
+	private class PixelBufferRenderCallback implements RenderCallback {
+		@Override
+		public void display(MediaPlayer mediaPlayer, ByteBuffer[] nativeBuffers, BufferFormat bufferFormat) {
+			Platform.runLater(() -> pixelBuffer.updateBuffer(pb -> null));
+		}
+	}
 
-    private class PixelBufferVideoSurface extends CallbackVideoSurface {
-        private PixelBufferVideoSurface() {
-            super(
-                ImageViewVideoSurface.this.bufferFormatCallback,
-                ImageViewVideoSurface.this.renderCallback,
-                true,
-                getVideoSurfaceAdapter()
-            );
-        }
-    }
+	private class PixelBufferVideoSurface extends CallbackVideoSurface {
+		private PixelBufferVideoSurface() {
+			super(ImageViewVideoSurface.this.bufferFormatCallback, ImageViewVideoSurface.this.renderCallback, true,
+					getVideoSurfaceAdapter());
+		}
+	}
 }

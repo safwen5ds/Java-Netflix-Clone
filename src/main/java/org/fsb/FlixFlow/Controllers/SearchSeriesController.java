@@ -48,7 +48,7 @@ public class SearchSeriesController {
 
 	@FXML
 	private TextField actorSearchTextField;
-	
+
 	private HashMap<Integer, Serie> seriesMap = new HashMap<>();
 
 	@FXML
@@ -98,27 +98,25 @@ public class SearchSeriesController {
 	private Map<Integer, List<Acteur>> seriesActorsMap;
 
 	private void loadAllSeries() {
-	    try {
-	        List<Serie> series = DatabaseUtil.getSeriesSortedByViews();
-	        masterData = FXCollections.observableArrayList();
-	        seriesActorsMap = new HashMap<>();
-	        seriesMap = new HashMap<>();
-	        for (Serie serie1 : series) {
-	            Serie serie = DatabaseUtil.getSerieById(serie1.getId_serie()); 
-	            if (serie != null) {
-	                masterData.add(serie);
-	                seriesMap.put(serie.getId_serie(), serie);
-	                List<Acteur> actors = DatabaseUtil.getActorsBySerieId(serie.getId_serie());
-	                seriesActorsMap.put(serie.getId_serie(), actors);
-	            }
-	        }
-	        updateSeriesFlowPane(masterData);
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			List<Serie> series = DatabaseUtil.getSeriesSortedByViews();
+			masterData = FXCollections.observableArrayList();
+			seriesActorsMap = new HashMap<>();
+			seriesMap = new HashMap<>();
+			for (Serie serie1 : series) {
+				Serie serie = DatabaseUtil.getSerieById(serie1.getId_serie());
+				if (serie != null) {
+					masterData.add(serie);
+					seriesMap.put(serie.getId_serie(), serie);
+					List<Acteur> actors = DatabaseUtil.getActorsBySerieId(serie.getId_serie());
+					seriesActorsMap.put(serie.getId_serie(), actors);
+				}
+			}
+			updateSeriesFlowPane(masterData);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-
-
 
 	private void setupSearchFieldListeners() {
 		setDelayedSearchListener(serieTitleSearchTextField);
@@ -148,26 +146,27 @@ public class SearchSeriesController {
 		String actorFilter = actorSearchTextField.getText().toLowerCase();
 
 		List<Serie> filteredData = masterData.stream()
-			    .filter(serie -> serieTitleFilter.isEmpty() || serie.getNom().toLowerCase().contains(serieTitleFilter))
-			    .filter(serie -> releaseYearFilter.isEmpty()
-			            || String.valueOf(serie.getAnnee_sortie()).contains(releaseYearFilter))
-			    .filter(serie -> genreFilter.isEmpty() || (serie.getNom_genre() != null && serie.getNom_genre().toLowerCase().contains(genreFilter)))
-			    .filter(serie -> languageFilter.isEmpty() || serie.getNom_langue().toLowerCase().contains(languageFilter))
-			    .filter(serie -> countryOfOriginFilter.isEmpty()
-			            || serie.getNom_pays().toLowerCase().contains(countryOfOriginFilter))
-			    .filter(serie -> producerFilter.isEmpty()
-			            || serie.getNom_producteur().toLowerCase().contains(producerFilter))
-			    .filter(serie -> {
-			        if (actorFilter.isEmpty()) {
-			            return true;
-			        }
-			        List<Acteur> actors = seriesActorsMap.get(serie.getId_serie());
-			        return actors.stream().anyMatch(actor -> actor.getNom().toLowerCase().contains(actorFilter));
-			    }).collect(Collectors.toList());
-      for (Serie f : filteredData)
-      {
-    	  System.out.println(f.toString());
-      }
+				.filter(serie -> serieTitleFilter.isEmpty() || serie.getNom().toLowerCase().contains(serieTitleFilter))
+				.filter(serie -> releaseYearFilter.isEmpty()
+						|| String.valueOf(serie.getAnnee_sortie()).contains(releaseYearFilter))
+				.filter(serie -> genreFilter.isEmpty()
+						|| (serie.getNom_genre() != null && serie.getNom_genre().toLowerCase().contains(genreFilter)))
+				.filter(serie -> languageFilter.isEmpty()
+						|| serie.getNom_langue().toLowerCase().contains(languageFilter))
+				.filter(serie -> countryOfOriginFilter.isEmpty()
+						|| serie.getNom_pays().toLowerCase().contains(countryOfOriginFilter))
+				.filter(serie -> producerFilter.isEmpty()
+						|| serie.getNom_producteur().toLowerCase().contains(producerFilter))
+				.filter(serie -> {
+					if (actorFilter.isEmpty()) {
+						return true;
+					}
+					List<Acteur> actors = seriesActorsMap.get(serie.getId_serie());
+					return actors.stream().anyMatch(actor -> actor.getNom().toLowerCase().contains(actorFilter));
+				}).collect(Collectors.toList());
+		for (Serie f : filteredData) {
+			System.out.println(f.toString());
+		}
 
 		updateSeriesFlowPane(FXCollections.observableArrayList(filteredData));
 	}

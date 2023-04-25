@@ -16,8 +16,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import java.util.Comparator;
 
-
-
 public class ActeurAddController {
 
 	@FXML
@@ -36,8 +34,8 @@ public class ActeurAddController {
 	private TableColumn<Acteur, Integer> idColumn;
 	@FXML
 	private TableColumn<Acteur, String> nameColumn;
-    @FXML
-    private ImageView im1;
+	@FXML
+	private ImageView im1;
 	private ObservableList<Acteur> acteurs;
 
 	@FXML
@@ -51,48 +49,43 @@ public class ActeurAddController {
 
 	@FXML
 	private void addActeur() {
-	    int id = Integer.parseInt(idField.getText());
-	    String name = nameField.getText();
+		int id = Integer.parseInt(idField.getText());
+		String name = nameField.getText();
 
-	    Acteur newActeur = new Acteur(id, name);
-	    if (DatabaseUtil.insertActeur(newActeur)) {
-	        acteurs.add(newActeur);
-	        acteurs.sort(Comparator.comparing(Acteur::getId_acteur)); 
-	    } else {
-	        showAlert("Erreur add acteur ! ");
-	    }
+		Acteur newActeur = new Acteur(id, name);
+		if (DatabaseUtil.insertActeur(newActeur)) {
+			acteurs.add(newActeur);
+			acteurs.sort(Comparator.comparing(Acteur::getId_acteur));
+		} else {
+			showAlert("Erreur add acteur ! ");
+		}
 	}
 
 	private void refreshTable() {
-	    acteurs.clear();
-	    acteurs.addAll(DatabaseUtil.getAllActeurs());
-	    acteurs.sort(Comparator.comparing(Acteur::getId_acteur)); 
-	    acteurTable.refresh();
+		acteurs.clear();
+		acteurs.addAll(DatabaseUtil.getAllActeurs());
+		acteurs.sort(Comparator.comparing(Acteur::getId_acteur));
+		acteurTable.refresh();
 	}
-
-
 
 	@FXML
 	private void updateActeur() {
-	    Acteur selectedActeur = acteurTable.getSelectionModel().getSelectedItem();
+		Acteur selectedActeur = acteurTable.getSelectionModel().getSelectedItem();
 
-	    if (selectedActeur != null) {
-	        int id = Integer.parseInt(idField.getText());
-	        String name = nameField.getText();
+		if (selectedActeur != null) {
+			int id = Integer.parseInt(idField.getText());
+			String name = nameField.getText();
 
-	        Acteur updatedActeur = new Acteur(id, name);
-	        if (DatabaseUtil.updateActeur(updatedActeur)) {
-	            selectedActeur.setId_acteur(id);
-	            selectedActeur.setNom(name);
-	            refreshTable(); 
-	        } else {
-	        	showAlert("Erreur update acteur ! ");
-	        }
-	    }
+			Acteur updatedActeur = new Acteur(id, name);
+			if (DatabaseUtil.updateActeur(updatedActeur)) {
+				selectedActeur.setId_acteur(id);
+				selectedActeur.setNom(name);
+				refreshTable();
+			} else {
+				showAlert("Erreur update acteur ! ");
+			}
+		}
 	}
-
-
-
 
 	@FXML
 	private void deleteActeur() {
@@ -106,13 +99,13 @@ public class ActeurAddController {
 			}
 		}
 	}
-	
+
 	private void showAlert(String message) {
-	    Alert alert = new Alert(AlertType.ERROR);
-	    alert.setTitle("Error");
-	    alert.setHeaderText(null);
-	    alert.setContentText(message);
-	    alert.showAndWait();
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 }

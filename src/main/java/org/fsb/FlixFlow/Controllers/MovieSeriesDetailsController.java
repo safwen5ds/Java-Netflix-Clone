@@ -1,8 +1,5 @@
 package org.fsb.FlixFlow.Controllers;
 
-
-
-
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -46,10 +43,10 @@ public class MovieSeriesDetailsController {
 		this.isMovie = isMovie;
 		this.userDashboardController = userDashboardController;
 	}
+
 	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 	Font bebasNeueFont1 = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 50);
 	Font bebasNeueFont2 = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 90);
-
 
 	@FXML
 	private Button Watchtrailer;
@@ -141,11 +138,11 @@ public class MovieSeriesDetailsController {
 		try {
 			int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
 			if (DatabaseUtil.isGenreFavExists(userId, genreId)) {
-				showErrorDialog("This genre is already in your favorites.");
+				showmsg("This genre is already in your favorites.");
 
 			} else {
 				DatabaseUtil.addPreferenceGenre(userId, genreId);
-				showErrorDialog("Genre added to your favorites.");
+				showmsg("Genre added to your favorites.");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -172,43 +169,41 @@ public class MovieSeriesDetailsController {
 	}
 
 	private void updateVoteCount() {
-		
-			try {
-				int voteCount;
-				if (isMovie) {
-					voteCount = DatabaseUtil.getVoteCountForFilm(mediaId);
-				} else {
-					voteCount = DatabaseUtil.getVoteCountForSeries(mediaId);
-				}
-				if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
-				{
-                v1.setFont(bebasNeueFont2);
+
+		try {
+			int voteCount;
+			if (isMovie) {
+				voteCount = DatabaseUtil.getVoteCountForFilm(mediaId);
+			} else {
+				voteCount = DatabaseUtil.getVoteCountForSeries(mediaId);
+			}
+			if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
+				v1.setFont(bebasNeueFont2);
 				vote.setText(String.valueOf(voteCount));
 				vote.setFont(bebasNeueFont2);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				showErrorDialog("Error ! ");
 			}
-		
-		
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error ! ");
+		}
+
 	}
 
 	@FXML
 	public void initialize() throws SQLException {
 		commentbtn.setFont(bebasNeueFont);
-        deleteCommentButton.setFont(bebasNeueFont);
-        modifyCommentButton.setFont(bebasNeueFont);
-        watchButton.setFont(bebasNeueFont);
-        Watchtrailer.setFont(bebasNeueFont);
-        addfav.setFont(bebasNeueFont);
-        submitRating.setFont(bebasNeueFont);
+		deleteCommentButton.setFont(bebasNeueFont);
+		modifyCommentButton.setFont(bebasNeueFont);
+		watchButton.setFont(bebasNeueFont);
+		Watchtrailer.setFont(bebasNeueFont);
+		addfav.setFont(bebasNeueFont);
+		submitRating.setFont(bebasNeueFont);
 		initializeTableView();
 
 		if (isMovie) {
 			try {
 				Film film = DatabaseUtil.getFilmById(mediaId);
-				if (film != null) { 
+				if (film != null) {
 					setFilmDetails(film);
 				} else {
 
@@ -225,7 +220,7 @@ public class MovieSeriesDetailsController {
 					setSerieDetails(serie);
 				} else {
 					showErrorDialog("Serie not found with mediaId: " + mediaId);
-					
+
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -261,13 +256,12 @@ public class MovieSeriesDetailsController {
 						DatabaseUtil.addUserFilmView(userId, mediaId);
 
 						Film updatedFilm = DatabaseUtil.getFilmById(mediaId);
-						if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
-						{
+						if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
 							v2.setFont(bebasNeueFont2);
 							vues.setText(String.valueOf(updatedFilm.getVues()));
 							vues.setFont(bebasNeueFont2);
 						}
-						
+
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
@@ -285,23 +279,19 @@ public class MovieSeriesDetailsController {
 			try {
 				if (isMovie) {
 
-					if (DatabaseUtil.addPreferenceFilm(loggedInUser.getId_utilisateur(), mediaId)==0)
-					{
-						showErrorDialog("Movie Already In Your Favorites ! ");
-					}else
-					{
-						showErrorDialog("Movie Added To Favorites ! ");
+					if (DatabaseUtil.addPreferenceFilm(loggedInUser.getId_utilisateur(), mediaId) == 0) {
+						showmsg("Movie Already In Your Favorites ! ");
+					} else {
+						showmsg("Movie Added To Favorites ! ");
 					}
 
 				} else {
-					if (DatabaseUtil.addPreferenceSerie(loggedInUser.getId_utilisateur(), mediaId)==0)
-					{
-						showErrorDialog("Serie Already In Your Favorites ! ");
-					}else
-					{
-						showErrorDialog("Serie Added To Favorites ! ");
+					if (DatabaseUtil.addPreferenceSerie(loggedInUser.getId_utilisateur(), mediaId) == 0) {
+						showmsg("Serie Already In Your Favorites ! ");
+					} else {
+						showmsg("Serie Added To Favorites ! ");
 					}
-					
+
 				}
 			} catch (SQLException ex) {
 				ex.printStackTrace();
@@ -391,9 +381,8 @@ public class MovieSeriesDetailsController {
 			}
 		});
 
-			updateVoteCount();
+		updateVoteCount();
 
-	
 	}
 
 	private void initializeTableView() {
@@ -468,8 +457,7 @@ public class MovieSeriesDetailsController {
 		annee.setFont(bebasNeueFont);
 		posterImage.setFill(pattern);
 		synopsisArea.setText(film.getSynopsis());
-		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
-		{
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
 			v2.setFont(bebasNeueFont2);
 			vues.setText(String.valueOf(film.getVues()));
 			vues.setFont(bebasNeueFont2);
@@ -500,8 +488,7 @@ public class MovieSeriesDetailsController {
 		posterImage.setFill(pattern);
 		synopsisArea.setText(serie.getSynopsis());
 		DatabaseUtil.calculateTotalSeriesViews(mediaId);
-		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
-		{
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
 			v2.setFont(bebasNeueFont2);
 			vues.setText(String.valueOf(serie.getVues()));
 			vues.setFont(bebasNeueFont2);
@@ -522,19 +509,15 @@ public class MovieSeriesDetailsController {
 	}
 
 	private void openUrlInNewWindow(String url) {
-	    Stage newWindow = new Stage();
-	    newWindow.initModality(Modality.APPLICATION_MODAL);
-	    final WebView webView = new WebView();
-	    WebEngine webEngine = webView.getEngine();
-	    webEngine.load(url);
-	    newWindow.setOnHidden(e -> webView.getEngine().load(null));
-	    newWindow.setScene(new Scene(new StackPane(webView), 800, 600));
-	    newWindow.show();
+		Stage newWindow = new Stage();
+		newWindow.initModality(Modality.APPLICATION_MODAL);
+		final WebView webView = new WebView();
+		WebEngine webEngine = webView.getEngine();
+		webEngine.load(url);
+		newWindow.setOnHidden(e -> webView.getEngine().load(null));
+		newWindow.setScene(new Scene(new StackPane(webView), 800, 600));
+		newWindow.show();
 	}
-
-
-
-
 
 	private void openSaisonPage() {
 		try {
@@ -551,12 +534,21 @@ public class MovieSeriesDetailsController {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			 showErrorDialog("Error Openning Seasons Page ! ");
+			showErrorDialog("Error Openning Seasons Page ! ");
 		}
 	}
+
 	private void showErrorDialog(String message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
+	private void showmsg(String message) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Important");
 		alert.setHeaderText(null);
 		alert.setContentText(message);
 		alert.showAndWait();

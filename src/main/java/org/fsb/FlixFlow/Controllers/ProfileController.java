@@ -19,10 +19,9 @@ public class ProfileController {
 
 	@FXML
 	private TextField SurNameField;
-	
+
 	@FXML
 	private Button Disconnect;
-	
 
 	@FXML
 	private DatePicker date;
@@ -45,9 +44,9 @@ public class ProfileController {
 
 	private UserDashboardController userDashboardController;
 
-    public ProfileController(UserDashboardController userDashboardController) {
-        this.userDashboardController = userDashboardController;
-    }
+	public ProfileController(UserDashboardController userDashboardController) {
+		this.userDashboardController = userDashboardController;
+	}
 
 	@FXML
 	private void initialize() {
@@ -97,34 +96,29 @@ public class ProfileController {
 			}
 		}
 	}
-	
+
 	public void Disconnect() {
-	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Login.fxml"));
-	        Parent loginRoot = loader.load();
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Login.fxml"));
+			Parent loginRoot = loader.load();
 
-	        Scene loginScene = new Scene(loginRoot);
+			Scene loginScene = new Scene(loginRoot);
 
-	        Stage profileStage = (Stage) Disconnect.getScene().getWindow();
+			Stage profileStage = (Stage) Disconnect.getScene().getWindow();
 
-	        if (userDashboardController != null && UserDashboardController.dashboardStage != null) {
-	            UserDashboardController.dashboardStage.close();
-	        }
+			if (userDashboardController != null && UserDashboardController.dashboardStage != null) {
+				UserDashboardController.dashboardStage.close();
+			}
 
-	        Stage loginStage = new Stage();
-	        loginStage.setScene(loginScene);
-	        loginStage.setTitle("Login");
-	        loginStage.show();
+			Stage loginStage = new Stage();
+			loginStage.setScene(loginScene);
+			loginStage.setTitle("Login");
+			loginStage.show();
 
-	        profileStage.close();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
+			profileStage.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-
-
-
-
-
 
 }

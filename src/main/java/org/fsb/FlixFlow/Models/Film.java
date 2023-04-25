@@ -50,7 +50,6 @@ public class Film {
 		return id_film;
 	}
 
-
 	public void setId_film(int id_film) {
 		this.id_film = id_film;
 	}
@@ -192,6 +191,5 @@ public class Film {
 				+ Nom_genre + ", Nom_pays=" + Nom_pays + ", Nom_langue=" + Nom_langue + ", Nom_acteur=" + Nom_acteur
 				+ "]";
 	}
-	
 
 }

@@ -29,7 +29,6 @@ public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
 		nameLabel = new Label();
 		roleLabel = new Label();
 
-
 		Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 		nameLabel.setFont(bebasNeueFont);
 		roleLabel.setFont(bebasNeueFont);
@@ -55,7 +54,6 @@ public class ActorRoleListCell extends ListCell<ActorRoleDisplay> {
 		content = new HBox(imageView, nameLabel, roleLabel, favoriteButton);
 		content.setSpacing(10);
 	}
-
 
 	private void showAlert(AlertType alertType, String title, String content) {
 		Alert alert = new Alert(alertType);

@@ -35,7 +35,7 @@ public class ClassementController {
 
 	@FXML
 	private TableColumn<SeriesRanking, Integer> viewsColumn;
-	
+
 	@FXML
 	private ImageView im1;
 
@@ -43,7 +43,7 @@ public class ClassementController {
 		rankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));
 		nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
 		viewsColumn.setCellValueFactory(new PropertyValueFactory<>("views"));
-		 searchButton.setOnAction(event -> SeriesRanking());
+		searchButton.setOnAction(event -> SeriesRanking());
 	}
 
 	@FXML

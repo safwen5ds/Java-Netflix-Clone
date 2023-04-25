@@ -11,39 +11,40 @@ import java.io.IOException;
 
 public class PageNavigationUtil {
 
-    public static void openMovieSeriesDetails(int id, boolean isMovie,
-                                              UserDashboardController userDashboardController) {
-    	
+	public static void openMovieSeriesDetails(int id, boolean isMovie,
+			UserDashboardController userDashboardController) {
 
-        if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
-            try {
-                FXMLLoader loader = new FXMLLoader(PageNavigationUtil.class.getResource("/FXML/MovieSeriesDetails.fxml"));
-                loader.setControllerFactory(
-                        param -> new MovieSeriesDetailsController(id, isMovie, userDashboardController));
-                Parent detailsPage = loader.load();
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
+			try {
+				FXMLLoader loader = new FXMLLoader(
+						PageNavigationUtil.class.getResource("/FXML/MovieSeriesDetails.fxml"));
+				loader.setControllerFactory(
+						param -> new MovieSeriesDetailsController(id, isMovie, userDashboardController));
+				Parent detailsPage = loader.load();
 
-                Platform.runLater(() -> {
-                    userDashboardController.getContentPane().getChildren().setAll(detailsPage);
-                });
+				Platform.runLater(() -> {
+					userDashboardController.getContentPane().getChildren().setAll(detailsPage);
+				});
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                FXMLLoader loader = new FXMLLoader(PageNavigationUtil.class.getResource("/FXML/MovieSeriesDetails_Others.fxml"));
-                loader.setControllerFactory(
-                        param -> new MovieSeriesDetailsController(id, isMovie, userDashboardController));
-                Parent detailsPage = loader.load();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				FXMLLoader loader = new FXMLLoader(
+						PageNavigationUtil.class.getResource("/FXML/MovieSeriesDetails_Others.fxml"));
+				loader.setControllerFactory(
+						param -> new MovieSeriesDetailsController(id, isMovie, userDashboardController));
+				Parent detailsPage = loader.load();
 
-                Platform.runLater(() -> {
-                    userDashboardController.getContentPane().getChildren().setAll(detailsPage);
-                });
+				Platform.runLater(() -> {
+					userDashboardController.getContentPane().getChildren().setAll(detailsPage);
+				});
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-    }
+	}
 }

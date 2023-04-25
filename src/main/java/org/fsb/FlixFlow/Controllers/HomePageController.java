@@ -51,8 +51,6 @@ public class HomePageController {
 
 	}
 
-
-
 	private void loadFilm(List<Film> films, HBox trendingPane2) {
 		for (Film film : films) {
 			ImageView poster = new ImageView(new Image(film.getUrl_image()));

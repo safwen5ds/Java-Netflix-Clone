@@ -27,48 +27,49 @@ import uk.co.caprica.vlcj.player.embedded.fullscreen.FullScreenStrategy;
  * <p>
  * This is a cross-platform strategy.
  */
-public class JavaFXFullScreenStrategy implements FullScreenStrategy  {
+public class JavaFXFullScreenStrategy implements FullScreenStrategy {
 
-    /**
-     * Stage to switch to full screen.
-     */
-    private final Stage stage;
+	/**
+	 * Stage to switch to full screen.
+	 */
+	private final Stage stage;
 
-    /**
-     * Create a full-screen strategy
-     *
-     * @param stage stage to switch to full screen
-     */
-    public JavaFXFullScreenStrategy(Stage stage) {
-        this.stage = stage;
-    }
+	/**
+	 * Create a full-screen strategy
+	 *
+	 * @param stage stage to switch to full screen
+	 */
+	public JavaFXFullScreenStrategy(Stage stage) {
+		this.stage = stage;
+	}
 
-    @Override
-    public final void enterFullScreenMode() {
-        onBeforeEnterFullScreen();
-        stage.setFullScreen(true);
-    }
+	@Override
+	public final void enterFullScreenMode() {
+		onBeforeEnterFullScreen();
+		stage.setFullScreen(true);
+	}
 
-    @Override
-    public final void exitFullScreenMode() {
-        stage.setFullScreen(false);
-        onAfterExitFullScreen();
-    }
+	@Override
+	public final void exitFullScreenMode() {
+		stage.setFullScreen(false);
+		onAfterExitFullScreen();
+	}
 
-    @Override
-    public final boolean isFullScreenMode() {
-        return stage.isFullScreen();
-    }
+	@Override
+	public final boolean isFullScreenMode() {
+		return stage.isFullScreen();
+	}
 
-    /**
-     * Optional override to perform operations before switching to full screen.
-     */
-    public void onBeforeEnterFullScreen() {
-    }
+	/**
+	 * Optional override to perform operations before switching to full screen.
+	 */
+	public void onBeforeEnterFullScreen() {
+	}
 
-    /**
-     * Optional override to perform operations after switching back from full screen.
-     */
-    public void onAfterExitFullScreen() {
-    }
+	/**
+	 * Optional override to perform operations after switching back from full
+	 * screen.
+	 */
+	public void onAfterExitFullScreen() {
+	}
 }

@@ -66,8 +66,7 @@ public class SaisonController {
 	public void loadData(int mediaId, int serieId) {
 		setMediaId(mediaId);
 		setSerieId(serieId);
-		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
-		{
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
 			try {
 				List<Saison> seasons = DatabaseUtil.getSaisonBySerieId(serieId);
 
@@ -87,8 +86,7 @@ public class SaisonController {
 				e.printStackTrace();
 				showErrorDialog("Error Loading Season");
 			}
-		}else
-		{
+		} else {
 			try {
 				List<Saison> seasons = DatabaseUtil.getSaisonBySerieId(serieId);
 
@@ -110,8 +108,8 @@ public class SaisonController {
 			}
 		}
 
-		
 	}
+
 	private void showErrorDialog(String message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");

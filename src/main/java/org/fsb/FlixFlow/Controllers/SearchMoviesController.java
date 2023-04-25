@@ -48,7 +48,7 @@ public class SearchMoviesController {
 
 	@FXML
 	private TextField actorSearchTextField;
-	
+
 	private HashMap<Integer, Film> filmsMap = new HashMap<>();
 
 	@FXML
@@ -98,27 +98,25 @@ public class SearchMoviesController {
 	private Map<Integer, List<Acteur>> moviesActorsMap;
 
 	private void loadAllMovies() {
-	    try {
-	        List<Film> films = DatabaseUtil.getMoviesSortedByViews();
-	        masterData = FXCollections.observableArrayList();
-	        moviesActorsMap = new HashMap<>();
-	        filmsMap = new HashMap<>();
-	        for (Film film : films) {
-	            Film movie = DatabaseUtil.getFilmById(film.getId_film()); 
-	            if (movie != null) {
-	                masterData.add(movie);
-	                filmsMap.put(movie.getId_film(), movie);
-	                List<Acteur> actors = DatabaseUtil.getActorsByFilmId(movie.getId_film());
-	                moviesActorsMap.put(movie.getId_film(), actors);
-	            }
-	        }
-	        updateMoviesFlowPane(masterData);
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			List<Film> films = DatabaseUtil.getMoviesSortedByViews();
+			masterData = FXCollections.observableArrayList();
+			moviesActorsMap = new HashMap<>();
+			filmsMap = new HashMap<>();
+			for (Film film : films) {
+				Film movie = DatabaseUtil.getFilmById(film.getId_film());
+				if (movie != null) {
+					masterData.add(movie);
+					filmsMap.put(movie.getId_film(), movie);
+					List<Acteur> actors = DatabaseUtil.getActorsByFilmId(movie.getId_film());
+					moviesActorsMap.put(movie.getId_film(), actors);
+				}
+			}
+			updateMoviesFlowPane(masterData);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-
-
 
 	private void setupSearchFieldListeners() {
 		setDelayedSearchListener(movieTitleSearchTextField);
@@ -148,26 +146,26 @@ public class SearchMoviesController {
 		String actorFilter = actorSearchTextField.getText().toLowerCase();
 
 		List<Film> filteredData = masterData.stream()
-			    .filter(film -> movieTitleFilter.isEmpty() || film.getNom().toLowerCase().contains(movieTitleFilter))
-			    .filter(film -> releaseYearFilter.isEmpty()
-			            || String.valueOf(film.getAnnee_sortie()).contains(releaseYearFilter))
-			    .filter(film -> genreFilter.isEmpty() || (film.getNom_genre() != null && film.getNom_genre().toLowerCase().contains(genreFilter)))
-			    .filter(film -> languageFilter.isEmpty() || film.getNom_langue().toLowerCase().contains(languageFilter))
-			    .filter(film -> countryOfOriginFilter.isEmpty()
-			            || film.getNom_pays().toLowerCase().contains(countryOfOriginFilter))
-			    .filter(film -> producerFilter.isEmpty()
-			            || film.getNom_producteur().toLowerCase().contains(producerFilter))
-			    .filter(film -> {
-			        if (actorFilter.isEmpty()) {
-			            return true;
-			        }
-			        List<Acteur> actors = moviesActorsMap.get(film.getId_film());
-			        return actors.stream().anyMatch(actor -> actor.getNom().toLowerCase().contains(actorFilter));
-			    }).collect(Collectors.toList());
-      for (Film f : filteredData)
-      {
-    	  System.out.println(f.toString());
-      }
+				.filter(film -> movieTitleFilter.isEmpty() || film.getNom().toLowerCase().contains(movieTitleFilter))
+				.filter(film -> releaseYearFilter.isEmpty()
+						|| String.valueOf(film.getAnnee_sortie()).contains(releaseYearFilter))
+				.filter(film -> genreFilter.isEmpty()
+						|| (film.getNom_genre() != null && film.getNom_genre().toLowerCase().contains(genreFilter)))
+				.filter(film -> languageFilter.isEmpty() || film.getNom_langue().toLowerCase().contains(languageFilter))
+				.filter(film -> countryOfOriginFilter.isEmpty()
+						|| film.getNom_pays().toLowerCase().contains(countryOfOriginFilter))
+				.filter(film -> producerFilter.isEmpty()
+						|| film.getNom_producteur().toLowerCase().contains(producerFilter))
+				.filter(film -> {
+					if (actorFilter.isEmpty()) {
+						return true;
+					}
+					List<Acteur> actors = moviesActorsMap.get(film.getId_film());
+					return actors.stream().anyMatch(actor -> actor.getNom().toLowerCase().contains(actorFilter));
+				}).collect(Collectors.toList());
+		for (Film f : filteredData) {
+			System.out.println(f.toString());
+		}
 
 		updateMoviesFlowPane(FXCollections.observableArrayList(filteredData));
 	}
