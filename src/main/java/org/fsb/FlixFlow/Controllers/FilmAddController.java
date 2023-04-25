@@ -3,9 +3,12 @@ package org.fsb.FlixFlow.Controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+
 import org.fsb.FlixFlow.Models.Film;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -36,6 +39,8 @@ public class FilmAddController {
 	@FXML
 	private TextField synopsisTextField;
 	@FXML
+	private TextField FilmUrlTextFiled;
+	@FXML
     private TableView<Film> FilmTableView;
     @FXML
     private TableColumn<Film, Integer> idColumn;
@@ -57,6 +62,8 @@ public class FilmAddController {
     private TableColumn<Film, Integer> Producer_IDColumn;
     @FXML
     private TableColumn<Film, String> SynopsisColumn;
+    @FXML
+    private TableColumn<Film, String> FilmUrlColumn;
     
     public void initialize() {
     	idColumn.setCellValueFactory(new PropertyValueFactory<>("id_film"));
@@ -69,6 +76,7 @@ public class FilmAddController {
         Country_IDColumn.setCellValueFactory(new PropertyValueFactory<>("id_pays_origine"));
         Producer_IDColumn.setCellValueFactory(new PropertyValueFactory<>("id_producteur"));
         SynopsisColumn.setCellValueFactory(new PropertyValueFactory<>("synopsis"));
+        FilmUrlColumn.setCellValueFactory(new PropertyValueFactory<>("url_film"));
         FilmTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 Film selectedFilm = FilmTableView.getSelectionModel().getSelectedItem();
@@ -82,6 +90,7 @@ public class FilmAddController {
                 countryIdTextField.setText(String.valueOf(selectedFilm.getId_pays_origine()));
                 producerIdTextField.setText(String.valueOf(selectedFilm.getId_producteur()));
                 synopsisTextField.setText(selectedFilm.getSynopsis());
+                FilmUrlTextFiled.setText(selectedFilm.getUrl_film());
             }
         });
 
@@ -95,6 +104,7 @@ public class FilmAddController {
             FilmTableView.setItems(Films);
         } catch (SQLException e) {
             e.printStackTrace();
+            showErrorDialog("Error When Refreshing Table !");
         }
     }
 
@@ -120,13 +130,15 @@ public class FilmAddController {
             Film.setId_pays_origine(Integer.parseInt(countryIdTextField.getText()));
             Film.setId_producteur(Integer.parseInt(producerIdTextField.getText()));
             Film.setSynopsis(synopsisTextField.getText());
+            Film.setUrl_film(FilmUrlTextFiled.getText());
 
             DatabaseUtil.createFilm(Film);
         } catch (SQLException e) {
             e.printStackTrace();
+            showErrorDialog("Error Creating Film");
         } catch (NumberFormatException e) {
+        	showErrorDialog("Invalid input. Please check your input fields and try again !");
             
-            System.err.println("Invalid input. Please check your input fields and try again.");
         }
         refreshTable();
     }
@@ -148,10 +160,12 @@ public class FilmAddController {
 			Film.setId_pays_origine(Integer.parseInt(countryIdTextField.getText()));
 			Film.setId_producteur(Integer.parseInt(producerIdTextField.getText()));
 			Film.setSynopsis(synopsisTextField.getText());
+			Film.setUrl_film(FilmUrlTextFiled.getText());
 
 			DatabaseUtil.updateFilm(Film);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Updating Movie !");
 		}
 		refreshTable();
 	}
@@ -163,8 +177,17 @@ public class FilmAddController {
 			DatabaseUtil.deleteFilm(id);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Deleting Movie !");
 		}
 		refreshTable();
+	}
+	
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 }
 

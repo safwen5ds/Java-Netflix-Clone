@@ -3,9 +3,12 @@ package org.fsb.FlixFlow.Controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+
 import org.fsb.FlixFlow.Models.Serie;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -95,6 +98,7 @@ public class SerieAddController {
             serieTableView.setItems(series);
         } catch (SQLException e) {
             e.printStackTrace();
+            showErrorDialog("Error When Refreshing Table");
         }
     }
 
@@ -124,9 +128,9 @@ public class SerieAddController {
             DatabaseUtil.addSerie(serie);
         } catch (SQLException e) {
             e.printStackTrace();
+        	showErrorDialog("Error Creating Serie ! ");
         } catch (NumberFormatException e) {
-            
-            System.err.println("Invalid input. Please check your input fields and try again.");
+        	showErrorDialog("Invalid input. Please check your input fields and try again !");
         }
         refreshTable();
     }
@@ -163,8 +167,17 @@ public class SerieAddController {
 			DatabaseUtil.deleteSerie(id);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Deleting Serie");
 		}
 		refreshTable();
+	}
+	
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 }
 

@@ -140,21 +140,15 @@ public class MovieSeriesDetailsController {
 		try {
 			int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
 			if (DatabaseUtil.isGenreFavExists(userId, genreId)) {
-				Alert alert = new Alert(AlertType.WARNING);
-				alert.setTitle("Warning");
-				alert.setHeaderText(null);
-				alert.setContentText("This genre is already in your favorites.");
-				alert.showAndWait();
+				showErrorDialog("This genre is already in your favorites.");
+
 			} else {
 				DatabaseUtil.addPreferenceGenre(userId, genreId);
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Information");
-				alert.setHeaderText(null);
-				alert.setContentText("Genre added to your favorites.");
-				alert.showAndWait();
+				showErrorDialog("Genre added to your favorites.");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error ! ");
 		}
 	}
 
@@ -172,6 +166,7 @@ public class MovieSeriesDetailsController {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error ! ");
 		}
 	}
 
@@ -192,6 +187,7 @@ public class MovieSeriesDetailsController {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				showErrorDialog("Error ! ");
 			}
 		
 		
@@ -211,11 +207,11 @@ public class MovieSeriesDetailsController {
 		if (isMovie) {
 			try {
 				Film film = DatabaseUtil.getFilmById(mediaId);
-				if (film != null) { // Add this null check
+				if (film != null) { 
 					setFilmDetails(film);
 				} else {
 
-					System.err.println("Film not found with mediaId: " + mediaId);
+					showErrorDialog("Film not found with mediaId: " + mediaId);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -227,11 +223,12 @@ public class MovieSeriesDetailsController {
 				if (serie != null) {
 					setSerieDetails(serie);
 				} else {
-
-					System.err.println("Serie not found with mediaId: " + mediaId);
+					showErrorDialog("Serie not found with mediaId: " + mediaId);
+					
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				showErrorDialog("Error ! ");
 			}
 		}
 		loadActorsList();
@@ -244,6 +241,7 @@ public class MovieSeriesDetailsController {
 						: DatabaseUtil.getSerieById(mediaId).getUrl_video();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
+				showErrorDialog("Error ! ");
 			}
 			openUrlInNewWindow(url);
 		});
@@ -272,6 +270,8 @@ public class MovieSeriesDetailsController {
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
+					showErrorDialog("Error ! ");
+
 				}
 				openUrlInNewWindow(url);
 			});
@@ -283,12 +283,28 @@ public class MovieSeriesDetailsController {
 		addfav.setOnAction(e -> {
 			try {
 				if (isMovie) {
-					DatabaseUtil.addPreferenceFilm(loggedInUser.getId_utilisateur(), mediaId);
+
+					if (DatabaseUtil.addPreferenceFilm(loggedInUser.getId_utilisateur(), mediaId)==0)
+					{
+						showErrorDialog("Movie Already In Your Favorites ! ");
+					}else
+					{
+						showErrorDialog("Movie Added To Favorites ! ");
+					}
+
 				} else {
-					DatabaseUtil.addPreferenceSerie(loggedInUser.getId_utilisateur(), mediaId);
+					if (DatabaseUtil.addPreferenceSerie(loggedInUser.getId_utilisateur(), mediaId)==0)
+					{
+						showErrorDialog("Serie Already In Your Favorites ! ");
+					}else
+					{
+						showErrorDialog("Serie Added To Favorites ! ");
+					}
+					
 				}
 			} catch (SQLException ex) {
 				ex.printStackTrace();
+				showErrorDialog("Error Adding To Favorite ! ");
 			}
 		});
 		submitRating.setOnAction(event -> {
@@ -312,6 +328,7 @@ public class MovieSeriesDetailsController {
 				}
 			} catch (SQLException ex) {
 				ex.printStackTrace();
+				showErrorDialog("Error Adding Comment ! ");
 			}
 		});
 
@@ -332,6 +349,7 @@ public class MovieSeriesDetailsController {
 					}
 				} catch (SQLException ex) {
 					ex.printStackTrace();
+					showErrorDialog("Error Modifying Comment ! ");
 				}
 			}
 		});
@@ -350,6 +368,7 @@ public class MovieSeriesDetailsController {
 					table();
 				} catch (SQLException ex) {
 					ex.printStackTrace();
+					showErrorDialog("Error Deleting Comment !  ");
 				}
 			}
 		});
@@ -367,6 +386,7 @@ public class MovieSeriesDetailsController {
 				addFavoriteGenre(genreId);
 			} catch (SQLException ex) {
 				ex.printStackTrace();
+				showErrorDialog("Error Adding To Favorite ! ");
 			}
 		});
 
@@ -406,6 +426,7 @@ public class MovieSeriesDetailsController {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Loading Actors List ! ");
 		}
 	}
 
@@ -430,6 +451,7 @@ public class MovieSeriesDetailsController {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Loading Page ! ");
 		}
 
 		tab.setItems(commentaires);
@@ -528,7 +550,15 @@ public class MovieSeriesDetailsController {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+			 showErrorDialog("Error Openning Seasons Page ! ");
 		}
+	}
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 }

@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+
 import org.fsb.FlixFlow.Models.*;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import java.util.Date;
@@ -78,6 +80,7 @@ public class SaisonAddController {
             seasonTable.setItems(seasons);
         } catch (SQLException e) {
             e.printStackTrace();
+            showErrorDialog("Error When Refreshing Table ! ");
         }
     }
 
@@ -98,8 +101,9 @@ public class SaisonAddController {
             refreshTable();
         } catch (SQLException e) {
             e.printStackTrace();
+            showErrorDialog("Error Adding Season ! ");
         } catch (NumberFormatException e) {
-            System.err.println("Invalid input. Please check your input fields and try again.");
+        	showErrorDialog("Invalid input. Please check your input fields and try again.");
         }
     }
 
@@ -119,8 +123,9 @@ public class SaisonAddController {
             refreshTable();
         } catch (SQLException e) {
             e.printStackTrace();
+            showErrorDialog("Error Updating Season ! ");
         } catch (NumberFormatException e) {
-            System.err.println("Invalid input. Please check your input fields and try again.");
+        	showErrorDialog("Invalid input. Please check your input fields and try again !");
         }
     }
 
@@ -133,10 +138,18 @@ public class SaisonAddController {
             refreshTable();
         } catch (SQLException e) {
             e.printStackTrace();
+            showErrorDialog("Error Deleting Season ! ");
         } catch (NumberFormatException e) {
-            System.err.println("Invalid input. Please check your input fields and try again.");
+        	showErrorDialog("Invalid input. Please check your input fields and try again !");
         }
     }
+    private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
 }
 
 

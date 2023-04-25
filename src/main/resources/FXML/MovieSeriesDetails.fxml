@@ -78,7 +78,14 @@
             <Button fx:id="watchButton" layoutX="929.0" layoutY="218.0" mnemonicParsing="false" text="Watch Now !" />
             <Button fx:id="Watchtrailer" layoutX="928.0" layoutY="283.0" mnemonicParsing="false" text="Watch Trailer" />
             <Button fx:id="addfav" layoutX="934.0" layoutY="358.0" mnemonicParsing="false" text="Add to Fav" />
-            <Button fx:id="addgenrefav" contentDisplay="GRAPHIC_ONLY" layoutX="785.0" layoutY="252.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="38.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Add to Fav" textFill="TRANSPARENT" />
+            <Button fx:id="addgenrefav" contentDisplay="GRAPHIC_ONLY" layoutX="807.0" layoutY="252.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="38.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Add to Fav" textFill="TRANSPARENT">
+               <graphic>
+                  <ImageView fx:id="m1" fitHeight="31.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Images_Videos/love.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
             <ListView fx:id="actorslist" layoutX="139.0" layoutY="833.0" prefHeight="259.0" prefWidth="906.0" />
             <TableView fx:id="tab" layoutX="140.0" layoutY="1179.0" prefHeight="312.0" prefWidth="906.0">
               <columns>
@@ -116,11 +123,6 @@
                   </Label>
                </children>
             </HBox>
-            <ImageView fx:id="m1" fitHeight="31.0" fitWidth="26.0" layoutX="816.0" layoutY="257.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@Images_Videos/love.png" />
-               </image>
-            </ImageView>
          </children>
       </AnchorPane>
    </children>

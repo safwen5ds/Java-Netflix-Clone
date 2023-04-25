@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+
 import java.sql.SQLException;
 import org.fsb.FlixFlow.Models.Role_film;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
@@ -26,7 +28,7 @@ public class Role_FilmAddController {
     @FXML
     private TextField id_filmTextField;
     @FXML
-    private TextField role_typeTextField;
+    private ComboBox<String> role_typeComboBox;
     @FXML
     private TextField url_imageTextField;
     @FXML
@@ -46,16 +48,20 @@ public class Role_FilmAddController {
 
         roleFilmList = FXCollections.observableArrayList();
         roleFilmTableView.setItems(roleFilmList);
+        role_typeComboBox.setItems(FXCollections.observableArrayList("Main Actor", "Secondary Actor"));
 
         roleFilmTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 Role_film selectedRoleFilm = roleFilmTableView.getSelectionModel().getSelectedItem();
                 id_acteurTextField.setText(String.valueOf(selectedRoleFilm.getId_acteur()));
                 id_filmTextField.setText(String.valueOf(selectedRoleFilm.getId_film()));
-                role_typeTextField.setText(selectedRoleFilm.getRole_type());
+                role_typeComboBox.setValue(selectedRoleFilm.getRole_type()); 
                 url_imageTextField.setText(selectedRoleFilm.getUrl_image());
+            } else {
+                clearForm();
             }
         });
+
 
         refreshTable();
     }
@@ -74,34 +80,33 @@ public class Role_FilmAddController {
         try {
             Role_film roleFilm = new Role_film(Integer.parseInt(id_acteurTextField.getText()),
                     Integer.parseInt(id_filmTextField.getText()),
-                    role_typeTextField.getText(),
+                    role_typeComboBox.getValue(),
                     url_imageTextField.getText());
+            System.out.println(roleFilm.toString());
             DatabaseUtil.addRoleFilm(roleFilm);
             roleFilmList.add(roleFilm);
-            clearForm();
         } catch (SQLException e) {
-            showErrorAlert("Error adding Role_film", e);
+        	showErrorDialog("Error adding Role_film" );
         }
     }
 
     @FXML
-    private void handleUpdateAction(ActionEvent event) {
+    private void handleUpdateAction(ActionEvent event) throws SQLException {
         Role_film selectedRoleFilm = roleFilmTableView.getSelectionModel().getSelectedItem();
         if (selectedRoleFilm != null) {
-            try {
+                Role_film old_film = new Role_film();
+                old_film.setId_acteur(selectedRoleFilm.getId_acteur());
+                old_film.setId_film(selectedRoleFilm.getId_film());
+                old_film.setRole_type(selectedRoleFilm.getRole_type());
+                old_film.setUrl_image(selectedRoleFilm.getUrl_image());
                 selectedRoleFilm.setId_acteur(Integer.parseInt(id_acteurTextField.getText()));
                 selectedRoleFilm.setId_film(Integer.parseInt(id_filmTextField.getText()));
-                selectedRoleFilm.setRole_type(role_typeTextField.getText());
+                selectedRoleFilm.setRole_type(role_typeComboBox.getValue());
                 selectedRoleFilm.setUrl_image(url_imageTextField.getText());
-                DatabaseUtil.updateRoleFilm(selectedRoleFilm);
+                System.out.println("Updating roleFilm: " + selectedRoleFilm.toString());
+                DatabaseUtil.updateRoleFilm(selectedRoleFilm,old_film);
                 roleFilmTableView.refresh();
-                clearForm();
-            } catch (SQLException e) {
-                showErrorAlert("Error updating Role_film", e);
             }
-        } else {
-            showWarningAlert("No Role_film Selected", "Please select a Role_film to update.");
-        }
     }
 
     @FXML
@@ -113,33 +118,24 @@ public class Role_FilmAddController {
                 roleFilmList.remove(selectedRoleFilm);
                 clearForm();
             } catch (SQLException e) {
-                showErrorAlert("Error deleting Role_film", e);
+            	showErrorDialog("Error deleting Role_film");
             }
         } else {
-            showWarningAlert("No Role_film Selected", "Please select a Role_film to delete.");
+        	showErrorDialog("No Role_film Selected Please select a Role_film to delete.");
         }
     }
 
     private void clearForm() {
         id_acteurTextField.clear();
         id_filmTextField.clear();
-        role_typeTextField.clear();
         url_imageTextField.clear();
     }
 
-    private void showErrorAlert(String title, SQLException e) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(e.getMessage());
-        alert.showAndWait();
-    }
-
-    private void showWarningAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+    private void showErrorDialog(String message) {
+ 		Alert alert = new Alert(AlertType.ERROR);
+ 		alert.setTitle("Error");
+ 		alert.setHeaderText(null);
+ 		alert.setContentText(message);
+ 		alert.showAndWait();
+ 	}
 }

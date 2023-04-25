@@ -183,4 +183,15 @@ public class Film {
 		Nom_acteur = nom_acteur;
 	}
 
+	@Override
+	public String toString() {
+		return "Film [id_film=" + id_film + ", nom=" + nom + ", annee_sortie=" + annee_sortie + ", url_film=" + url_film
+				+ ", url_image=" + url_image + ", url_video=" + url_video + ", vues=" + vues + ", id_genre=" + id_genre
+				+ ", id_langue=" + id_langue + ", id_pays_origine=" + id_pays_origine + ", id_producteur="
+				+ id_producteur + ", synopsis=" + synopsis + ", Nom_producteur=" + Nom_producteur + ", Nom_genre="
+				+ Nom_genre + ", Nom_pays=" + Nom_pays + ", Nom_langue=" + Nom_langue + ", Nom_acteur=" + Nom_acteur
+				+ "]";
+	}
+	
+
 }

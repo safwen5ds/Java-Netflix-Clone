@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
@@ -138,6 +139,7 @@ public class SeasonLayoutController {
 			commentinput.clear();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Adding Comment ! ");
 		}
 	}
 
@@ -149,6 +151,7 @@ public class SeasonLayoutController {
 				updateCommentList();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				showErrorDialog("Error Deleting Comment ! ");
 			}
 		}
 	}
@@ -163,6 +166,7 @@ public class SeasonLayoutController {
 				commentinput.clear();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				showErrorDialog("Error Modifying Comment ! ");
 			}
 		}
 	}
@@ -173,6 +177,7 @@ public class SeasonLayoutController {
 			listcomment.getItems().setAll(comments);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Updating Comment ! ");
 		}
 	}
 
@@ -189,6 +194,7 @@ public class SeasonLayoutController {
 			average.setText(String.format("%.2f", averageScore));
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Updating Average ! ");
 		}
 	}
 
@@ -204,9 +210,12 @@ public class SeasonLayoutController {
 				Scene scene = new Scene(root);
 				Stage stage = new Stage();
 				stage.setScene(scene);
+				stage.setWidth(1270);
+				stage.setHeight(720);
 				stage.show();
 			} catch (IOException e) {
 				e.printStackTrace();
+				showErrorDialog("Error Openning Episodes ! ");
 			}
 		}else
 		{
@@ -219,9 +228,12 @@ public class SeasonLayoutController {
 				Scene scene = new Scene(root);
 				Stage stage = new Stage();
 				stage.setScene(scene);
+				stage.setWidth(1270);
+				stage.setHeight(720);
 				stage.show();
 			} catch (IOException e) {
 				e.printStackTrace();
+				showErrorDialog("Error Openning Episodes ! ");
 			}
 		}
 		
@@ -280,6 +292,7 @@ public class SeasonLayoutController {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				showErrorDialog("Error Updating Votes ! ");
 			}
 		
 		
@@ -296,9 +309,17 @@ public class SeasonLayoutController {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				showErrorDialog("Error Updating Total Episode ! ");
 			
 		}
 		
+	}
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 }

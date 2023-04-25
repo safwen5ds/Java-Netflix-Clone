@@ -4,6 +4,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.fsb.FlixFlow.Models.Saison;
@@ -83,6 +85,7 @@ public class SaisonController {
 				}
 			} catch (SQLException | IOException e) {
 				e.printStackTrace();
+				showErrorDialog("Error Loading Season");
 			}
 		}else
 		{
@@ -103,10 +106,18 @@ public class SaisonController {
 				}
 			} catch (SQLException | IOException e) {
 				e.printStackTrace();
+				showErrorDialog("Error Loading Season");
 			}
 		}
 
 		
+	}
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 }

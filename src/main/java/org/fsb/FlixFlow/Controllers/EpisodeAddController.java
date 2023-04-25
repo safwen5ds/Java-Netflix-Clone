@@ -3,10 +3,12 @@ package org.fsb.FlixFlow.Controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
@@ -93,6 +95,7 @@ public class EpisodeAddController {
 
     @FXML
     private void addEpisode() {
+        try {
         Episode newEpisode = new Episode();
         newEpisode.setId_episode(Integer.parseInt(idEpisodeField.getText()));
         newEpisode.setId_saison(Integer.parseInt(idSaisonField.getText()));
@@ -103,11 +106,16 @@ public class EpisodeAddController {
         newEpisode.setSynopsis(synopsisField.getText());
         newEpisode.setUrl_episode(urlEpisodeField.getText());
 
-        try {
+
             DatabaseUtil.createEpisode(newEpisode);
             episodes.add(newEpisode);
+        
         } catch (SQLException e) {
             e.printStackTrace();
+            showErrorDialog("Error Adding Epiosde ! ");
+        }catch (NumberFormatException e)
+        {
+        	showErrorDialog("Invalid input. Please check your input fields and try again !");
         }
         episodeTable.refresh();
     }
@@ -116,6 +124,7 @@ public class EpisodeAddController {
     private void updateEpisode() {
         Episode selectedEpisode = episodeTable.getSelectionModel().getSelectedItem();
         if (selectedEpisode != null) {
+            try {
             selectedEpisode.setId_episode(Integer.parseInt(idEpisodeField.getText()));
             selectedEpisode.setId_saison(Integer.parseInt(idSaisonField.getText()));
             selectedEpisode.setId_serie(Integer.parseInt(idSerieField.getText()));
@@ -124,10 +133,14 @@ public class EpisodeAddController {
             selectedEpisode.setDate_diffusion(Date.valueOf(localDate));
             selectedEpisode.setSynopsis(synopsisField.getText());
             selectedEpisode.setUrl_episode(urlEpisodeField.getText());
-            try {
+        
                 DatabaseUtil.updateEpisode(selectedEpisode);
             } catch (SQLException e) {
                 e.printStackTrace();
+                showErrorDialog("Error Updating Epiosde ! ");
+            }catch (NumberFormatException e)
+            {
+            	showErrorDialog("Invalid input. Please check your input fields and try again !");
             }
         }
         episodeTable.refresh();
@@ -142,10 +155,21 @@ public class EpisodeAddController {
                 episodes.remove(selectedEpisode);
             } catch (SQLException e) {
             e.printStackTrace();
+            showErrorDialog("Error Deleting Epiosde ! ");
             }
             }
         episodeTable.refresh();
             }
     
+    private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+    
         }
+
+
 

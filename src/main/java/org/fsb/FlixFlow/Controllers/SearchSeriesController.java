@@ -21,16 +21,15 @@ import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import org.fsb.FlixFlow.Views.PageNavigationUtil;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SearchSeriesController {
-
 	@FXML
 	private TextField serieTitleSearchTextField;
+	Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 
 	@FXML
 	private TextField releaseYearSearchTextField;
@@ -49,13 +48,14 @@ public class SearchSeriesController {
 
 	@FXML
 	private TextField actorSearchTextField;
+	
+	private HashMap<Integer, Serie> seriesMap = new HashMap<>();
 
 	@FXML
 	private FlowPane seriesFlowPane;
-
 	private final UserDashboardController userDashboardController;
+
 	private ObservableList<Serie> masterData;
-	Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 
 	public SearchSeriesController(UserDashboardController userDashboardController) {
 		this.userDashboardController = userDashboardController;
@@ -88,7 +88,7 @@ public class SearchSeriesController {
 			mediaContainer.setAlignment(Pos.CENTER);
 			mediaContainer.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
 			mediaContainer.setOnMouseClicked(event -> {
-				PageNavigationUtil.openMovieSeriesDetails(serie.getId_serie(), false, userDashboardController);
+				PageNavigationUtil.openMovieSeriesDetails(serie.getId_serie(), true, userDashboardController);
 			});
 
 			seriesFlowPane.getChildren().add(mediaContainer);
@@ -98,74 +98,77 @@ public class SearchSeriesController {
 	private Map<Integer, List<Acteur>> seriesActorsMap;
 
 	private void loadAllSeries() {
-		try {
-			List<Serie> series = DatabaseUtil.getSeriesSortedByViews();
-			masterData = FXCollections.observableArrayList(series);
-			seriesActorsMap = new HashMap<>();
-			for (Serie serie : series) {
-				List<Acteur> actors = DatabaseUtil.getActorsBySerieId(serie.getId_serie());
-				seriesActorsMap.put(serie.getId_serie(), actors);
-			}
-			updateSeriesFlowPane(masterData);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	    try {
+	        List<Serie> series = DatabaseUtil.getSeriesSortedByViews();
+	        masterData = FXCollections.observableArrayList();
+	        seriesActorsMap = new HashMap<>();
+	        seriesMap = new HashMap<>();
+	        for (Serie serie1 : series) {
+	            Serie serie = DatabaseUtil.getSerieById(serie1.getId_serie()); 
+	            if (serie != null) {
+	                masterData.add(serie);
+	                seriesMap.put(serie.getId_serie(), serie);
+	                List<Acteur> actors = DatabaseUtil.getActorsBySerieId(serie.getId_serie());
+	                seriesActorsMap.put(serie.getId_serie(), actors);
+	            }
+	        }
+	        updateSeriesFlowPane(masterData);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 
-	private void setupSearchFieldListeners() {
-		PauseTransition pause = new PauseTransition(Duration.millis(500));
-		pause.setOnFinished(event -> searchSeries());
 
-		serieTitleSearchTextField.setOnKeyReleased(event -> {
-			pause.playFromStart();
-		});
-		releaseYearSearchTextField.setOnKeyReleased(event -> {
-			pause.playFromStart();
-		});
-		genreSearchTextField.setOnKeyReleased(event -> {
-			pause.playFromStart();
-		});
-		languageSearchTextField.setOnKeyReleased(event -> {
-			pause.playFromStart();
-		});
-		countryOfOriginSearchTextField.setOnKeyReleased(event -> {
-			pause.playFromStart();
-		});
-		producerSearchTextField.setOnKeyReleased(event -> {
-			pause.playFromStart();
-		});
-		actorSearchTextField.setOnKeyReleased(event -> {
+
+	private void setupSearchFieldListeners() {
+		setDelayedSearchListener(serieTitleSearchTextField);
+		setDelayedSearchListener(releaseYearSearchTextField);
+		setDelayedSearchListener(genreSearchTextField);
+		setDelayedSearchListener(languageSearchTextField);
+		setDelayedSearchListener(countryOfOriginSearchTextField);
+		setDelayedSearchListener(producerSearchTextField);
+		setDelayedSearchListener(actorSearchTextField);
+	}
+
+	private void setDelayedSearchListener(TextField textField) {
+		PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+		textField.setOnKeyReleased(event -> {
+			pause.setOnFinished(e -> searchSeries());
 			pause.playFromStart();
 		});
 	}
 
 	private void searchSeries() {
-		String serieTitleFilter = serieTitleSearchTextField.getText().toLowerCase().trim();
-		String releaseYearFilter = releaseYearSearchTextField.getText().toLowerCase().trim();
-		String genreFilter = genreSearchTextField.getText().toLowerCase().trim();
-		String languageFilter = languageSearchTextField.getText().toLowerCase().trim();
-		String countryOfOriginFilter = countryOfOriginSearchTextField.getText().toLowerCase().trim();
-		String producerFilter = producerSearchTextField.getText().toLowerCase().trim();
-		String actorFilter = actorSearchTextField.getText().toLowerCase().trim();
+		String serieTitleFilter = serieTitleSearchTextField.getText().toLowerCase();
+		String releaseYearFilter = releaseYearSearchTextField.getText().toLowerCase();
+		String genreFilter = genreSearchTextField.getText().toLowerCase();
+		String languageFilter = languageSearchTextField.getText().toLowerCase();
+		String countryOfOriginFilter = countryOfOriginSearchTextField.getText().toLowerCase();
+		String producerFilter = producerSearchTextField.getText().toLowerCase();
+		String actorFilter = actorSearchTextField.getText().toLowerCase();
 
 		List<Serie> filteredData = masterData.stream()
-				.filter(serie -> serieTitleFilter.isEmpty() || serie.getNom().toLowerCase().contains(serieTitleFilter))
-				.filter(serie -> releaseYearFilter.isEmpty()
-						|| String.valueOf(serie.getAnnee_sortie()).contains(releaseYearFilter))
-				.filter(serie -> genreFilter.isEmpty() || serie.getNom_genre().toLowerCase().contains(genreFilter))
-				.filter(serie -> languageFilter.isEmpty()
-						|| serie.getNom_langue().toLowerCase().contains(languageFilter))
-				.filter(serie -> countryOfOriginFilter.isEmpty()
-						|| serie.getNom_pays().toLowerCase().contains(countryOfOriginFilter))
-				.filter(serie -> producerFilter.isEmpty()
-						|| serie.getNom_producteur().toLowerCase().contains(producerFilter))
-				.filter(serie -> {
-					List<Acteur> actors = seriesActorsMap.getOrDefault(serie.getId_serie(), Collections.emptyList());
-					return actorFilter.isEmpty()
-							|| actors.stream().anyMatch(actor -> actor.getNom().toLowerCase().contains(actorFilter));
-				}).collect(Collectors.toList());
+			    .filter(serie -> serieTitleFilter.isEmpty() || serie.getNom().toLowerCase().contains(serieTitleFilter))
+			    .filter(serie -> releaseYearFilter.isEmpty()
+			            || String.valueOf(serie.getAnnee_sortie()).contains(releaseYearFilter))
+			    .filter(serie -> genreFilter.isEmpty() || (serie.getNom_genre() != null && serie.getNom_genre().toLowerCase().contains(genreFilter)))
+			    .filter(serie -> languageFilter.isEmpty() || serie.getNom_langue().toLowerCase().contains(languageFilter))
+			    .filter(serie -> countryOfOriginFilter.isEmpty()
+			            || serie.getNom_pays().toLowerCase().contains(countryOfOriginFilter))
+			    .filter(serie -> producerFilter.isEmpty()
+			            || serie.getNom_producteur().toLowerCase().contains(producerFilter))
+			    .filter(serie -> {
+			        if (actorFilter.isEmpty()) {
+			            return true;
+			        }
+			        List<Acteur> actors = seriesActorsMap.get(serie.getId_serie());
+			        return actors.stream().anyMatch(actor -> actor.getNom().toLowerCase().contains(actorFilter));
+			    }).collect(Collectors.toList());
+      for (Serie f : filteredData)
+      {
+    	  System.out.println(f.toString());
+      }
 
 		updateSeriesFlowPane(FXCollections.observableArrayList(filteredData));
 	}
-
 }

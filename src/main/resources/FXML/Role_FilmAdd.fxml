@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -12,7 +13,7 @@
       <children>
          <TextField fx:id="id_acteurTextField" promptText="Id Acteur" />
          <TextField fx:id="id_filmTextField" promptText="Id Film" />
-         <TextField fx:id="role_typeTextField" promptText="Role Type" />
+         <ComboBox fx:id="role_typeComboBox" prefWidth="150.0" promptText="Role type" />
          <TextField fx:id="url_imageTextField" promptText="Url Image" />
          <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddAction" text="Add" />
          <Button fx:id="updateButton" mnemonicParsing="false" onAction="#handleUpdateAction" text="Update" />
@@ -21,10 +22,10 @@
    </HBox>
     <TableView fx:id="roleFilmTableView" layoutX="14.0" layoutY="50.0" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="50.0">
         <columns>
-            <TableColumn fx:id="id_acteurColumn" prefWidth="150.0" text="Id Acteur" />
-            <TableColumn fx:id="id_filmColumn" prefWidth="150.0" text="Id Film" />
-            <TableColumn fx:id="role_typeColumn" prefWidth="150.0" text="Role Type" />
-            <TableColumn fx:id="url_imageColumn" prefWidth="150.0" text="Url Image" />
+            <TableColumn fx:id="id_acteurColumn" prefWidth="179.2000732421875" text="Id Actor" />
+            <TableColumn fx:id="id_filmColumn" prefWidth="181.59991455078125" text="Id Film" />
+            <TableColumn fx:id="role_typeColumn" prefWidth="180.0" text="Role Type" />
+            <TableColumn fx:id="url_imageColumn" prefWidth="247.2000732421875" text="Url Image" />
         </columns>
     </TableView>
 </AnchorPane>

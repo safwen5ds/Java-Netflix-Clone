@@ -2,6 +2,7 @@ package org.fsb.FlixFlow.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
@@ -12,8 +13,7 @@ import javafx.util.Callback;
 import org.fsb.FlixFlow.Models.Commentaire_episode;
 import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -91,21 +91,24 @@ public class EpisodeLayoutController {
 			episodes = org.fsb.FlixFlow.Utilities.DatabaseUtil.getEpisodeByIds(saisonId, serieId);
 
 			for (Episode episode : episodes) {
-				episodeListView.getItems().add("Episode " + episode.getNum_episode());
-
+			    System.out.println("Adding episode to ListView: " + episode.getNum_episode());
+			    episodeListView.getItems().add(0, "Episode " + episode.getNum_episode());
 			}
 
-			episodeListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-				int selectedIndex = episodeListView.getSelectionModel().getSelectedIndex();
-				if (selectedIndex >= 0) {
-					try {
-						onEpisodeSelected(episodes.get(selectedIndex));
-					} catch (SQLException e) {
 
-						e.printStackTrace();
-					}
-				}
+
+			episodeListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			    int selectedIndex = episodeListView.getSelectionModel().getSelectedIndex();
+			    int adjustedIndex = episodes.size() - 1 - selectedIndex; 
+			    if (adjustedIndex >= 0) {
+			        try {
+			            onEpisodeSelected(episodes.get(adjustedIndex));
+			        } catch (SQLException e) {
+			            e.printStackTrace();
+			        }
+			    }
 			});
+
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -127,6 +130,9 @@ public class EpisodeLayoutController {
 		delbtn.setFont(bebasNeueFont);
 		modifbtn.setFont(bebasNeueFont);
 		submitEpisodeRatingButton.setFont(bebasNeueFont);
+		System.out.println("Fetched episodes: " + episodes);
+		System.out.println("Number of episodes: " + episodes.size());
+
 
 	}
 
@@ -221,6 +227,7 @@ public class EpisodeLayoutController {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Loading Comments ! ");
 		}
 		int id_episode = episode.getId_episode();
 		addcommentbtn.setOnAction(event -> addComment(id_episode));
@@ -268,6 +275,7 @@ public class EpisodeLayoutController {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			showErrorDialog("Error Updating Vote !");
 		}
 	}
 	
@@ -303,5 +311,11 @@ public class EpisodeLayoutController {
             }
         };
     }
-
+	 private void showErrorDialog(String message) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText(null);
+			alert.setContentText(message);
+			alert.showAndWait();
+		}
 }

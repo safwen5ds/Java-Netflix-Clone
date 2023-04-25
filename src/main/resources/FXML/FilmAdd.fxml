@@ -18,27 +18,30 @@
 		<Label text="Release Year" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 		<Label text="Image URL" GridPane.columnIndex="0" GridPane.rowIndex="3" />
 		<Label text="Video URL" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-		<Label text="Genre ID" GridPane.rowIndex="6" />
-		<Label text="Language ID" GridPane.rowIndex="7" />
-		<Label text="Country ID" GridPane.rowIndex="8" />
-		<Label text="Producer ID" GridPane.rowIndex="9" />
-		<Label text="Synopsis" GridPane.rowIndex="10" />
+		<Label text="Genre ID" GridPane.rowIndex="7" />
+		<Label text="Language ID" GridPane.rowIndex="8" />
+		<Label text="Country ID" GridPane.rowIndex="9" />
+		<Label text="Producer ID" GridPane.rowIndex="10" />
+		<Label text="Synopsis" GridPane.rowIndex="11" />
 
 		<TextField fx:id="idTextField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 		<TextField fx:id="nameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 		<TextField fx:id="releaseYearTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 		<TextField fx:id="imageUrlTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 		<TextField fx:id="videoUrlTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-		<TextField fx:id="genreIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-		<TextField fx:id="languageIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-		<TextField fx:id="countryIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-		<TextField fx:id="producerIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-		<TextField fx:id="synopsisTextField" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+		<TextField fx:id="genreIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+		<TextField fx:id="languageIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+		<TextField fx:id="countryIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+		<TextField fx:id="producerIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+		<TextField fx:id="synopsisTextField" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+      <TextField fx:id="FilmUrlTextFiled" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <Label text="Film URL" GridPane.rowIndex="6" />
       <columnConstraints>
          <ColumnConstraints />
          <ColumnConstraints />
       </columnConstraints>
       <rowConstraints>
+         <RowConstraints />
          <RowConstraints />
          <RowConstraints />
          <RowConstraints />
@@ -67,6 +70,7 @@
 			<TableColumn fx:id="ReleaseYearColumn" text="Release Year" />
 			<TableColumn fx:id="Image_URLColumn" text="Image URL" />
 			<TableColumn fx:id="Video_URLColumn" text="Video URL" />
+         <TableColumn fx:id="FilmUrlColumn" prefWidth="75.0" text="Film URL" />
 			<TableColumn fx:id="Genre_IDColumn" text="Genre ID" />
 			<TableColumn fx:id="Language_IDColumn" text="Language ID" />
 			<TableColumn fx:id="Country_IDColumn" text="Country ID" />

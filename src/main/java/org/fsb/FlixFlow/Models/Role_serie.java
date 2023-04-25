@@ -46,6 +46,11 @@ public class Role_serie {
 	public void setUrl_image(String url_image) {
 		this.url_image = url_image;
 	}
+	@Override
+	public String toString() {
+		return "Role_serie [id_acteur=" + id_acteur + ", id_serie=" + id_serie + ", id_saison=" + id_saison
+				+ ", role_type=" + role_type + ", url_image=" + url_image + "]";
+	}
 	
    
     

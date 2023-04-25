@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 
 import java.sql.SQLException;
 
@@ -28,7 +29,7 @@ public class Role_SerieAddController {
     @FXML
     private TextField id_saisonTextField;
     @FXML
-    private TextField role_typeTextField;
+    private ComboBox<String> role_typeComboBox;
     @FXML
     private TextField url_imageTextField;
     @FXML
@@ -47,14 +48,15 @@ public class Role_SerieAddController {
     @FXML
     public void initialize() {
         id_acteurColumn.setCellValueFactory(new PropertyValueFactory<>("id_acteur"));
-        url_imageColumn.setCellValueFactory(new PropertyValueFactory<>("id_serie"));
+        id_serieColumn.setCellValueFactory(new PropertyValueFactory<>("id_serie"));
         id_saisonColumn.setCellValueFactory(new PropertyValueFactory<>("id_saison"));
         role_typeColumn.setCellValueFactory(new PropertyValueFactory<>("role_type"));
         url_imageColumn.setCellValueFactory(new PropertyValueFactory<>("url_image"));
         
-
+      
         roleSerieList = FXCollections.observableArrayList();
         roleSerieTableView.setItems(roleSerieList);
+        role_typeComboBox.setItems(FXCollections.observableArrayList("Main Actor", "Secondary Actor"));
 
         roleSerieTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -62,8 +64,8 @@ public class Role_SerieAddController {
                 id_acteurTextField.setText(String.valueOf(selectedRoleSerie.getId_acteur()));
                 id_serieTextField.setText(String.valueOf(selectedRoleSerie.getId_serie()));
                 id_saisonTextField.setText(String.valueOf(selectedRoleSerie.getId_saison()));
-                role_typeTextField.setText(selectedRoleSerie.getRole_type());
                 url_imageTextField.setText(selectedRoleSerie.getUrl_image());
+
             }
         });
 
@@ -80,40 +82,37 @@ public class Role_SerieAddController {
     }
 
     @FXML
-    private void handleAddAction(ActionEvent event) {
-        try {
-            Role_serie roleSerie = new Role_serie(Integer.parseInt(id_acteurTextField.getText()),
-                    Integer.parseInt(id_serieTextField.getText()), 
-                    Integer.parseInt(id_saisonTextField.getText()), role_typeTextField.getText(),
-                    url_imageTextField.getText());
-            DatabaseUtil.addRoleSerie(roleSerie);
-            roleSerieList.add(roleSerie);
-            clearForm();
-        } catch (SQLException e) {
-            showErrorAlert("Error adding Role_serie", e);
-        }
+    private void handleAddAction(ActionEvent event) throws SQLException {
+    
+             Role_serie roleSerie = new Role_serie(Integer.parseInt(id_acteurTextField.getText()),
+                     Integer.parseInt(id_serieTextField.getText()), 
+                     Integer.parseInt(id_saisonTextField.getText()), role_typeComboBox.getValue(),
+                     url_imageTextField.getText());
+             DatabaseUtil.addRoleSerie(roleSerie);
+             roleSerieList.add(roleSerie);
+        
     }
 
 
     @FXML
     private void handleUpdateAction(ActionEvent event) {
-        Role_serie selectedRoleSerie = roleSerieTableView.getSelectionModel().getSelectedItem();
+    	Role_serie selectedRoleSerie = roleSerieTableView.getSelectionModel().getSelectedItem();
         if (selectedRoleSerie != null) {
             try {
                 selectedRoleSerie.setId_acteur(Integer.parseInt(id_acteurTextField.getText()));
+                selectedRoleSerie.setId_serie(Integer.parseInt(id_serieTextField.getText()));
                 selectedRoleSerie.setId_saison(Integer.parseInt(id_saisonTextField.getText()));
-                selectedRoleSerie.setRole_type(role_typeTextField.getText());
+                selectedRoleSerie.setRole_type(role_typeComboBox.getValue());
                 selectedRoleSerie.setUrl_image(url_imageTextField.getText());
                 DatabaseUtil.updateRoleSerie(selectedRoleSerie);
                 roleSerieTableView.refresh();
-                clearForm();
-                } catch (SQLException e) {
-                showErrorAlert("Error updating Role_serie", e);
-                }
-                } else {
-                showWarningAlert("No Role_serie Selected", "Please select a Role_serie to update.");
-                }
-                }
+            } catch (SQLException e) {
+            	showErrorDialog("Error updating Role_serie "+e);
+            }
+        } else {
+        	showErrorDialog("No Role_serie Selected Please select a Role_serie to update !");
+        }
+   }
     @FXML
     private void handleDeleteAction(ActionEvent event) {
         Role_serie selectedRoleSerie = roleSerieTableView.getSelectionModel().getSelectedItem();
@@ -121,36 +120,23 @@ public class Role_SerieAddController {
             try {
                 DatabaseUtil.deleteRoleSerie(selectedRoleSerie);
                 roleSerieList.remove(selectedRoleSerie);
-                clearForm();
             } catch (SQLException e) {
-                showErrorAlert("Error deleting Role_serie", e);
+            	showErrorDialog("Error deleting Role_serie " );
             }
         } else {
-            showWarningAlert("No Role_serie Selected", "Please select a Role_serie to delete.");
+        	showErrorDialog("No Role_serie Selected Please select a Role_serie to delete.");
         }
     }
 
-    private void clearForm() {
-        id_acteurTextField.clear();
-        id_serieTextField.clear();
-        id_saisonTextField.clear();
-        role_typeTextField.clear();
-        url_imageTextField.clear();
-    }
 
-    private void showErrorAlert(String title, SQLException e) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(e.getMessage());
-        alert.showAndWait();
-    }
 
-    private void showWarningAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+    private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
+   
 }
