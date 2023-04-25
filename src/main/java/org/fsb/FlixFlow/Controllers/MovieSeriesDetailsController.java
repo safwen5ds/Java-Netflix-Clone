@@ -25,6 +25,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.fsb.FlixFlow.Models.*;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Views.CommentaireDisplay;
 
 import java.io.IOException;
 import java.sql.SQLException;

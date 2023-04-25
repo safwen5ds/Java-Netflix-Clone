@@ -11,7 +11,7 @@
    <children>
       <AnchorPane prefHeight="1628.0" prefWidth="1266.0">
          <children>
-            <Label fx:id="lab1" layoutX="39.0" layoutY="58.0" text="Trending" translateX="12.0" />
+            <Label fx:id="lab1" layoutX="39.0" layoutY="58.0" text="All" translateX="12.0" />
             <ScrollPane layoutX="42.0" layoutY="120.0" prefHeight="320.0" prefWidth="1200" vbarPolicy="NEVER">
                <content>
                   <HBox fx:id="trendingPane" prefHeight="185.0" prefWidth="1026.0" />

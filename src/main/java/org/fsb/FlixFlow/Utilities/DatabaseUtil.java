@@ -8,6 +8,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Slider;
 import org.fsb.FlixFlow.Controllers.ActorRoleDisplay;
 import org.fsb.FlixFlow.Models.*;
+import org.fsb.FlixFlow.Views.SeriesRanking;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

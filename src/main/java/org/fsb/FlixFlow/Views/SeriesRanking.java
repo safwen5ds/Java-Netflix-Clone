@@ -1,4 +1,4 @@
-package org.fsb.FlixFlow.Models;
+package org.fsb.FlixFlow.Views;
 
 public class SeriesRanking {
 	private int idSerie;

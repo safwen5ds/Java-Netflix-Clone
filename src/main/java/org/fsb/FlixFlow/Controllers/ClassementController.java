@@ -10,8 +10,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 
-import org.fsb.FlixFlow.Models.SeriesRanking;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Views.SeriesRanking;
 
 import java.time.LocalDate;
 
