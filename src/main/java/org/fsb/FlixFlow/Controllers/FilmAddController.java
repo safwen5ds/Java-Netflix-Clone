@@ -11,11 +11,8 @@ import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 
-import java.net.URL;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.ResourceBundle;
 
 public class FilmAddController {
 	@FXML

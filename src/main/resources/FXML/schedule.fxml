@@ -2,14 +2,29 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="506.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.ScheduleController">
+<AnchorPane prefHeight="506.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.ScheduleController">
    <ListView fx:id="episodesListView" layoutX="46.0" layoutY="60.0" prefHeight="372.0" prefWidth="572.0" />
    <HBox>
       <children>
-         <Label text="Schedule" />
+         <Label text="Schedule">
+            <font>
+               <Font size="30.0" />
+            </font></Label>
       </children>
    </HBox>
+   <ImageView fitHeight="307.0" fitWidth="687.0" layoutX="644.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@Images_Videos/1549546150_tumblr_nqxe241pxg1uvf5blo1_500.gif" />
+      </image>
+      <effect>
+         <DropShadow />
+      </effect>
+   </ImageView>
 </AnchorPane>

@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="org.fsb.FlixFlow.Controllers.FavController">
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="root" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.FavController">
     <HBox spacing="10">
-        <TextField fx:id="actorSearch" promptText="Search Actors" />
-        <TextField fx:id="filmSearch" promptText="Search Films" />
-        <TextField fx:id="seriesSearch" promptText="Search Series" />
-        <TextField fx:id="genreSearch" promptText="Search Genres" />
+        <TextField fx:id="actorSearch" promptText="Search Actors" translateX="47.0" />
+        <TextField fx:id="filmSearch" promptText="Search Films" translateX="131.0" />
+        <TextField fx:id="seriesSearch" promptText="Search Series" translateX="223.0" />
+        <TextField fx:id="genreSearch" promptText="Search Genres" translateX="314.0" />
     </HBox>
     <GridPane>
         <ListView fx:id="actorsList" GridPane.columnIndex="0" />
         <ListView fx:id="filmsList" GridPane.columnIndex="1" />
         <ListView fx:id="seriesList" GridPane.columnIndex="2" />
         <ListView fx:id="genresList" GridPane.columnIndex="3" />
+      <columnConstraints>
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints />
+      </rowConstraints>
     </GridPane>
 </VBox>

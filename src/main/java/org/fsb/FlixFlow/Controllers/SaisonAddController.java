@@ -6,14 +6,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.fsb.FlixFlow.Models.*;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.ResourceBundle;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class SaisonAddController {

@@ -177,53 +177,82 @@ public class UserDashboardController {
 
 	@FXML
 	public void initialize() {
+		
 		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
 		List<Episode> todaysEpisodes = DatabaseUtil.fetchTodaysEpisodes(userId);
 		showNewEpisodeAlerts(todaysEpisodes);
 		handleHomeClick();
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+		{
+		    setHoverEffect(btnm1, actor_manager);
+		    setHoverEffect(btnm2, producer);
+		    setHoverEffect(btnm3, serie_manager);
+		    setHoverEffect(btnm4, season_manager);
+		    setHoverEffect(btnm5, episode);
+		    setHoverEffect(btnm6, movie_manager);
+		    setHoverEffect(btnm7, user_manager);
+		    setHoverEffect(btnm8, serie_role);
+		    setHoverEffect(btnm9, movie_role);
+		    setHoverEffect(btnrank, rank);
+		}else if ("Producer".equals(DatabaseUtil.readUserFromFile().getType()))
+		{
+		    setHoverEffect(btnm3, serie_manager);
+		    setHoverEffect(btnm4, season_manager);
+		    setHoverEffect(btnm5, episode);
+		    setHoverEffect(btnm6, movie_manager);
+		    setHoverEffect(btnm8, serie_role);
+		    setHoverEffect(btnm9, movie_role);
+		}
+		
 	    setHoverEffect(btnhome, home);
 	    setHoverEffect(btnfavorite,heart );
-	    setHoverEffect(btnm1, actor_manager);
-	    setHoverEffect(btnm2, producer);
-	    setHoverEffect(btnm3, serie_manager);
-	    setHoverEffect(btnm4, season_manager);
-	    setHoverEffect(btnm5, episode);
-	    setHoverEffect(btnm6, movie_manager);
-	    setHoverEffect(btnm7, user_manager);
-	    setHoverEffect(btnm8, serie_role);
-	    setHoverEffect(btnm9, movie_role);
-	    setHoverEffect(btnmovie, film);
-	    setHoverEffect(btnrank, rank);
 	    setHoverEffect(btnschedule, calen);
 	    setHoverEffect(btnserie, serie);
+	    setHoverEffect(btnmovie, film);
+
+
+	 
 	    setFontForAllButtons();
 	}
 	private void setFontForAllButtons() {
 	    Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
+        if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+        		{
+    	    List<Button> buttons = new ArrayList<>(Arrays.asList(btnfavorite, btnhome, btnm1, btnm2, btnm3, btnm4, btnm5, btnm6, btnm7, btnm8, btnm9, btnmovie, btnrank, btnschedule, btnserie));
 
-	    List<Button> buttons = new ArrayList<>(Arrays.asList(btnfavorite, btnhome, btnm1, btnm2, btnm3, btnm4, btnm5, btnm6, btnm7, btnm8, btnm9, btnmovie, btnrank, btnschedule, btnserie));
+        		}
+        else if ("Producer".equals(DatabaseUtil.readUserFromFile().getType()))
+        {
+    	    List<Button> buttons = new ArrayList<>(Arrays.asList(btnfavorite, btnhome, btnm3, btnm4, btnm5, btnm6,  btnm8, btnm9, btnmovie,  btnschedule, btnserie));
+
+        }
+	    List<Button> buttons = new ArrayList<>(Arrays.asList(btnfavorite, btnhome,   btnmovie,  btnschedule, btnserie));
 
 	    for (Button button : buttons) {
 	        button.setFont(bebasNeueFont);
 	    }
 	}
 	private void setHoverEffect(Button button1, ImageView imageView) {
-	    Color sourceColor = Color.web("#000000"); 
-	    Color finalColor = Color.web("#AD241B"); 
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType()))
+		{
+			Color sourceColor = Color.web("#000000"); 
+		    Color finalColor = Color.web("#AD241B"); 
 
-	    button1.setOnMouseEntered(event -> {
-	        button1.setStyle("-fx-background-color: #ffffff;    -fx-border-radius: 5px;   -fx-background-radius: 5px; -fx-text-fill: #AD241B;");
-	        Image inputImage = imageView.getImage(); 
-	        Image outputImage = reColor(inputImage, sourceColor, finalColor);
-	        imageView.setImage(outputImage);
-	    });
+		    button1.setOnMouseEntered(event -> {
+		        button1.setStyle("-fx-background-color: #ffffff;    -fx-border-radius: 5px;   -fx-background-radius: 5px; -fx-text-fill: #AD241B;");
+		        Image inputImage = imageView.getImage(); 
+		        Image outputImage = reColor(inputImage, sourceColor, finalColor);
+		        imageView.setImage(outputImage);
+		    });
 
-	    button1.setOnMouseExited(event -> {
-	        button1.setStyle("-fx-background-color: #2F3136;-fx-border-radius: 5px;   -fx-background-radius: 5px; -fx-text-fill: #FFFFFF;");
-	        Image inputImage = imageView.getImage(); 
-	        Image originalImage = reColor(inputImage, finalColor, sourceColor);
-	        imageView.setImage(originalImage);
-	    });
+		    button1.setOnMouseExited(event -> {
+		        button1.setStyle("-fx-background-color: #2F3136;-fx-border-radius: 5px;   -fx-background-radius: 5px; -fx-text-fill: #FFFFFF;");
+		        Image inputImage = imageView.getImage(); 
+		        Image originalImage = reColor(inputImage, finalColor, sourceColor);
+		        imageView.setImage(originalImage);
+		    });
+		}
+	    
 	}
 
 	private static Image reColor(Image inputImage, Color sourceColor, Color finalColor) {

@@ -8,6 +8,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
+
 import org.fsb.FlixFlow.Models.SeriesRanking;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
@@ -33,6 +35,9 @@ public class ClassementController {
 
 	@FXML
 	private TableColumn<SeriesRanking, Integer> viewsColumn;
+	
+	@FXML
+	private ImageView im1;
 
 	public void initialize() {
 		rankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));

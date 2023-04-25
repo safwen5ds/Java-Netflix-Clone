@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.ProducteurAddController" spacing="10">
+
+<VBox prefHeight="568.0" prefWidth="609.0" spacing="10" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.ProducteurAddController">
     <HBox spacing="10">
         <Label text="ID:" />
         <TextField fx:id="idField" />
@@ -11,14 +16,14 @@
         <TextField fx:id="nameField" />
     </HBox>
     <HBox spacing="10">
-        <Button fx:id="addButton" text="Add" onAction="#addProducteur" />
-        <Button fx:id="updateButton" text="Update" onAction="#updateProducteur" />
-        <Button fx:id="deleteButton" text="Delete" onAction="#deleteProducteur" />
+        <Button fx:id="addButton" onAction="#addProducteur" text="Add" />
+        <Button fx:id="updateButton" onAction="#updateProducteur" text="Update" />
+        <Button fx:id="deleteButton" onAction="#deleteProducteur" text="Delete" />
     </HBox>
-    <TableView fx:id="producteurTable">
+    <TableView fx:id="producteurTable" prefHeight="400.0" prefWidth="437.0">
         <columns>
-            <TableColumn fx:id="idColumn" text="ID" prefWidth="75"/>
-            <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
+            <TableColumn fx:id="idColumn" prefWidth="75" text="ID" />
+            <TableColumn fx:id="nameColumn" prefWidth="619.2" text="Name" />
         </columns>
     </TableView>
 </VBox>

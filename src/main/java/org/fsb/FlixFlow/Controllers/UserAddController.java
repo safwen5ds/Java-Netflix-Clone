@@ -12,8 +12,6 @@ import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import java.sql.Date;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 
 

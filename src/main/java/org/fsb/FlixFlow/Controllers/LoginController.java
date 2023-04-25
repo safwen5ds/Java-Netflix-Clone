@@ -107,11 +107,13 @@ public class LoginController {
 	    String fxmlPath;
 	    if ("admin".equals(userType)) {
 	        fxmlPath = "/FXML/dash.fxml";
-	    } else if ("Normal User".equals(userType)) {
+	    } else if ("Normal User".equals(userType) || "Actor".equals(userType) ) {
 	        fxmlPath = "/FXML/dash_User.fxml";
 	    } else {
 	        fxmlPath = "/FXML/dash_Producer.fxml";
 	    }
+	    
+	    System.out.println(fxmlPath);
 
 	    try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

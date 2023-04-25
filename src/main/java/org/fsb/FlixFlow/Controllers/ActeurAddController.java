@@ -8,7 +8,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import org.fsb.FlixFlow.Models.Acteur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
@@ -37,7 +37,7 @@ public class ActeurAddController {
 	@FXML
 	private TableColumn<Acteur, String> nameColumn;
     @FXML
-    private Image im1;
+    private ImageView im1;
 	private ObservableList<Acteur> acteurs;
 
 	@FXML

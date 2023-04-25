@@ -11,12 +11,9 @@ import javafx.util.Callback;
 
 import org.fsb.FlixFlow.Models.Commentaire_episode;
 import org.fsb.FlixFlow.Models.Episode;
-import org.fsb.FlixFlow.Models.Vote_episode;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.util.Callback;
-
 import java.sql.SQLException;
 import java.util.List;
 

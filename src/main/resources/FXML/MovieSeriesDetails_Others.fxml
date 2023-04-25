@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2500.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.MovieSeriesDetailsController">
+   <children>
+      <AnchorPane prefHeight="2500.0" prefWidth="1280.0">
+         <children>
+            <Rectangle fx:id="backdropImage" fill="#c4c4c4" height="2500.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1280.0">
+               <effect>
+             <GaussianBlur radius="30.0" />
+               </effect>
+            </Rectangle>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="2500.0" stroke="BLACK" strokeType="INSIDE" width="1280.0">
+               <effect>
+                  <GaussianBlur />
+               </effect>
+            </Rectangle>
+            <Rectangle fx:id="posterImage" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="607.0" layoutX="140.0" layoutY="77.0" stroke="BLACK" strokeType="INSIDE" width="439.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="521.0" layoutX="619.0" layoutY="78.0" stroke="WHITE" strokeLineCap="ROUND" strokeType="OUTSIDE" strokeWidth="5.0" width="447.0">
+               <effect>
+                  <Blend />
+               </effect></Rectangle>
+            <VBox layoutX="652.0" layoutY="75.0" style="-fx-background-color: transparent;">
+               <children>
+                  <Label fx:id="titre" prefHeight="107.0" prefWidth="697.0" text="Titre" textFill="#fffffff7">
+                     <font>
+                        <Font size="73.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Label fx:id="annee" layoutX="690.0" layoutY="207.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="genre" layoutX="690.0" layoutY="259.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="langue" layoutX="690.0" layoutY="309.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="pays" layoutX="690.0" layoutY="360.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="producteur" layoutX="690.0" layoutY="406.0" text="Annee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <VBox layoutX="140.0" layoutY="707.0" prefHeight="107.0" prefWidth="906.0">
+               <children>
+                  <Label fx:id="synopsisArea" text="Label" />
+               </children>
+            </VBox>
+            <Button fx:id="watchButton" layoutX="929.0" layoutY="218.0" mnemonicParsing="false" text="Watch Now !" />
+            <Button fx:id="Watchtrailer" layoutX="928.0" layoutY="283.0" mnemonicParsing="false" text="Watch Trailer" />
+            <Button fx:id="addfav" layoutX="934.0" layoutY="358.0" mnemonicParsing="false" text="Add to Fav" />
+            <Button fx:id="addgenrefav" contentDisplay="GRAPHIC_ONLY" layoutX="785.0" layoutY="252.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="38.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Add to Fav" textFill="TRANSPARENT" />
+            <ListView fx:id="actorslist" layoutX="139.0" layoutY="833.0" prefHeight="259.0" prefWidth="906.0" />
+            <TableView fx:id="tab" layoutX="140.0" layoutY="1179.0" prefHeight="312.0" prefWidth="906.0">
+              <columns>
+                <TableColumn fx:id="prenom" prefWidth="190.3999481201172" text="Surname" />
+                <TableColumn fx:id="commentaire" prefWidth="560.0000610351562" text="Comment" />
+              </columns>
+            </TableView>
+            <TextField fx:id="txtcomment" layoutX="140.0" layoutY="1119.0" prefHeight="26.0" prefWidth="270.0" />
+            <Button fx:id="commentbtn" layoutX="454.0" layoutY="1119.0" mnemonicParsing="false" text="Add" />
+            <Button fx:id="modifyCommentButton" layoutX="515.0" layoutY="1119.0" mnemonicParsing="false" text="Modify" />
+            <Button fx:id="deleteCommentButton" layoutX="589.0" layoutY="1119.0" mnemonicParsing="false" text="Delete" />
+            <Slider fx:id="ratingSlider" blockIncrement="1.0" layoutX="656.0" layoutY="465.0" majorTickUnit="1.0" max="10.0" showTickLabels="true" showTickMarks="true" />
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="submitRating" layoutX="843.0" layoutY="460.0" mnemonicParsing="false" text="Submit" />
+            <HBox layoutX="953.0" layoutY="462.0" style="-fx-background-color: transparent;">
+               <children>
+                  <ImageView fx:id="m2" fitHeight="32.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Images_Videos/star.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="average" text="Label">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <ImageView fx:id="m1" fitHeight="31.0" fitWidth="26.0" layoutX="816.0" layoutY="257.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Images_Videos/love.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

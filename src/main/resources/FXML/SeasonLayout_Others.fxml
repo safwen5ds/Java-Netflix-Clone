@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="587.0" prefWidth="1239.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-width: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fsb.FlixFlow.Controllers.SeasonLayoutController">
+         <children>
+            <Rectangle fx:id="image" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="260.0" layoutX="39.0" layoutY="63.0" stroke="BLACK" strokeType="INSIDE" width="175.0" />
+            <Label fx:id="seasonNumLabel" layoutX="528.0" layoutY="73.0" prefHeight="36.0" prefWidth="21.0">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <Label fx:id="serieNameLabel" layoutX="242.0" layoutY="73.0" prefHeight="18.0" prefWidth="14.0">
+         <font>
+            <Font size="25.0" />
+         </font></Label>
+            <Label fx:id="seasonDate_debutLabel" layoutX="195.0" layoutY="251.0" prefHeight="18.0" prefWidth="28.0" />
+      <VBox layoutX="243.0" layoutY="174.892578125" style="-fx-background-color: transparent;">
+         <children>
+                  <Text fx:id="seasonSynopsistext" strokeType="OUTSIDE" strokeWidth="0.0" text="Troubble is brewing" wrappingWidth="557.5999755859375">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+            <TextField fx:id="commentinput" layoutX="852.0" layoutY="179.0" prefHeight="26.0" prefWidth="107.0" />
+            <Button fx:id="addcommentbtn" layoutX="970.0" layoutY="180.0" mnemonicParsing="false" style="-fx-text-fill: black;" text="Add Comment" />
+            <ListView fx:id="listcomment" layoutX="853.0" layoutY="224.0" prefHeight="292.0" prefWidth="341.0" />
+            <Button fx:id="watchnow" layoutX="242.0" layoutY="126.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="123.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-background-color: #FFC107; -fx-text-fill: black;" text="Watch Now" translateX="2.0" translateY="-2.0" />
+            <Button fx:id="watchtrailer" layoutX="462.0" layoutY="124.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="123.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-background-color: transparent; -fx-border-color: black; -fx-text-fill: black;" text="Watch trailer" translateX="2.0" />
+<Slider fx:id="saisonRatingSlider" blockIncrement="1.0" layoutX="39.0" layoutY="351.0" majorTickUnit="1.0" max="10.0" minorTickCount="0" prefHeight="38.0" prefWidth="182.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" translateY="4.0" />
+<Button fx:id="submitSaisonRatingButton" layoutX="53.0" layoutY="403.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF; -fx-text-fill: black;" text="Submit Rating">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Images_Videos/like.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button fx:id="modifbtn" layoutX="1078.0" layoutY="180.0" mnemonicParsing="false" style="-fx-text-fill: black;" text="Modify" />
+      <Button fx:id="delbtn" layoutX="1144.0" layoutY="180.0" mnemonicParsing="false" style="-fx-text-fill: black;" text="Delete" />
+      <Label fx:id="average" layoutX="39.0" layoutY="333.0" style="-fx-text-fill: black;" text="Label" />
+      <GridPane layoutX="240.0" layoutY="61.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label fx:id="serieNameLabel" style="-fx-text-fill: black;" text="Game of Thrones">
+               <font>
+                  <Font size="33.5" />
+               </font>
+            </Label>
+            <Label fx:id="seasonNumLabel" prefHeight="48.0" prefWidth="284.0" style="-fx-text-fill: black;" text="  Season 1" GridPane.columnIndex="1">
+               <font>
+                  <Font size="33.5" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+      <Button fx:id="hd" layoutX="383.0" layoutY="124.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="63.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-background-color: transparent; -fx-border-color: black; -fx-border-width: 2; -fx-text-fill: black;" text="HD">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="844.0" layoutY="64.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="350.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-background-color: transparent; -fx-border-color: black; -fx-text-fill: black;" text="Comments">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <GridPane layoutX="256.0" layoutY="418.0" prefHeight="91.0" prefWidth="328.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="235.2" minWidth="10.0" prefWidth="167.2" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.99997558593753" minWidth="0.0" prefWidth="160.40000000000003" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="seasonDate_debutLabel" style="-fx-text-fill: black;" text="Label">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+         </children>
+</AnchorPane>

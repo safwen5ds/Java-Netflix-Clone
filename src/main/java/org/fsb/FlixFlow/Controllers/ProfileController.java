@@ -11,14 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 import java.io.IOException;
 
-import java.io.IOException;
 import java.time.ZoneId;
 
 public class ProfileController {

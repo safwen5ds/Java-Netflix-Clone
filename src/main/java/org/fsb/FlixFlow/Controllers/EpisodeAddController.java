@@ -11,12 +11,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.fsb.FlixFlow.Models.Episode;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
-import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ResourceBundle;
 
 public class EpisodeAddController {
 
