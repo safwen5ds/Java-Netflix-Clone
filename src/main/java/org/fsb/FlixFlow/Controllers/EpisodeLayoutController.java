@@ -186,7 +186,10 @@ public class EpisodeLayoutController {
 			int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
 			int episodeId = episodes.get(selectedIndex).getId_episode();
 			int rating = (int) Math.round(episodeRatingSlider.getValue());
-			DatabaseUtil.submitEpisodeRating(userId, episodeId, rating);
+			boolean updated = DatabaseUtil.submitEpisodeRating(userId, episodeId, rating);
+			if (updated) {
+				showAlert("Rating Updated", "Your rating for this episode has been updated.");
+			}
 			updateAverageScore(episodeId);
 		}
 	}
@@ -310,6 +313,14 @@ public class EpisodeLayoutController {
 		alert.setTitle("Error");
 		alert.setHeaderText(null);
 		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
+	private static void showAlert(String title, String content) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(content);
 		alert.showAndWait();
 	}
 }

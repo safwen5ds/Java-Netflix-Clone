@@ -186,7 +186,10 @@ public class SeasonLayoutController {
 	private void submitSaisonRating() {
 		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
 		int rating = (int) Math.round(saisonRatingSlider.getValue());
-		DatabaseUtil.submitSaisonRating(userId, saisonId, rating);
+		boolean updated = DatabaseUtil.submitSaisonRating(userId, saisonId, rating);
+		if (updated) {
+			showAlert("Rating Updated", "Your rating for this season has been updated.");
+		}
 		updateAverageScore();
 	}
 
@@ -315,6 +318,14 @@ public class SeasonLayoutController {
 		alert.setTitle("Error");
 		alert.setHeaderText(null);
 		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
+	private static void showAlert(String title, String content) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(content);
 		alert.showAndWait();
 	}
 

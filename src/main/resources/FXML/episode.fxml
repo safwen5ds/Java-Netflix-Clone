@@ -48,11 +48,11 @@
                      </children>
                   </GridPane>
             <Slider fx:id="episodeRatingSlider" blockIncrement="1.0" layoutX="1385.0" layoutY="781.0" majorTickUnit="1.0" max="10.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-            <Button fx:id="submitEpisodeRatingButton" layoutX="1409.0" layoutY="819.0" mnemonicParsing="false" onAction="#submitEpisodeRating" style="-fx-background-color: #5A2E98; -fx-text-fill: white;" text="Submit Rating" />      <TextField fx:id="txtcomment" layoutX="911.0" layoutY="759.0" prefHeight="26.0" prefWidth="448.0" style="-fx-border-color: #5A2E98; -fx-border-width: 3;" />
-                  <Button fx:id="addcommentbtn" layoutX="1067.0" layoutY="707.0" mnemonicParsing="false" onAction="#addComment" style="-fx-background-color: #5A2E98; -fx-text-fill: white;" text="Add comment" />
+            <Button fx:id="submitEpisodeRatingButton" layoutX="1409.0" layoutY="819.0" mnemonicParsing="false"  style="-fx-background-color: #5A2E98; -fx-text-fill: white;" text="Submit Rating" />      <TextField fx:id="txtcomment" layoutX="911.0" layoutY="759.0" prefHeight="26.0" prefWidth="448.0" style="-fx-border-color: #5A2E98; -fx-border-width: 3;" />
+                  <Button fx:id="addcommentbtn" layoutX="1067.0" layoutY="707.0" mnemonicParsing="false" style="-fx-background-color: #5A2E98; -fx-text-fill: white;" text="Add comment" />
                   <ListView fx:id="listcomments" layoutX="441.0" layoutY="687.0" prefHeight="170.0" prefWidth="458.0" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #5A2E98; -fx-border-width: 2;" />
-                  <Button fx:id="modifbtn" layoutX="1195.0" layoutY="707.0" mnemonicParsing="false" onAction="#modifyComment" style="-fx-background-color: #5A2E98; -fx-text-fill: white;" text="Modify" />
-                  <Button fx:id="delbtn" layoutX="1281.0" layoutY="707.0" mnemonicParsing="false" onAction="#deleteComment" style="-fx-background-color: #5A2E98; -fx-text-fill: white;" text="Delete" />
+                  <Button fx:id="modifbtn" layoutX="1195.0" layoutY="707.0" mnemonicParsing="false"  style="-fx-background-color: #5A2E98; -fx-text-fill: white;" text="Modify" />
+                  <Button fx:id="delbtn" layoutX="1281.0" layoutY="707.0" mnemonicParsing="false" style="-fx-background-color: #5A2E98; -fx-text-fill: white;" text="Delete" />
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1c1c1c" height="38.0" layoutX="425.0" layoutY="639.0" stroke="WHITE" strokeType="INSIDE" width="1100.0" />
                   <HBox layoutX="34.0" layoutY="893.05078125" style="-fx-background-color: transparent; -fx-border-color: white;">
                      <children>
