@@ -22,28 +22,28 @@ public class Role_film {
 		return id_acteur;
 	}
 
-	public void setId_acteur(int id_acteur) {
-		this.id_acteur = id_acteur;
-	}
-
 	public int getId_film() {
 		return id_film;
-	}
-
-	public void setId_film(int id_film) {
-		this.id_film = id_film;
 	}
 
 	public String getRole_type() {
 		return role_type;
 	}
 
-	public void setRole_type(String role_type) {
-		this.role_type = role_type;
-	}
-
 	public String getUrl_image() {
 		return url_image;
+	}
+
+	public void setId_acteur(int id_acteur) {
+		this.id_acteur = id_acteur;
+	}
+
+	public void setId_film(int id_film) {
+		this.id_film = id_film;
+	}
+
+	public void setRole_type(String role_type) {
+		this.role_type = role_type;
 	}
 
 	public void setUrl_image(String url_image) {

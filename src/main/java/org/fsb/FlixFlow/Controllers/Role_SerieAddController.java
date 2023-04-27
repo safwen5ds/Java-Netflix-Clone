@@ -1,49 +1,100 @@
 package org.fsb.FlixFlow.Controllers;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
-
 import java.sql.SQLException;
 
 import org.fsb.FlixFlow.Models.Role_serie;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import javafx.scene.control.cell.PropertyValueFactory;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class Role_SerieAddController {
 	@FXML
-	private TableView<Role_serie> roleSerieTableView;
+	private Button addButton;
+	@FXML
+	private Button deleteButton;
 	@FXML
 	private TableColumn<Role_serie, Integer> id_acteurColumn;
 	@FXML
-	private TableColumn<Role_serie, Integer> id_saisonColumn;
-	@FXML
-	private TableColumn<Role_serie, String> role_typeColumn;
-	@FXML
-	private TableColumn<Role_serie, String> url_imageColumn;
-	@FXML
 	private TextField id_acteurTextField;
 	@FXML
+	private TableColumn<Role_serie, Integer> id_saisonColumn;
+	@FXML
 	private TextField id_saisonTextField;
-	@FXML
-	private ComboBox<String> role_typeComboBox;
-	@FXML
-	private TextField url_imageTextField;
 	@FXML
 	private TableColumn<Role_serie, Integer> id_serieColumn;
 	@FXML
 	private TextField id_serieTextField;
 	@FXML
-	private Button addButton;
+	private TableColumn<Role_serie, String> role_typeColumn;
+	@FXML
+	private ComboBox<String> role_typeComboBox;
+	private ObservableList<Role_serie> roleSerieList;
+	@FXML
+	private TableView<Role_serie> roleSerieTableView;
 	@FXML
 	private Button updateButton;
 	@FXML
-	private Button deleteButton;
+	private TableColumn<Role_serie, String> url_imageColumn;
 
-	private ObservableList<Role_serie> roleSerieList;
+	@FXML
+	private TextField url_imageTextField;
+
+	@FXML
+	private void handleAddAction(ActionEvent event) throws SQLException {
+
+		Role_serie roleSerie = new Role_serie(Integer.parseInt(id_acteurTextField.getText()),
+				Integer.parseInt(id_serieTextField.getText()), Integer.parseInt(id_saisonTextField.getText()),
+				role_typeComboBox.getValue(), url_imageTextField.getText());
+		DatabaseUtil.addRoleSerie(roleSerie);
+		roleSerieList.add(roleSerie);
+
+	}
+
+	@FXML
+	private void handleDeleteAction(ActionEvent event) {
+		Role_serie selectedRoleSerie = roleSerieTableView.getSelectionModel().getSelectedItem();
+		if (selectedRoleSerie != null) {
+			try {
+				DatabaseUtil.deleteRoleSerie(selectedRoleSerie);
+				roleSerieList.remove(selectedRoleSerie);
+			} catch (SQLException e) {
+				showErrorDialog("Error deleting Role_serie ");
+			}
+		} else {
+			showErrorDialog("No Role_serie Selected Please select a Role_serie to delete.");
+		}
+	}
+
+	@FXML
+	private void handleUpdateAction(ActionEvent event) {
+		Role_serie selectedRoleSerie = roleSerieTableView.getSelectionModel().getSelectedItem();
+		if (selectedRoleSerie != null) {
+			try {
+				selectedRoleSerie.setId_acteur(Integer.parseInt(id_acteurTextField.getText()));
+				selectedRoleSerie.setId_serie(Integer.parseInt(id_serieTextField.getText()));
+				selectedRoleSerie.setId_saison(Integer.parseInt(id_saisonTextField.getText()));
+				selectedRoleSerie.setRole_type(role_typeComboBox.getValue());
+				selectedRoleSerie.setUrl_image(url_imageTextField.getText());
+				DatabaseUtil.updateRoleSerie(selectedRoleSerie);
+				roleSerieTableView.refresh();
+			} catch (SQLException e) {
+				showErrorDialog("Error updating Role_serie " + e);
+			}
+		} else {
+			showErrorDialog("No Role_serie Selected Please select a Role_serie to update !");
+		}
+	}
 
 	@FXML
 	public void initialize() {
@@ -77,52 +128,6 @@ public class Role_SerieAddController {
 			roleSerieList.setAll(roleSeries);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-	}
-
-	@FXML
-	private void handleAddAction(ActionEvent event) throws SQLException {
-
-		Role_serie roleSerie = new Role_serie(Integer.parseInt(id_acteurTextField.getText()),
-				Integer.parseInt(id_serieTextField.getText()), Integer.parseInt(id_saisonTextField.getText()),
-				role_typeComboBox.getValue(), url_imageTextField.getText());
-		DatabaseUtil.addRoleSerie(roleSerie);
-		roleSerieList.add(roleSerie);
-
-	}
-
-	@FXML
-	private void handleUpdateAction(ActionEvent event) {
-		Role_serie selectedRoleSerie = roleSerieTableView.getSelectionModel().getSelectedItem();
-		if (selectedRoleSerie != null) {
-			try {
-				selectedRoleSerie.setId_acteur(Integer.parseInt(id_acteurTextField.getText()));
-				selectedRoleSerie.setId_serie(Integer.parseInt(id_serieTextField.getText()));
-				selectedRoleSerie.setId_saison(Integer.parseInt(id_saisonTextField.getText()));
-				selectedRoleSerie.setRole_type(role_typeComboBox.getValue());
-				selectedRoleSerie.setUrl_image(url_imageTextField.getText());
-				DatabaseUtil.updateRoleSerie(selectedRoleSerie);
-				roleSerieTableView.refresh();
-			} catch (SQLException e) {
-				showErrorDialog("Error updating Role_serie " + e);
-			}
-		} else {
-			showErrorDialog("No Role_serie Selected Please select a Role_serie to update !");
-		}
-	}
-
-	@FXML
-	private void handleDeleteAction(ActionEvent event) {
-		Role_serie selectedRoleSerie = roleSerieTableView.getSelectionModel().getSelectedItem();
-		if (selectedRoleSerie != null) {
-			try {
-				DatabaseUtil.deleteRoleSerie(selectedRoleSerie);
-				roleSerieList.remove(selectedRoleSerie);
-			} catch (SQLException e) {
-				showErrorDialog("Error deleting Role_serie ");
-			}
-		} else {
-			showErrorDialog("No Role_serie Selected Please select a Role_serie to delete.");
 		}
 	}
 

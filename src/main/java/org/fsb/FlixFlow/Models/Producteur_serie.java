@@ -18,12 +18,12 @@ public class Producteur_serie {
 		return id_producteur_serie;
 	}
 
-	public void setId_producteur_serie(int id_producteur_serie) {
-		this.id_producteur_serie = id_producteur_serie;
-	}
-
 	public int getId_serie() {
 		return id_serie;
+	}
+
+	public void setId_producteur_serie(int id_producteur_serie) {
+		this.id_producteur_serie = id_producteur_serie;
 	}
 
 	public void setId_serie(int id_serie) {

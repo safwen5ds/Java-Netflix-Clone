@@ -19,20 +19,20 @@ public class Acteur {
 		return id_acteur;
 	}
 
-	public void setId_acteur(int id_acteur) {
-		this.id_acteur = id_acteur;
-	}
-
 	public String getNom() {
 		return nom;
 	}
 
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
 	public String getUrl_image() {
 		return url_image;
+	}
+
+	public void setId_acteur(int id_acteur) {
+		this.id_acteur = id_acteur;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 
 	public void setUrl_image(String url_image) {

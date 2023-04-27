@@ -1,64 +1,108 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.sql.SQLException;
+import java.util.Comparator;
+
+import org.fsb.FlixFlow.Models.Serie;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
-
-import org.fsb.FlixFlow.Models.Serie;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.sql.SQLException;
-import java.util.Comparator;
 
 public class SerieAddController {
 	@FXML
-	private TextField idTextField;
-	@FXML
-	private TextField nameTextField;
-	@FXML
-	private TextField releaseYearTextField;
-	@FXML
-	private TextField imageUrlTextField;
-	@FXML
-	private TextField videoUrlTextField;
-	@FXML
-	private TextField genreIdTextField;
-	@FXML
-	private TextField languageIdTextField;
+	private TableColumn<Serie, Integer> Country_IDColumn;
 	@FXML
 	private TextField countryIdTextField;
 	@FXML
-	private TextField producerIdTextField;
+	private TableColumn<Serie, Integer> Genre_IDColumn;
 	@FXML
-	private TextField synopsisTextField;
-	@FXML
-	private TableView<Serie> serieTableView;
+	private TextField genreIdTextField;
 	@FXML
 	private TableColumn<Serie, Integer> idColumn;
 	@FXML
-	private TableColumn<Serie, String> NameColumn;
-	@FXML
-	private TableColumn<Serie, Integer> ReleaseYearColumn;
+	private TextField idTextField;
 	@FXML
 	private TableColumn<Serie, String> Image_URLColumn;
 	@FXML
-	private TableColumn<Serie, String> Video_URLColumn;
-	@FXML
-	private TableColumn<Serie, Integer> Genre_IDColumn;
+	private TextField imageUrlTextField;
 	@FXML
 	private TableColumn<Serie, Integer> Language_IDColumn;
 	@FXML
-	private TableColumn<Serie, Integer> Country_IDColumn;
+	private TextField languageIdTextField;
+	@FXML
+	private TableColumn<Serie, String> NameColumn;
+	@FXML
+	private TextField nameTextField;
 	@FXML
 	private TableColumn<Serie, Integer> Producer_IDColumn;
 	@FXML
+	private TextField producerIdTextField;
+	@FXML
+	private TableColumn<Serie, Integer> ReleaseYearColumn;
+	@FXML
+	private TextField releaseYearTextField;
+	@FXML
+	private TableView<Serie> serieTableView;
+	@FXML
 	private TableColumn<Serie, String> SynopsisColumn;
+	@FXML
+	private TextField synopsisTextField;
+	@FXML
+	private TableColumn<Serie, String> Video_URLColumn;
+	@FXML
+	private TextField videoUrlTextField;
+
+	@FXML
+	private void createSerie() {
+		try {
+			Serie serie = new Serie();
+			if (idTextField.getText().matches("\\d+")) {
+				int id = Integer.parseInt(idTextField.getText());
+				serie.setId_serie(id);
+			} else {
+				System.out.println(" Not Cool !");
+			}
+
+			serie.setNom(nameTextField.getText());
+			serie.setAnnee_sortie(Integer.parseInt(releaseYearTextField.getText()));
+			serie.setUrl_image(imageUrlTextField.getText());
+			serie.setUrl_video(videoUrlTextField.getText());
+			serie.setId_genre(Integer.parseInt(genreIdTextField.getText()));
+			serie.setVues(0);
+			serie.setId_langue(Integer.parseInt(languageIdTextField.getText()));
+			serie.setId_pays_origine(Integer.parseInt(countryIdTextField.getText()));
+			serie.setId_producteur(Integer.parseInt(producerIdTextField.getText()));
+			serie.setSynopsis(synopsisTextField.getText());
+
+			DatabaseUtil.addSerie(serie);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Creating Serie ! ");
+		} catch (NumberFormatException e) {
+			showErrorDialog("Invalid input. Please check your input fields and try again !");
+		}
+		refreshTable();
+	}
+
+	@FXML
+	private void deleteSerie() {
+		try {
+			int id = Integer.parseInt(idTextField.getText());
+			DatabaseUtil.deleteSerie(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Deleting Serie");
+		}
+		refreshTable();
+	}
 
 	public void initialize() {
 		idColumn.setCellValueFactory(new PropertyValueFactory<>("id_serie"));
@@ -102,36 +146,12 @@ public class SerieAddController {
 		}
 	}
 
-	@FXML
-	private void createSerie() {
-		try {
-			Serie serie = new Serie();
-			if (idTextField.getText().matches("\\d+")) {
-				int id = Integer.parseInt(idTextField.getText());
-				serie.setId_serie(id);
-			} else {
-				System.out.println(" Not Cool !");
-			}
-
-			serie.setNom(nameTextField.getText());
-			serie.setAnnee_sortie(Integer.parseInt(releaseYearTextField.getText()));
-			serie.setUrl_image(imageUrlTextField.getText());
-			serie.setUrl_video(videoUrlTextField.getText());
-			serie.setId_genre(Integer.parseInt(genreIdTextField.getText()));
-			serie.setVues(0);
-			serie.setId_langue(Integer.parseInt(languageIdTextField.getText()));
-			serie.setId_pays_origine(Integer.parseInt(countryIdTextField.getText()));
-			serie.setId_producteur(Integer.parseInt(producerIdTextField.getText()));
-			serie.setSynopsis(synopsisTextField.getText());
-
-			DatabaseUtil.addSerie(serie);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Creating Serie ! ");
-		} catch (NumberFormatException e) {
-			showErrorDialog("Invalid input. Please check your input fields and try again !");
-		}
-		refreshTable();
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 	@FXML
@@ -154,25 +174,5 @@ public class SerieAddController {
 			e.printStackTrace();
 		}
 		refreshTable();
-	}
-
-	@FXML
-	private void deleteSerie() {
-		try {
-			int id = Integer.parseInt(idTextField.getText());
-			DatabaseUtil.deleteSerie(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Deleting Serie");
-		}
-		refreshTable();
-	}
-
-	private void showErrorDialog(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
 	}
 }

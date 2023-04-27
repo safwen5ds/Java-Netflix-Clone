@@ -1,11 +1,25 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.fsb.FlixFlow.Models.Commentaire_saison;
+import org.fsb.FlixFlow.Models.Saison;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
@@ -16,46 +30,49 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.fsb.FlixFlow.Models.Commentaire_saison;
-import org.fsb.FlixFlow.Models.Saison;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 public class SeasonLayoutController {
+
+	private static void showAlert(String title, String content) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(content);
+		alert.showAndWait();
+	}
 
 	@FXML
 	private Button addcommentbtn;
 	@FXML
-	private Button delbtn;
+	private Button addfav;
 	@FXML
 	private Label average;
-	@FXML
-	private Label vote;
-	@FXML
-	private Label nbreps;
-
-	@FXML
-	private Button modifbtn;
-	@FXML
-	private Button addfav;
-
-	@FXML
-	private Slider saisonRatingSlider;
-
-	@FXML
-	private Button submitSaisonRatingButton;
+	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 
 	@FXML
 	private TextField commentinput;
+	@FXML
+	private Button delbtn;
+
+	@FXML
+	private Button hd;
 
 	@FXML
 	private Rectangle image;
 
 	@FXML
 	private ListView<Commentaire_saison> listcomment;
+
+	@FXML
+	private Button modifbtn;
+
+	@FXML
+	private Label nbreps;
+
+	private int saisonId;
+
+	@FXML
+	private Slider saisonRatingSlider;
 
 	@FXML
 	private Label seasonDate_debutLabel;
@@ -69,67 +86,26 @@ public class SeasonLayoutController {
 	@FXML
 	private Label seasonViewsLabel;
 
+	private int serieId;
+
 	@FXML
 	private Label serieNameLabel;
 
 	@FXML
+	private Button submitSaisonRatingButton;
+	@FXML
 	private WebView videoweb;
 
 	@FXML
-	private Button votebtn;
+	private Label vote;
 
+	@FXML
+	private Button votebtn;
 	@FXML
 	private Button watchnow;
 
 	@FXML
 	private Button watchtrailer;
-	@FXML
-	private Button hd;
-
-	private int saisonId;
-
-	private int serieId;
-	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
-
-	public void setIds(int saisonId, int serieId) {
-		this.saisonId = saisonId;
-		this.serieId = serieId;
-	}
-
-	@FXML
-	public void initialize() {
-		listcomment.setCellFactory(param -> new ListCell<>() {
-			@Override
-			protected void updateItem(Commentaire_saison item, boolean empty) {
-				super.updateItem(item, empty);
-
-				if (empty || item == null) {
-					setText(null);
-				} else {
-					setText(item.getNom_User() + " : " + item.getContenu());
-				}
-			}
-		});
-
-		watchnow.setOnAction(event -> openEpisodeLayout());
-		submitSaisonRatingButton.setOnAction(event -> submitSaisonRating());
-		addcommentbtn.setOnAction(event -> addComment());
-		delbtn.setOnAction(event -> deleteComment());
-		modifbtn.setOnAction(event -> modifyComment());
-		watchtrailer.setOnAction(event -> openUrlInNewWindow(null));
-		updateCommentList();
-	}
-
-	private void openUrlInNewWindow(String url) {
-		Stage newWindow = new Stage();
-		newWindow.initModality(Modality.APPLICATION_MODAL);
-		final WebView webView = new WebView();
-		WebEngine webEngine = webView.getEngine();
-		webEngine.load(url);
-		newWindow.setOnHidden(e -> webView.getEngine().load(null));
-		newWindow.setScene(new Scene(new StackPane(webView), 800, 600));
-		newWindow.show();
-	}
 
 	private void addComment() {
 		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
@@ -156,90 +132,6 @@ public class SeasonLayoutController {
 				showErrorDialog("Error Deleting Comment ! ");
 			}
 		}
-	}
-
-	private void modifyComment() {
-		Commentaire_saison selectedComment = listcomment.getSelectionModel().getSelectedItem();
-		if (selectedComment != null) {
-			String newContent = commentinput.getText();
-			try {
-				DatabaseUtil.updateCommentForSeason(selectedComment.getComment_id(), newContent);
-				updateCommentList();
-				commentinput.clear();
-			} catch (SQLException e) {
-				e.printStackTrace();
-				showErrorDialog("Error Modifying Comment ! ");
-			}
-		}
-	}
-
-	private void updateCommentList() {
-		try {
-			List<Commentaire_saison> comments = DatabaseUtil.getCommentaireSaisonsByMediaId(saisonId);
-			listcomment.getItems().setAll(comments);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Updating Comment ! ");
-		}
-	}
-
-	private void submitSaisonRating() {
-		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
-		int rating = (int) Math.round(saisonRatingSlider.getValue());
-		boolean updated = DatabaseUtil.submitSaisonRating(userId, saisonId, rating);
-		if (updated) {
-			showAlert("Rating Updated", "Your rating for this season has been updated.");
-		}
-		updateAverageScore();
-	}
-
-	private void updateAverageScore() {
-		try {
-			double averageScore = DatabaseUtil.calculateAverageSeasonScore(saisonId);
-			average.setText(String.format("%.2f", averageScore));
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Updating Average ! ");
-		}
-	}
-
-	private void openEpisodeLayout() {
-		if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
-			try {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/episode.fxml"));
-				Parent root = loader.load();
-				EpisodeLayoutController controller = loader.getController();
-				controller.initData(saisonId, serieId);
-
-				Scene scene = new Scene(root);
-				Stage stage = new Stage();
-				stage.setScene(scene);
-				stage.setWidth(1270);
-				stage.setHeight(720);
-				stage.show();
-			} catch (IOException e) {
-				e.printStackTrace();
-				showErrorDialog("Error Openning Episodes ! ");
-			}
-		} else {
-			try {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/episode_Others.fxml"));
-				Parent root = loader.load();
-				EpisodeLayoutController controller = loader.getController();
-				controller.initData(saisonId, serieId);
-
-				Scene scene = new Scene(root);
-				Stage stage = new Stage();
-				stage.setScene(scene);
-				stage.setWidth(1270);
-				stage.setHeight(720);
-				stage.show();
-			} catch (IOException e) {
-				e.printStackTrace();
-				showErrorDialog("Error Openning Episodes ! ");
-			}
-		}
-
 	}
 
 	public void initData(Saison season) throws SQLException {
@@ -282,19 +174,136 @@ public class SeasonLayoutController {
 		updateTotalEpisodes();
 	}
 
-	private void updateVoteCount() {
+	@FXML
+	public void initialize() {
+		listcomment.setCellFactory(param -> new ListCell<>() {
+			@Override
+			protected void updateItem(Commentaire_saison item, boolean empty) {
+				super.updateItem(item, empty);
 
-		try {
-			int voteCount = DatabaseUtil.getVoteCountForSeason(saisonId);
-			if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
-				vote.setFont(bebasNeueFont);
-				vote.setText(" / " + String.valueOf(voteCount) + " Voted");
+				if (empty || item == null) {
+					setText(null);
+				} else {
+					setText(item.getNom_User() + " : " + item.getContenu());
+				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Updating Votes ! ");
+		});
+
+		watchnow.setOnAction(event -> openEpisodeLayout());
+		submitSaisonRatingButton.setOnAction(event -> submitSaisonRating());
+		addcommentbtn.setOnAction(event -> addComment());
+		delbtn.setOnAction(event -> deleteComment());
+		modifbtn.setOnAction(event -> modifyComment());
+		watchtrailer.setOnAction(event -> openUrlInNewWindow(null));
+		updateCommentList();
+	}
+
+	private void modifyComment() {
+		Commentaire_saison selectedComment = listcomment.getSelectionModel().getSelectedItem();
+		if (selectedComment != null) {
+			String newContent = commentinput.getText();
+			try {
+				DatabaseUtil.updateCommentForSeason(selectedComment.getComment_id(), newContent);
+				updateCommentList();
+				commentinput.clear();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				showErrorDialog("Error Modifying Comment ! ");
+			}
+		}
+	}
+
+	private void openEpisodeLayout() {
+		if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/episode.fxml"));
+				Parent root = loader.load();
+				EpisodeLayoutController controller = loader.getController();
+				controller.initData(saisonId, serieId);
+
+				Scene scene = new Scene(root);
+				Stage stage = new Stage();
+				stage.setScene(scene);
+				stage.setWidth(1270);
+				stage.setHeight(720);
+				stage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+				showErrorDialog("Error Openning Episodes ! ");
+			}
+		} else {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/episode_Others.fxml"));
+				Parent root = loader.load();
+				EpisodeLayoutController controller = loader.getController();
+				controller.initData(saisonId, serieId);
+
+				Scene scene = new Scene(root);
+				Stage stage = new Stage();
+				stage.setScene(scene);
+				stage.setWidth(1270);
+				stage.setHeight(720);
+				stage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+				showErrorDialog("Error Openning Episodes ! ");
+			}
 		}
 
+	}
+
+	private void openUrlInNewWindow(String url) {
+		Stage newWindow = new Stage();
+		newWindow.initModality(Modality.APPLICATION_MODAL);
+		final WebView webView = new WebView();
+		WebEngine webEngine = webView.getEngine();
+		webEngine.load(url);
+		newWindow.setOnHidden(e -> webView.getEngine().load(null));
+		newWindow.setScene(new Scene(new StackPane(webView), 800, 600));
+		newWindow.show();
+	}
+
+	public void setIds(int saisonId, int serieId) {
+		this.saisonId = saisonId;
+		this.serieId = serieId;
+	}
+
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
+	private void submitSaisonRating() {
+		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+		int rating = (int) Math.round(saisonRatingSlider.getValue());
+		boolean updated = DatabaseUtil.submitSaisonRating(userId, saisonId, rating);
+		if (updated) {
+			showAlert("Rating Updated", "Your rating for this season has been updated.");
+		}
+		updateAverageScore();
+	}
+
+	private void updateAverageScore() {
+		try {
+			double averageScore = DatabaseUtil.calculateAverageSeasonScore(saisonId);
+			average.setText(String.format("%.2f", averageScore));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Updating Average ! ");
+		}
+	}
+
+	private void updateCommentList() {
+		try {
+			List<Commentaire_saison> comments = DatabaseUtil.getCommentaireSaisonsByMediaId(saisonId);
+			listcomment.getItems().setAll(comments);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Updating Comment ! ");
+		}
 	}
 
 	private void updateTotalEpisodes() {
@@ -313,20 +322,19 @@ public class SeasonLayoutController {
 
 	}
 
-	private void showErrorDialog(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
-	}
+	private void updateVoteCount() {
 
-	private static void showAlert(String title, String content) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(content);
-		alert.showAndWait();
+		try {
+			int voteCount = DatabaseUtil.getVoteCountForSeason(saisonId);
+			if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
+				vote.setFont(bebasNeueFont);
+				vote.setText(" / " + String.valueOf(voteCount) + " Voted");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Updating Votes ! ");
+		}
+
 	}
 
 }

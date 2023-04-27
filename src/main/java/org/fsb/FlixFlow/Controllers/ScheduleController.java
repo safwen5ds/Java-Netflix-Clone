@@ -1,14 +1,15 @@
 package org.fsb.FlixFlow.Controllers;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.ListView;
-import org.fsb.FlixFlow.Models.Episode;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import org.fsb.FlixFlow.Models.Episode;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
 
 public class ScheduleController implements Initializable {
 

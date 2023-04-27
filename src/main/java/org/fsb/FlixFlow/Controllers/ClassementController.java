@@ -1,5 +1,10 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.time.LocalDate;
+
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Views.SeriesRanking;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,17 +15,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import org.fsb.FlixFlow.Views.SeriesRanking;
-
-import java.time.LocalDate;
-
 public class ClassementController {
 	@FXML
-	private DatePicker startDatePicker;
+	private DatePicker endDatePicker;
 
 	@FXML
-	private DatePicker endDatePicker;
+	private ImageView im1;
+	@FXML
+	private TableColumn<SeriesRanking, String> nomColumn;
+
+	@FXML
+	private TableColumn<SeriesRanking, Integer> rankColumn;
+
 	@FXML
 	private Button searchButton;
 
@@ -28,16 +34,10 @@ public class ClassementController {
 	private TableView<SeriesRanking> seriesRankingTable;
 
 	@FXML
-	private TableColumn<SeriesRanking, Integer> rankColumn;
-
-	@FXML
-	private TableColumn<SeriesRanking, String> nomColumn;
+	private DatePicker startDatePicker;
 
 	@FXML
 	private TableColumn<SeriesRanking, Integer> viewsColumn;
-
-	@FXML
-	private ImageView im1;
 
 	public void initialize() {
 		rankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));

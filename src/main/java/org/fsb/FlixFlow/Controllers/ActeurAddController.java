@@ -1,8 +1,15 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.util.Comparator;
+
+import org.fsb.FlixFlow.Models.Acteur;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -10,42 +17,27 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 
-import org.fsb.FlixFlow.Models.Acteur;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import java.util.Comparator;
-
 public class ActeurAddController {
 
-	@FXML
-	private TextField idField;
-	@FXML
-	private TextField nameField;
-	@FXML
-	private Button addButton;
-	@FXML
-	private Button updateButton;
-	@FXML
-	private Button deleteButton;
+	private ObservableList<Acteur> acteurs;
 	@FXML
 	private TableView<Acteur> acteurTable;
 	@FXML
+	private Button addButton;
+	@FXML
+	private Button deleteButton;
+	@FXML
 	private TableColumn<Acteur, Integer> idColumn;
+	@FXML
+	private TextField idField;
+	@FXML
+	private ImageView im1;
 	@FXML
 	private TableColumn<Acteur, String> nameColumn;
 	@FXML
-	private ImageView im1;
-	private ObservableList<Acteur> acteurs;
-
+	private TextField nameField;
 	@FXML
-	public void initialize() {
-		idColumn.setCellValueFactory(new PropertyValueFactory<>("id_acteur"));
-		nameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
-
-		acteurs = FXCollections.observableArrayList(DatabaseUtil.getAllActeurs());
-		acteurTable.setItems(acteurs);
-	}
+	private Button updateButton;
 
 	@FXML
 	private void addActeur() {
@@ -61,11 +53,41 @@ public class ActeurAddController {
 		}
 	}
 
+	@FXML
+	private void deleteActeur() {
+		Acteur selectedActeur = acteurTable.getSelectionModel().getSelectedItem();
+
+		if (selectedActeur != null) {
+			if (DatabaseUtil.deleteActeur(selectedActeur.getId_acteur())) {
+				acteurs.remove(selectedActeur);
+			} else {
+				showAlert("Erreur delete acteur ! ");
+			}
+		}
+	}
+
+	@FXML
+	public void initialize() {
+		idColumn.setCellValueFactory(new PropertyValueFactory<>("id_acteur"));
+		nameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
+
+		acteurs = FXCollections.observableArrayList(DatabaseUtil.getAllActeurs());
+		acteurTable.setItems(acteurs);
+	}
+
 	private void refreshTable() {
 		acteurs.clear();
 		acteurs.addAll(DatabaseUtil.getAllActeurs());
 		acteurs.sort(Comparator.comparing(Acteur::getId_acteur));
 		acteurTable.refresh();
+	}
+
+	private void showAlert(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 	@FXML
@@ -85,27 +107,6 @@ public class ActeurAddController {
 				showAlert("Erreur update acteur ! ");
 			}
 		}
-	}
-
-	@FXML
-	private void deleteActeur() {
-		Acteur selectedActeur = acteurTable.getSelectionModel().getSelectedItem();
-
-		if (selectedActeur != null) {
-			if (DatabaseUtil.deleteActeur(selectedActeur.getId_acteur())) {
-				acteurs.remove(selectedActeur);
-			} else {
-				showAlert("Erreur delete acteur ! ");
-			}
-		}
-	}
-
-	private void showAlert(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
 	}
 
 }

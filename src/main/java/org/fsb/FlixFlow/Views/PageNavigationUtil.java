@@ -1,13 +1,14 @@
 package org.fsb.FlixFlow.Views;
 
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import java.io.IOException;
+
 import org.fsb.FlixFlow.Controllers.MovieSeriesDetailsController;
 import org.fsb.FlixFlow.Controllers.UserDashboardController;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
-import java.io.IOException;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
 public class PageNavigationUtil {
 

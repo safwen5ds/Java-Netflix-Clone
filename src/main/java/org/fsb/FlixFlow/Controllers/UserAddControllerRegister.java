@@ -1,50 +1,43 @@
 package org.fsb.FlixFlow.Controllers;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 import org.fsb.FlixFlow.Models.Utilisateur;
 import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 
-import java.io.IOException;
-import java.sql.Date;
-import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import java.sql.SQLException;
-import java.util.regex.Pattern;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class UserAddControllerRegister {
 	@FXML
-	private TextField firstNameTextField;
-
-	@FXML
-	private TextField lastNameTextField;
+	private DatePicker birthDatePicker;
 
 	@FXML
 	private TextField emailTextField;
 
 	@FXML
-	private PasswordField passwordTextField;
-
-	@FXML
-	private DatePicker birthDatePicker;
+	private TextField firstNameTextField;
 
 	@FXML
 	private Button inputjoin;
 
 	@FXML
-	public void initialize() {
+	private TextField lastNameTextField;
 
-		inputjoin.setOnAction(event -> addUtilisateur());
-
-	}
+	@FXML
+	private PasswordField passwordTextField;
 
 	@FXML
 	private void addUtilisateur() {
@@ -78,6 +71,29 @@ public class UserAddControllerRegister {
 		}
 	}
 
+	private void clearInputFields() {
+		firstNameTextField.clear();
+		lastNameTextField.clear();
+		emailTextField.clear();
+		passwordTextField.clear();
+		birthDatePicker.setValue(null);
+	}
+
+	@FXML
+	public void initialize() {
+
+		inputjoin.setOnAction(event -> addUtilisateur());
+
+	}
+
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
 	private boolean validateInput() {
 		String errorMessage = "";
 
@@ -107,22 +123,6 @@ public class UserAddControllerRegister {
 			showErrorDialog(errorMessage);
 			return false;
 		}
-	}
-
-	private void clearInputFields() {
-		firstNameTextField.clear();
-		lastNameTextField.clear();
-		emailTextField.clear();
-		passwordTextField.clear();
-		birthDatePicker.setValue(null);
-	}
-
-	private void showErrorDialog(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
 	}
 
 }

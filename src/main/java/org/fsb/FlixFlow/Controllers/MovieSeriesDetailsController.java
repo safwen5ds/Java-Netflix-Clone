@@ -1,101 +1,91 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.fsb.FlixFlow.Models.Commentaire_film;
+import org.fsb.FlixFlow.Models.Commentaire_serie;
+import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Models.Serie;
+import org.fsb.FlixFlow.Models.Utilisateur;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Views.CommentaireDisplay;
+
 import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.scene.image.ImageView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import org.fsb.FlixFlow.Models.*;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import org.fsb.FlixFlow.Views.CommentaireDisplay;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class MovieSeriesDetailsController {
 
-	private final int mediaId;
-	private final boolean isMovie;
-	@FXML
-	private Label average;
-	@FXML
-	private Button addgenrefav;
-	private final UserDashboardController userDashboardController;
-
-	public MovieSeriesDetailsController(int mediaId, boolean isMovie, UserDashboardController userDashboardController) {
-		this.mediaId = mediaId;
-		this.isMovie = isMovie;
-		this.userDashboardController = userDashboardController;
-	}
-
-	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
-	Font bebasNeueFont1 = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 50);
-	Font bebasNeueFont2 = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 90);
-
-	@FXML
-	private Button Watchtrailer;
-	@FXML
-	private Label vote;
-	@FXML
-	private Slider ratingSlider;
-	@FXML
-	private ImageView m1;
-	@FXML
-	private ImageView m2;
-
-	@FXML
-	private Button submitRating;
-
 	@FXML
 	private ListView<ActorRoleDisplay> actorslist;
-
-	@FXML
-	private TextField txtcomment;
-
-	@FXML
-	private Button commentbtn;
-	@FXML
-	private Button modifyCommentButton;
-
-	@FXML
-	private Button deleteCommentButton;
-
 	@FXML
 	private Button addfav;
-
+	@FXML
+	private Button addgenrefav;
 	@FXML
 	private Button addvote;
-
 	@FXML
 	private Label annee;
 
 	@FXML
-	private Rectangle backdropImage;
+	private Label average;
 
 	@FXML
-	private TableColumn<CommentaireDisplay, CommentaireDisplay> commentaire;
+	private Rectangle backdropImage;
+	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
+	Font bebasNeueFont1 = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 50);
 
+	Font bebasNeueFont2 = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 90);
+	@FXML
+	private TableColumn<CommentaireDisplay, CommentaireDisplay> commentaire;
+	@FXML
+	private Button commentbtn;
+	@FXML
+	private Button deleteCommentButton;
 	@FXML
 	private Label genre;
 
+	private final boolean isMovie;
+
 	@FXML
 	private Label langue;
+
+	@FXML
+	private ImageView m1;
+
+	@FXML
+	private ImageView m2;
+	private final int mediaId;
+
+	@FXML
+	private Button modifyCommentButton;
 
 	@FXML
 	private Label pays;
@@ -110,7 +100,13 @@ public class MovieSeriesDetailsController {
 	private Label producteur;
 
 	@FXML
+	private Slider ratingSlider;
+
+	@FXML
 	private StackPane root;
+
+	@FXML
+	private Button submitRating;
 
 	@FXML
 	private Label synopsis;
@@ -125,14 +121,32 @@ public class MovieSeriesDetailsController {
 	private Label titre;
 
 	@FXML
+	private TextField txtcomment;
+
+	private final UserDashboardController userDashboardController;
+
+	@FXML
+	private Label v1;
+
+	@FXML
+	private Label v2;
+
+	@FXML
+	private Label vote;
+
+	@FXML
 	private Label vues;
 
 	@FXML
 	private Button watchButton;
 	@FXML
-	private Label v1;
-	@FXML
-	private Label v2;
+	private Button Watchtrailer;
+
+	public MovieSeriesDetailsController(int mediaId, boolean isMovie, UserDashboardController userDashboardController) {
+		this.mediaId = mediaId;
+		this.isMovie = isMovie;
+		this.userDashboardController = userDashboardController;
+	}
 
 	private void addFavoriteGenre(int genreId) {
 		try {
@@ -148,45 +162,6 @@ public class MovieSeriesDetailsController {
 			e.printStackTrace();
 			showErrorDialog("Error ! ");
 		}
-	}
-
-	private void updateAverageRating() {
-		try {
-			double averageScore;
-			if (isMovie) {
-				averageScore = DatabaseUtil.calculateAverageFilmScore(mediaId);
-
-			} else {
-				averageScore = DatabaseUtil.calculateAverageSeriesScore(mediaId);
-
-			}
-			average.setText(String.format("%.2f", averageScore));
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error ! ");
-		}
-	}
-
-	private void updateVoteCount() {
-
-		try {
-			int voteCount;
-			if (isMovie) {
-				voteCount = DatabaseUtil.getVoteCountForFilm(mediaId);
-			} else {
-				voteCount = DatabaseUtil.getVoteCountForSeries(mediaId);
-			}
-			if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
-				v1.setFont(bebasNeueFont2);
-				vote.setText(String.valueOf(voteCount));
-				vote.setFont(bebasNeueFont2);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error ! ");
-		}
-
 	}
 
 	@FXML
@@ -420,32 +395,34 @@ public class MovieSeriesDetailsController {
 		}
 	}
 
-	private void table() {
-		ObservableList<CommentaireDisplay> commentaires = FXCollections.observableArrayList();
-
+	private void openSaisonPage() {
 		try {
-			if (isMovie) {
-				List<Commentaire_film> commentaireFilms = DatabaseUtil.getCommentaireFilmsByMediaId(mediaId);
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/saison.fxml"));
+			SaisonController saisonController = new SaisonController();
+			loader.setController(saisonController);
+			Parent saisonPage = loader.load();
+			int serieId = 1;
+			saisonController.initData(serieId, mediaId);
 
-				for (Commentaire_film cf : commentaireFilms) {
-					System.out.println("Commentaire_film: " + cf.getNom_User() + " - " + cf.getContenu());
-					commentaires.add(new CommentaireDisplay(cf.getNom_User(), cf.getContenu(), cf.getComment_id()));
-				}
-			} else {
-				List<Commentaire_serie> commentaireSeries = DatabaseUtil.getCommentaireSeriesByMediaId(mediaId);
+			Platform.runLater(() -> {
+				userDashboardController.getContentPane().getChildren().setAll(saisonPage);
+			});
 
-				for (Commentaire_serie cs : commentaireSeries) {
-					System.out.println("Commentaire_serie: " + cs.getNom_User() + " - " + cs.getContenu());
-					commentaires.add(new CommentaireDisplay(cs.getNom_User(), cs.getContenu(), cs.getComment_id()));
-				}
-			}
-		} catch (SQLException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-			showErrorDialog("Error Loading Page ! ");
+			showErrorDialog("Error Openning Seasons Page ! ");
 		}
+	}
 
-		tab.setItems(commentaires);
-
+	private void openUrlInNewWindow(String url) {
+		Stage newWindow = new Stage();
+		newWindow.initModality(Modality.APPLICATION_MODAL);
+		final WebView webView = new WebView();
+		WebEngine webEngine = webView.getEngine();
+		webEngine.load(url);
+		newWindow.setOnHidden(e -> webView.getEngine().load(null));
+		newWindow.setScene(new Scene(new StackPane(webView), 800, 600));
+		newWindow.show();
 	}
 
 	public void setFilmDetails(Film film) throws SQLException {
@@ -508,36 +485,6 @@ public class MovieSeriesDetailsController {
 		average.setFont(bebasNeueFont);
 	}
 
-	private void openUrlInNewWindow(String url) {
-		Stage newWindow = new Stage();
-		newWindow.initModality(Modality.APPLICATION_MODAL);
-		final WebView webView = new WebView();
-		WebEngine webEngine = webView.getEngine();
-		webEngine.load(url);
-		newWindow.setOnHidden(e -> webView.getEngine().load(null));
-		newWindow.setScene(new Scene(new StackPane(webView), 800, 600));
-		newWindow.show();
-	}
-
-	private void openSaisonPage() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/saison.fxml"));
-			SaisonController saisonController = new SaisonController();
-			loader.setController(saisonController);
-			Parent saisonPage = loader.load();
-			int serieId = 1;
-			saisonController.initData(serieId, mediaId);
-
-			Platform.runLater(() -> {
-				userDashboardController.getContentPane().getChildren().setAll(saisonPage);
-			});
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Openning Seasons Page ! ");
-		}
-	}
-
 	private void showErrorDialog(String message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
@@ -552,6 +499,73 @@ public class MovieSeriesDetailsController {
 		alert.setHeaderText(null);
 		alert.setContentText(message);
 		alert.showAndWait();
+	}
+
+	private void table() {
+		ObservableList<CommentaireDisplay> commentaires = FXCollections.observableArrayList();
+
+		try {
+			if (isMovie) {
+				List<Commentaire_film> commentaireFilms = DatabaseUtil.getCommentaireFilmsByMediaId(mediaId);
+
+				for (Commentaire_film cf : commentaireFilms) {
+					System.out.println("Commentaire_film: " + cf.getNom_User() + " - " + cf.getContenu());
+					commentaires.add(new CommentaireDisplay(cf.getNom_User(), cf.getContenu(), cf.getComment_id()));
+				}
+			} else {
+				List<Commentaire_serie> commentaireSeries = DatabaseUtil.getCommentaireSeriesByMediaId(mediaId);
+
+				for (Commentaire_serie cs : commentaireSeries) {
+					System.out.println("Commentaire_serie: " + cs.getNom_User() + " - " + cs.getContenu());
+					commentaires.add(new CommentaireDisplay(cs.getNom_User(), cs.getContenu(), cs.getComment_id()));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Loading Page ! ");
+		}
+
+		tab.setItems(commentaires);
+
+	}
+
+	private void updateAverageRating() {
+		try {
+			double averageScore;
+			if (isMovie) {
+				averageScore = DatabaseUtil.calculateAverageFilmScore(mediaId);
+
+			} else {
+				averageScore = DatabaseUtil.calculateAverageSeriesScore(mediaId);
+
+			}
+			average.setText(String.format("%.2f", averageScore));
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error ! ");
+		}
+	}
+
+	private void updateVoteCount() {
+
+		try {
+			int voteCount;
+			if (isMovie) {
+				voteCount = DatabaseUtil.getVoteCountForFilm(mediaId);
+			} else {
+				voteCount = DatabaseUtil.getVoteCountForSeries(mediaId);
+			}
+			if ("admin".equals(DatabaseUtil.readUserFromFile().getType())) {
+				v1.setFont(bebasNeueFont2);
+				vote.setText(String.valueOf(voteCount));
+				vote.setFont(bebasNeueFont2);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error ! ");
+		}
+
 	}
 
 }

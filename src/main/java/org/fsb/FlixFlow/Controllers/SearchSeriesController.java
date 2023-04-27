@@ -1,5 +1,16 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.fsb.FlixFlow.Models.Acteur;
+import org.fsb.FlixFlow.Models.Serie;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Views.PageNavigationUtil;
+
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,24 +26,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import org.fsb.FlixFlow.Models.Acteur;
-import org.fsb.FlixFlow.Models.Serie;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import org.fsb.FlixFlow.Views.PageNavigationUtil;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SearchSeriesController {
 	@FXML
-	private TextField serieTitleSearchTextField;
-	Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
-
+	private TextField actorSearchTextField;
 	@FXML
-	private TextField releaseYearSearchTextField;
+	private TextField countryOfOriginSearchTextField;
 
 	@FXML
 	private TextField genreSearchTextField;
@@ -40,22 +39,26 @@ public class SearchSeriesController {
 	@FXML
 	private TextField languageSearchTextField;
 
-	@FXML
-	private TextField countryOfOriginSearchTextField;
+	private ObservableList<Serie> masterData;
+
+	Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 
 	@FXML
 	private TextField producerSearchTextField;
 
 	@FXML
-	private TextField actorSearchTextField;
+	private TextField releaseYearSearchTextField;
 
-	private HashMap<Integer, Serie> seriesMap = new HashMap<>();
+	private Map<Integer, List<Acteur>> seriesActorsMap;
 
 	@FXML
 	private FlowPane seriesFlowPane;
-	private final UserDashboardController userDashboardController;
+	private HashMap<Integer, Serie> seriesMap = new HashMap<>();
 
-	private ObservableList<Serie> masterData;
+	@FXML
+	private TextField serieTitleSearchTextField;
+
+	private final UserDashboardController userDashboardController;
 
 	public SearchSeriesController(UserDashboardController userDashboardController) {
 		this.userDashboardController = userDashboardController;
@@ -67,9 +70,25 @@ public class SearchSeriesController {
 		setupSearchFieldListeners();
 	}
 
-	private void updateSeriesFlowPane(ObservableList<Serie> series) {
-		seriesFlowPane.getChildren().clear();
-		loadSerie(series, seriesFlowPane);
+	private void loadAllSeries() {
+		try {
+			List<Serie> series = DatabaseUtil.getSeriesSortedByViews();
+			masterData = FXCollections.observableArrayList();
+			seriesActorsMap = new HashMap<>();
+			seriesMap = new HashMap<>();
+			for (Serie serie1 : series) {
+				Serie serie = DatabaseUtil.getSerieById(serie1.getId_serie());
+				if (serie != null) {
+					masterData.add(serie);
+					seriesMap.put(serie.getId_serie(), serie);
+					List<Acteur> actors = DatabaseUtil.getActorsBySerieId(serie.getId_serie());
+					seriesActorsMap.put(serie.getId_serie(), actors);
+				}
+			}
+			updateSeriesFlowPane(masterData);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void loadSerie(List<Serie> series, FlowPane seriesFlowPane) {
@@ -93,47 +112,6 @@ public class SearchSeriesController {
 
 			seriesFlowPane.getChildren().add(mediaContainer);
 		}
-	}
-
-	private Map<Integer, List<Acteur>> seriesActorsMap;
-
-	private void loadAllSeries() {
-		try {
-			List<Serie> series = DatabaseUtil.getSeriesSortedByViews();
-			masterData = FXCollections.observableArrayList();
-			seriesActorsMap = new HashMap<>();
-			seriesMap = new HashMap<>();
-			for (Serie serie1 : series) {
-				Serie serie = DatabaseUtil.getSerieById(serie1.getId_serie());
-				if (serie != null) {
-					masterData.add(serie);
-					seriesMap.put(serie.getId_serie(), serie);
-					List<Acteur> actors = DatabaseUtil.getActorsBySerieId(serie.getId_serie());
-					seriesActorsMap.put(serie.getId_serie(), actors);
-				}
-			}
-			updateSeriesFlowPane(masterData);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void setupSearchFieldListeners() {
-		setDelayedSearchListener(serieTitleSearchTextField);
-		setDelayedSearchListener(releaseYearSearchTextField);
-		setDelayedSearchListener(genreSearchTextField);
-		setDelayedSearchListener(languageSearchTextField);
-		setDelayedSearchListener(countryOfOriginSearchTextField);
-		setDelayedSearchListener(producerSearchTextField);
-		setDelayedSearchListener(actorSearchTextField);
-	}
-
-	private void setDelayedSearchListener(TextField textField) {
-		PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
-		textField.setOnKeyReleased(event -> {
-			pause.setOnFinished(e -> searchSeries());
-			pause.playFromStart();
-		});
 	}
 
 	private void searchSeries() {
@@ -169,5 +147,28 @@ public class SearchSeriesController {
 		}
 
 		updateSeriesFlowPane(FXCollections.observableArrayList(filteredData));
+	}
+
+	private void setDelayedSearchListener(TextField textField) {
+		PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+		textField.setOnKeyReleased(event -> {
+			pause.setOnFinished(e -> searchSeries());
+			pause.playFromStart();
+		});
+	}
+
+	private void setupSearchFieldListeners() {
+		setDelayedSearchListener(serieTitleSearchTextField);
+		setDelayedSearchListener(releaseYearSearchTextField);
+		setDelayedSearchListener(genreSearchTextField);
+		setDelayedSearchListener(languageSearchTextField);
+		setDelayedSearchListener(countryOfOriginSearchTextField);
+		setDelayedSearchListener(producerSearchTextField);
+		setDelayedSearchListener(actorSearchTextField);
+	}
+
+	private void updateSeriesFlowPane(ObservableList<Serie> series) {
+		seriesFlowPane.getChildren().clear();
+		loadSerie(series, seriesFlowPane);
 	}
 }

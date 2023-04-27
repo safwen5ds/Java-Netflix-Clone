@@ -1,50 +1,90 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.Date;
+
+import org.fsb.FlixFlow.Models.Saison;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-
-import org.fsb.FlixFlow.Models.*;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import java.util.Date;
-
-import java.sql.SQLException;
-import java.util.Comparator;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class SaisonAddController {
 	@FXML
-	private TextField idSaisonField;
-	@FXML
-	private TextField idSerieField;
-	@FXML
-	private TextField numSaisonField;
+	private TableColumn<Saison, Date> dateDebutColumn;
 	@FXML
 	private DatePicker dateDebutPicker;
 	@FXML
-	private TextField synopsisField;
-	@FXML
-	private TextField urlImageField;
-	@FXML
-	private TextField urlVideoField;
-	@FXML
-	private TableView<Saison> seasonTable;
-	@FXML
 	private TableColumn<Saison, Integer> idSaisonColumn;
+	@FXML
+	private TextField idSaisonField;
 	@FXML
 	private TableColumn<Saison, Integer> idSerieColumn;
 	@FXML
+	private TextField idSerieField;
+	@FXML
 	private TableColumn<Saison, Integer> numSaisonColumn;
 	@FXML
-	private TableColumn<Saison, Date> dateDebutColumn;
+	private TextField numSaisonField;
+	@FXML
+	private TableView<Saison> seasonTable;
 	@FXML
 	private TableColumn<Saison, String> synopsisColumn;
 	@FXML
+	private TextField synopsisField;
+	@FXML
 	private TableColumn<Saison, String> urlImageColumn;
 	@FXML
+	private TextField urlImageField;
+	@FXML
 	private TableColumn<Saison, String> urlVideoColumn;
+	@FXML
+	private TextField urlVideoField;
+
+	@FXML
+	private void addSeason() {
+		try {
+			Saison season = new Saison();
+			season.setId_saison(Integer.parseInt(idSaisonField.getText()));
+			season.setId_serie(Integer.parseInt(idSerieField.getText()));
+			season.setNum_saison(Integer.parseInt(numSaisonField.getText()));
+			season.setDate_debut(java.sql.Date.valueOf(dateDebutPicker.getValue()));
+			season.setSynopsis(synopsisField.getText());
+			season.setUrl_image(urlImageField.getText());
+			season.setUrl_video(urlVideoField.getText());
+
+			DatabaseUtil.addSaison(season);
+			refreshTable();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Adding Season ! ");
+		} catch (NumberFormatException e) {
+			showErrorDialog("Invalid input. Please check your input fields and try again.");
+		}
+	}
+
+	@FXML
+	private void deleteSeason() {
+		try {
+			int idSaison = Integer.parseInt(idSaisonField.getText());
+			DatabaseUtil.deleteSaison(idSaison);
+			refreshTable();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Deleting Season ! ");
+		} catch (NumberFormatException e) {
+			showErrorDialog("Invalid input. Please check your input fields and try again !");
+		}
+	}
 
 	public void initialize() {
 		idSaisonColumn.setCellValueFactory(new PropertyValueFactory<>("id_saison"));
@@ -82,26 +122,12 @@ public class SaisonAddController {
 		}
 	}
 
-	@FXML
-	private void addSeason() {
-		try {
-			Saison season = new Saison();
-			season.setId_saison(Integer.parseInt(idSaisonField.getText()));
-			season.setId_serie(Integer.parseInt(idSerieField.getText()));
-			season.setNum_saison(Integer.parseInt(numSaisonField.getText()));
-			season.setDate_debut(java.sql.Date.valueOf(dateDebutPicker.getValue()));
-			season.setSynopsis(synopsisField.getText());
-			season.setUrl_image(urlImageField.getText());
-			season.setUrl_video(urlVideoField.getText());
-
-			DatabaseUtil.addSaison(season);
-			refreshTable();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Adding Season ! ");
-		} catch (NumberFormatException e) {
-			showErrorDialog("Invalid input. Please check your input fields and try again.");
-		}
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 	@FXML
@@ -124,27 +150,5 @@ public class SaisonAddController {
 		} catch (NumberFormatException e) {
 			showErrorDialog("Invalid input. Please check your input fields and try again !");
 		}
-	}
-
-	@FXML
-	private void deleteSeason() {
-		try {
-			int idSaison = Integer.parseInt(idSaisonField.getText());
-			DatabaseUtil.deleteSaison(idSaison);
-			refreshTable();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Deleting Season ! ");
-		} catch (NumberFormatException e) {
-			showErrorDialog("Invalid input. Please check your input fields and try again !");
-		}
-	}
-
-	private void showErrorDialog(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
 	}
 }

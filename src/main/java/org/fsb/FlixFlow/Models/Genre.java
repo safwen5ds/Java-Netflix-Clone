@@ -18,12 +18,12 @@ public class Genre {
 		return id_genre;
 	}
 
-	public void setId_genre(int id_genre) {
-		this.id_genre = id_genre;
-	}
-
 	public String getNom() {
 		return nom;
+	}
+
+	public void setId_genre(int id_genre) {
+		this.id_genre = id_genre;
 	}
 
 	public void setNom(String nom) {

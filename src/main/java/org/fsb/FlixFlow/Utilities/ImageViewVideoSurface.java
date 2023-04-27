@@ -19,6 +19,10 @@
 
 package org.fsb.FlixFlow.Utilities;
 
+import static uk.co.caprica.vlcj.player.embedded.videosurface.VideoSurfaceAdapters.getVideoSurfaceAdapter;
+
+import java.nio.ByteBuffer;
+
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelBuffer;
@@ -32,25 +36,55 @@ import uk.co.caprica.vlcj.player.embedded.videosurface.callback.BufferFormatCall
 import uk.co.caprica.vlcj.player.embedded.videosurface.callback.RenderCallback;
 import uk.co.caprica.vlcj.player.embedded.videosurface.callback.format.RV32BufferFormat;
 
-import java.nio.ByteBuffer;
-
-import static uk.co.caprica.vlcj.player.embedded.videosurface.VideoSurfaceAdapters.getVideoSurfaceAdapter;
-
 /**
  * A vlcj {@link VideoSurface} component for a JavaFX {@link ImageView}, using
  * {@link PixelBuffer}.
  */
 public final class ImageViewVideoSurface extends VideoSurface {
 
-	private final ImageView imageView;
+	private class PixelBufferBufferFormatCallback implements BufferFormatCallback {
+
+		private int sourceHeight;
+		private int sourceWidth;
+
+		@Override
+		public void allocatedBuffers(ByteBuffer[] buffers) {
+			PixelFormat<ByteBuffer> pixelFormat = PixelFormat.getByteBgraPreInstance();
+			pixelBuffer = new PixelBuffer<>(sourceWidth, sourceHeight, buffers[0], pixelFormat);
+			imageView.setImage(new WritableImage(pixelBuffer));
+		}
+
+		@Override
+		public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
+			this.sourceWidth = sourceWidth;
+			this.sourceHeight = sourceHeight;
+			return new RV32BufferFormat(sourceWidth, sourceHeight);
+		}
+	}
+
+	private class PixelBufferRenderCallback implements RenderCallback {
+		@Override
+		public void display(MediaPlayer mediaPlayer, ByteBuffer[] nativeBuffers, BufferFormat bufferFormat) {
+			Platform.runLater(() -> pixelBuffer.updateBuffer(pb -> null));
+		}
+	}
+
+	private class PixelBufferVideoSurface extends CallbackVideoSurface {
+		private PixelBufferVideoSurface() {
+			super(ImageViewVideoSurface.this.bufferFormatCallback, ImageViewVideoSurface.this.renderCallback, true,
+					getVideoSurfaceAdapter());
+		}
+	}
 
 	private final PixelBufferBufferFormatCallback bufferFormatCallback;
+
+	private final ImageView imageView;
+
+	private PixelBuffer<ByteBuffer> pixelBuffer;
 
 	private final PixelBufferRenderCallback renderCallback;
 
 	private final PixelBufferVideoSurface videoSurface;
-
-	private PixelBuffer<ByteBuffer> pixelBuffer;
 
 	/**
 	 * Create a new {@link VideoSurface} for an {@link ImageView}.
@@ -68,39 +102,5 @@ public final class ImageViewVideoSurface extends VideoSurface {
 	@Override
 	public void attach(MediaPlayer mediaPlayer) {
 		this.videoSurface.attach(mediaPlayer);
-	}
-
-	private class PixelBufferBufferFormatCallback implements BufferFormatCallback {
-
-		private int sourceWidth;
-		private int sourceHeight;
-
-		@Override
-		public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
-			this.sourceWidth = sourceWidth;
-			this.sourceHeight = sourceHeight;
-			return new RV32BufferFormat(sourceWidth, sourceHeight);
-		}
-
-		@Override
-		public void allocatedBuffers(ByteBuffer[] buffers) {
-			PixelFormat<ByteBuffer> pixelFormat = PixelFormat.getByteBgraPreInstance();
-			pixelBuffer = new PixelBuffer<>(sourceWidth, sourceHeight, buffers[0], pixelFormat);
-			imageView.setImage(new WritableImage(pixelBuffer));
-		}
-	}
-
-	private class PixelBufferRenderCallback implements RenderCallback {
-		@Override
-		public void display(MediaPlayer mediaPlayer, ByteBuffer[] nativeBuffers, BufferFormat bufferFormat) {
-			Platform.runLater(() -> pixelBuffer.updateBuffer(pb -> null));
-		}
-	}
-
-	private class PixelBufferVideoSurface extends CallbackVideoSurface {
-		private PixelBufferVideoSurface() {
-			super(ImageViewVideoSurface.this.bufferFormatCallback, ImageViewVideoSurface.this.renderCallback, true,
-					getVideoSurfaceAdapter());
-		}
 	}
 }

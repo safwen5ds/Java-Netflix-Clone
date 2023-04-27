@@ -18,12 +18,12 @@ public class Producteur {
 		return id_producteur;
 	}
 
-	public void setId_producteur(int id_producteur) {
-		this.id_producteur = id_producteur;
-	}
-
 	public String getNom() {
 		return nom;
+	}
+
+	public void setId_producteur(int id_producteur) {
+		this.id_producteur = id_producteur;
 	}
 
 	public void setNom(String nom) {

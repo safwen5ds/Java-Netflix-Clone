@@ -18,12 +18,12 @@ public class Pays {
 		return id_pays;
 	}
 
-	public void setId_pays(int id_pays) {
-		this.id_pays = id_pays;
-	}
-
 	public String getNom() {
 		return nom;
+	}
+
+	public void setId_pays(int id_pays) {
+		this.id_pays = id_pays;
 	}
 
 	public void setNom(String nom) {

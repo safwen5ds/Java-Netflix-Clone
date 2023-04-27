@@ -1,5 +1,11 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.io.IOException;
+import java.time.ZoneId;
+
+import org.fsb.FlixFlow.Models.Utilisateur;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,25 +15,17 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.fsb.FlixFlow.Models.Utilisateur;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import java.io.IOException;
-
-import java.time.ZoneId;
 
 public class ProfileController {
-
-	@FXML
-	private TextField SurNameField;
-
-	@FXML
-	private Button Disconnect;
 
 	@FXML
 	private DatePicker date;
 
 	@FXML
 	private Button deleteButton;
+
+	@FXML
+	private Button Disconnect;
 
 	@FXML
 	private TextField emailField;
@@ -39,6 +37,9 @@ public class ProfileController {
 	private PasswordField passwordField;
 
 	@FXML
+	private TextField SurNameField;
+
+	@FXML
 	private Button updateButton;
 	private Utilisateur user;
 
@@ -46,6 +47,41 @@ public class ProfileController {
 
 	public ProfileController(UserDashboardController userDashboardController) {
 		this.userDashboardController = userDashboardController;
+	}
+
+	private void deleteUserProfile() {
+		if (user != null) {
+			boolean isDeleted = DatabaseUtil.deleteUserFromDatabase(user.getId_utilisateur());
+			if (isDeleted) {
+				DatabaseUtil.deleteUserFromFile();
+				Stage stage = (Stage) deleteButton.getScene().getWindow();
+				stage.close();
+			}
+		}
+	}
+
+	public void Disconnect() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Login.fxml"));
+			Parent loginRoot = loader.load();
+
+			Scene loginScene = new Scene(loginRoot);
+
+			Stage profileStage = (Stage) Disconnect.getScene().getWindow();
+
+			if (userDashboardController != null && UserDashboardController.dashboardStage != null) {
+				UserDashboardController.dashboardStage.close();
+			}
+
+			Stage loginStage = new Stage();
+			loginStage.setScene(loginScene);
+			loginStage.setTitle("Login");
+			loginStage.show();
+
+			profileStage.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
@@ -83,41 +119,6 @@ public class ProfileController {
 			if (isUpdated) {
 				DatabaseUtil.storeUserToFile(user);
 			}
-		}
-	}
-
-	private void deleteUserProfile() {
-		if (user != null) {
-			boolean isDeleted = DatabaseUtil.deleteUserFromDatabase(user.getId_utilisateur());
-			if (isDeleted) {
-				DatabaseUtil.deleteUserFromFile();
-				Stage stage = (Stage) deleteButton.getScene().getWindow();
-				stage.close();
-			}
-		}
-	}
-
-	public void Disconnect() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Login.fxml"));
-			Parent loginRoot = loader.load();
-
-			Scene loginScene = new Scene(loginRoot);
-
-			Stage profileStage = (Stage) Disconnect.getScene().getWindow();
-
-			if (userDashboardController != null && UserDashboardController.dashboardStage != null) {
-				UserDashboardController.dashboardStage.close();
-			}
-
-			Stage loginStage = new Stage();
-			loginStage.setScene(loginScene);
-			loginStage.setTitle("Login");
-			loginStage.show();
-
-			profileStage.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

@@ -18,12 +18,12 @@ public class Langue {
 		return id_langue;
 	}
 
-	public void setId_langue(int id_langue) {
-		this.id_langue = id_langue;
-	}
-
 	public String getNom() {
 		return nom;
+	}
+
+	public void setId_langue(int id_langue) {
+		this.id_langue = id_langue;
 	}
 
 	public void setNom(String nom) {

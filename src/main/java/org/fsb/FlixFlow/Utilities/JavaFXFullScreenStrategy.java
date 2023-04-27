@@ -61,15 +61,15 @@ public class JavaFXFullScreenStrategy implements FullScreenStrategy {
 	}
 
 	/**
-	 * Optional override to perform operations before switching to full screen.
-	 */
-	public void onBeforeEnterFullScreen() {
-	}
-
-	/**
 	 * Optional override to perform operations after switching back from full
 	 * screen.
 	 */
 	public void onAfterExitFullScreen() {
+	}
+
+	/**
+	 * Optional override to perform operations before switching to full screen.
+	 */
+	public void onBeforeEnterFullScreen() {
 	}
 }

@@ -1,5 +1,16 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.fsb.FlixFlow.Models.Acteur;
+import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+import org.fsb.FlixFlow.Views.PageNavigationUtil;
+
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,24 +26,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import org.fsb.FlixFlow.Models.Acteur;
-import org.fsb.FlixFlow.Models.Film;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import org.fsb.FlixFlow.Views.PageNavigationUtil;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SearchMoviesController {
 	@FXML
-	private TextField movieTitleSearchTextField;
-	Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
-
+	private TextField actorSearchTextField;
 	@FXML
-	private TextField releaseYearSearchTextField;
+	private TextField countryOfOriginSearchTextField;
+
+	private HashMap<Integer, Film> filmsMap = new HashMap<>();
 
 	@FXML
 	private TextField genreSearchTextField;
@@ -40,22 +41,24 @@ public class SearchMoviesController {
 	@FXML
 	private TextField languageSearchTextField;
 
-	@FXML
-	private TextField countryOfOriginSearchTextField;
+	private ObservableList<Film> masterData;
 
+	Font Montessart = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
+
+	private Map<Integer, List<Acteur>> moviesActorsMap;
+
+	@FXML
+	private FlowPane moviesFlowPane;
+
+	@FXML
+	private TextField movieTitleSearchTextField;
 	@FXML
 	private TextField producerSearchTextField;
 
 	@FXML
-	private TextField actorSearchTextField;
+	private TextField releaseYearSearchTextField;
 
-	private HashMap<Integer, Film> filmsMap = new HashMap<>();
-
-	@FXML
-	private FlowPane moviesFlowPane;
 	private final UserDashboardController userDashboardController;
-
-	private ObservableList<Film> masterData;
 
 	public SearchMoviesController(UserDashboardController userDashboardController) {
 		this.userDashboardController = userDashboardController;
@@ -67,9 +70,25 @@ public class SearchMoviesController {
 		setupSearchFieldListeners();
 	}
 
-	private void updateMoviesFlowPane(ObservableList<Film> films) {
-		moviesFlowPane.getChildren().clear();
-		loadFilm(films, moviesFlowPane);
+	private void loadAllMovies() {
+		try {
+			List<Film> films = DatabaseUtil.getMoviesSortedByViews();
+			masterData = FXCollections.observableArrayList();
+			moviesActorsMap = new HashMap<>();
+			filmsMap = new HashMap<>();
+			for (Film film : films) {
+				Film movie = DatabaseUtil.getFilmById(film.getId_film());
+				if (movie != null) {
+					masterData.add(movie);
+					filmsMap.put(movie.getId_film(), movie);
+					List<Acteur> actors = DatabaseUtil.getActorsByFilmId(movie.getId_film());
+					moviesActorsMap.put(movie.getId_film(), actors);
+				}
+			}
+			updateMoviesFlowPane(masterData);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void loadFilm(List<Film> movies, FlowPane moviesFlowPane) {
@@ -93,47 +112,6 @@ public class SearchMoviesController {
 
 			moviesFlowPane.getChildren().add(mediaContainer);
 		}
-	}
-
-	private Map<Integer, List<Acteur>> moviesActorsMap;
-
-	private void loadAllMovies() {
-		try {
-			List<Film> films = DatabaseUtil.getMoviesSortedByViews();
-			masterData = FXCollections.observableArrayList();
-			moviesActorsMap = new HashMap<>();
-			filmsMap = new HashMap<>();
-			for (Film film : films) {
-				Film movie = DatabaseUtil.getFilmById(film.getId_film());
-				if (movie != null) {
-					masterData.add(movie);
-					filmsMap.put(movie.getId_film(), movie);
-					List<Acteur> actors = DatabaseUtil.getActorsByFilmId(movie.getId_film());
-					moviesActorsMap.put(movie.getId_film(), actors);
-				}
-			}
-			updateMoviesFlowPane(masterData);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void setupSearchFieldListeners() {
-		setDelayedSearchListener(movieTitleSearchTextField);
-		setDelayedSearchListener(releaseYearSearchTextField);
-		setDelayedSearchListener(genreSearchTextField);
-		setDelayedSearchListener(languageSearchTextField);
-		setDelayedSearchListener(countryOfOriginSearchTextField);
-		setDelayedSearchListener(producerSearchTextField);
-		setDelayedSearchListener(actorSearchTextField);
-	}
-
-	private void setDelayedSearchListener(TextField textField) {
-		PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
-		textField.setOnKeyReleased(event -> {
-			pause.setOnFinished(e -> searchMovies());
-			pause.playFromStart();
-		});
 	}
 
 	private void searchMovies() {
@@ -168,5 +146,28 @@ public class SearchMoviesController {
 		}
 
 		updateMoviesFlowPane(FXCollections.observableArrayList(filteredData));
+	}
+
+	private void setDelayedSearchListener(TextField textField) {
+		PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+		textField.setOnKeyReleased(event -> {
+			pause.setOnFinished(e -> searchMovies());
+			pause.playFromStart();
+		});
+	}
+
+	private void setupSearchFieldListeners() {
+		setDelayedSearchListener(movieTitleSearchTextField);
+		setDelayedSearchListener(releaseYearSearchTextField);
+		setDelayedSearchListener(genreSearchTextField);
+		setDelayedSearchListener(languageSearchTextField);
+		setDelayedSearchListener(countryOfOriginSearchTextField);
+		setDelayedSearchListener(producerSearchTextField);
+		setDelayedSearchListener(actorSearchTextField);
+	}
+
+	private void updateMoviesFlowPane(ObservableList<Film> films) {
+		moviesFlowPane.getChildren().clear();
+		loadFilm(films, moviesFlowPane);
 	}
 }

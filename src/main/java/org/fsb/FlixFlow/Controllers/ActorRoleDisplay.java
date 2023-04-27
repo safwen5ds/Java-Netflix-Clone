@@ -1,10 +1,10 @@
 package org.fsb.FlixFlow.Controllers;
 
 public class ActorRoleDisplay {
-	private String urlImage;
+	private int actorid;
 	private String actorName;
 	private String roleType;
-	private int actorid;
+	private String urlImage;
 
 	public ActorRoleDisplay(String urlImage, String actorName, String roleType, int actorid) {
 		this.urlImage = urlImage;
@@ -13,36 +13,36 @@ public class ActorRoleDisplay {
 		this.actorid = actorid;
 	}
 
-	public String getUrlImage() {
-		return urlImage;
-	}
-
-	public void setUrlImage(String urlImage) {
-		this.urlImage = urlImage;
+	public int getActorid() {
+		return actorid;
 	}
 
 	public String getActorName() {
 		return actorName;
 	}
 
-	public void setActorName(String actorName) {
-		this.actorName = actorName;
-	}
-
 	public String getRoleType() {
 		return roleType;
+	}
+
+	public String getUrlImage() {
+		return urlImage;
+	}
+
+	public void setActorid(int actorid) {
+		this.actorid = actorid;
+	}
+
+	public void setActorName(String actorName) {
+		this.actorName = actorName;
 	}
 
 	public void setRoleType(String roleType) {
 		this.roleType = roleType;
 	}
 
-	public int getActorid() {
-		return actorid;
-	}
-
-	public void setActorid(int actorid) {
-		this.actorid = actorid;
+	public void setUrlImage(String urlImage) {
+		this.urlImage = urlImage;
 	}
 
 }

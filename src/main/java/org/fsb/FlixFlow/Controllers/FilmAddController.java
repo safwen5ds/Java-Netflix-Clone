@@ -1,68 +1,114 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.sql.SQLException;
+import java.util.Comparator;
+
+import org.fsb.FlixFlow.Models.Film;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
-
-import org.fsb.FlixFlow.Models.Film;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.sql.SQLException;
-import java.util.Comparator;
 
 public class FilmAddController {
 	@FXML
-	private TextField idTextField;
-	@FXML
-	private TextField nameTextField;
-	@FXML
-	private TextField releaseYearTextField;
-	@FXML
-	private TextField imageUrlTextField;
-	@FXML
-	private TextField videoUrlTextField;
-	@FXML
-	private TextField genreIdTextField;
-	@FXML
-	private TextField languageIdTextField;
+	private TableColumn<Film, Integer> Country_IDColumn;
 	@FXML
 	private TextField countryIdTextField;
 	@FXML
-	private TextField producerIdTextField;
+	private TableView<Film> FilmTableView;
 	@FXML
-	private TextField synopsisTextField;
+	private TableColumn<Film, String> FilmUrlColumn;
 	@FXML
 	private TextField FilmUrlTextFiled;
 	@FXML
-	private TableView<Film> FilmTableView;
+	private TableColumn<Film, Integer> Genre_IDColumn;
+	@FXML
+	private TextField genreIdTextField;
 	@FXML
 	private TableColumn<Film, Integer> idColumn;
 	@FXML
-	private TableColumn<Film, String> NameColumn;
-	@FXML
-	private TableColumn<Film, Integer> ReleaseYearColumn;
+	private TextField idTextField;
 	@FXML
 	private TableColumn<Film, String> Image_URLColumn;
 	@FXML
-	private TableColumn<Film, String> Video_URLColumn;
-	@FXML
-	private TableColumn<Film, Integer> Genre_IDColumn;
+	private TextField imageUrlTextField;
 	@FXML
 	private TableColumn<Film, Integer> Language_IDColumn;
 	@FXML
-	private TableColumn<Film, Integer> Country_IDColumn;
+	private TextField languageIdTextField;
+	@FXML
+	private TableColumn<Film, String> NameColumn;
+	@FXML
+	private TextField nameTextField;
 	@FXML
 	private TableColumn<Film, Integer> Producer_IDColumn;
 	@FXML
+	private TextField producerIdTextField;
+	@FXML
+	private TableColumn<Film, Integer> ReleaseYearColumn;
+	@FXML
+	private TextField releaseYearTextField;
+	@FXML
 	private TableColumn<Film, String> SynopsisColumn;
 	@FXML
-	private TableColumn<Film, String> FilmUrlColumn;
+	private TextField synopsisTextField;
+	@FXML
+	private TableColumn<Film, String> Video_URLColumn;
+	@FXML
+	private TextField videoUrlTextField;
+
+	@FXML
+	private void createFilm() {
+		try {
+			Film Film = new Film();
+			if (idTextField.getText().matches("\\d+")) {
+				int id = Integer.parseInt(idTextField.getText());
+				Film.setId_film(id);
+			} else {
+				System.out.println(" Not Cool !");
+			}
+
+			Film.setNom(nameTextField.getText());
+			Film.setAnnee_sortie(Integer.parseInt(releaseYearTextField.getText()));
+			Film.setUrl_image(imageUrlTextField.getText());
+			Film.setUrl_video(videoUrlTextField.getText());
+			Film.setId_genre(Integer.parseInt(genreIdTextField.getText()));
+			Film.setVues(0);
+			Film.setId_langue(Integer.parseInt(languageIdTextField.getText()));
+			Film.setId_pays_origine(Integer.parseInt(countryIdTextField.getText()));
+			Film.setId_producteur(Integer.parseInt(producerIdTextField.getText()));
+			Film.setSynopsis(synopsisTextField.getText());
+			Film.setUrl_film(FilmUrlTextFiled.getText());
+
+			DatabaseUtil.createFilm(Film);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Creating Film");
+		} catch (NumberFormatException e) {
+			showErrorDialog("Invalid input. Please check your input fields and try again !");
+
+		}
+		refreshTable();
+	}
+
+	@FXML
+	private void deleteFilm() {
+		try {
+			int id = Integer.parseInt(idTextField.getText());
+			DatabaseUtil.deleteFilm(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showErrorDialog("Error Deleting Movie !");
+		}
+		refreshTable();
+	}
 
 	public void initialize() {
 		idColumn.setCellValueFactory(new PropertyValueFactory<>("id_film"));
@@ -108,38 +154,12 @@ public class FilmAddController {
 		}
 	}
 
-	@FXML
-	private void createFilm() {
-		try {
-			Film Film = new Film();
-			if (idTextField.getText().matches("\\d+")) {
-				int id = Integer.parseInt(idTextField.getText());
-				Film.setId_film(id);
-			} else {
-				System.out.println(" Not Cool !");
-			}
-
-			Film.setNom(nameTextField.getText());
-			Film.setAnnee_sortie(Integer.parseInt(releaseYearTextField.getText()));
-			Film.setUrl_image(imageUrlTextField.getText());
-			Film.setUrl_video(videoUrlTextField.getText());
-			Film.setId_genre(Integer.parseInt(genreIdTextField.getText()));
-			Film.setVues(0);
-			Film.setId_langue(Integer.parseInt(languageIdTextField.getText()));
-			Film.setId_pays_origine(Integer.parseInt(countryIdTextField.getText()));
-			Film.setId_producteur(Integer.parseInt(producerIdTextField.getText()));
-			Film.setSynopsis(synopsisTextField.getText());
-			Film.setUrl_film(FilmUrlTextFiled.getText());
-
-			DatabaseUtil.createFilm(Film);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Creating Film");
-		} catch (NumberFormatException e) {
-			showErrorDialog("Invalid input. Please check your input fields and try again !");
-
-		}
-		refreshTable();
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 	@FXML
@@ -164,25 +184,5 @@ public class FilmAddController {
 			showErrorDialog("Error Updating Movie !");
 		}
 		refreshTable();
-	}
-
-	@FXML
-	private void deleteFilm() {
-		try {
-			int id = Integer.parseInt(idTextField.getText());
-			DatabaseUtil.deleteFilm(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			showErrorDialog("Error Deleting Movie !");
-		}
-		refreshTable();
-	}
-
-	private void showErrorDialog(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
 	}
 }

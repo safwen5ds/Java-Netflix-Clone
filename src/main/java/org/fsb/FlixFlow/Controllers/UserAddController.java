@@ -1,38 +1,57 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.regex.Pattern;
+
+import org.fsb.FlixFlow.Models.Utilisateur;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import org.fsb.FlixFlow.Models.Utilisateur;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-import java.sql.Date;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.ComboBox;
-
-import java.sql.SQLException;
-import java.util.regex.Pattern;
 
 public class UserAddController {
 	@FXML
-	private TextField firstNameTextField;
+	private DatePicker birthDatePicker;
 
 	@FXML
-	private TextField lastNameTextField;
+	private TableColumn<Utilisateur, String> date_de_naissanceColumn;
+
+	private DatabaseUtil dbUtil;
+
+	@FXML
+	private TableColumn<Utilisateur, String> emailColumn;
 
 	@FXML
 	private TextField emailTextField;
 
 	@FXML
-	private PasswordField passwordTextField;
+	private TextField firstNameTextField;
 
 	@FXML
-	private DatePicker birthDatePicker;
+	private TableColumn<Utilisateur, Integer> id_utilisateurColumn;
 
+	@FXML
+	private TextField lastNameTextField;
+
+	@FXML
+	private TableColumn<Utilisateur, String> mot_de_passeColumn;
+	@FXML
+	private TableColumn<Utilisateur, String> nomColumn;
+	@FXML
+	private PasswordField passwordTextField;
+	@FXML
+	private TableColumn<Utilisateur, String> prenomColumn;
+	@FXML
+	private TableColumn<Utilisateur, String> typeColumn;
 	@FXML
 	private ComboBox<String> userTypeComboBox;
 
@@ -40,22 +59,40 @@ public class UserAddController {
 	private TableView<Utilisateur> utilisateurTableView;
 
 	@FXML
-	private TableColumn<Utilisateur, Integer> id_utilisateurColumn;
+	private void addUtilisateur() {
+		if (validateInput()) {
+			Utilisateur utilisateur = new Utilisateur();
+			utilisateur.setNom(firstNameTextField.getText());
+			utilisateur.setPrenom(lastNameTextField.getText());
+			utilisateur.setEmail(emailTextField.getText());
+			utilisateur.setMot_de_passe(passwordTextField.getText());
+			utilisateur.setDate_de_naissance(Date.valueOf(birthDatePicker.getValue()));
+			utilisateur.setType(userTypeComboBox.getValue());
 
-	@FXML
-	private TableColumn<Utilisateur, String> nomColumn;
-	@FXML
-	private TableColumn<Utilisateur, String> prenomColumn;
-	@FXML
-	private TableColumn<Utilisateur, String> emailColumn;
-	@FXML
-	private TableColumn<Utilisateur, String> mot_de_passeColumn;
-	@FXML
-	private TableColumn<Utilisateur, String> date_de_naissanceColumn;
-	@FXML
-	private TableColumn<Utilisateur, String> typeColumn;
+			try {
+				DatabaseUtil.addUtilisateur(utilisateur);
+				utilisateurTableView.setItems(getUtilisateurList());
+				clearInputFields();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-	private DatabaseUtil dbUtil;
+	private void clearInputFields() {
+		firstNameTextField.clear();
+		lastNameTextField.clear();
+		emailTextField.clear();
+		passwordTextField.clear();
+		birthDatePicker.setValue(null);
+		userTypeComboBox.getSelectionModel().clearSelection();
+	}
+
+	private ObservableList<Utilisateur> getUtilisateurList() throws SQLException {
+		ObservableList<Utilisateur> utilisateurList = FXCollections.observableArrayList();
+		utilisateurList.addAll(dbUtil.getAllUtilisateurs());
+		return utilisateurList;
+	}
 
 	@FXML
 	public void initialize() {
@@ -78,33 +115,6 @@ public class UserAddController {
 			utilisateurTableView.setItems(getUtilisateurList());
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-	}
-
-	private ObservableList<Utilisateur> getUtilisateurList() throws SQLException {
-		ObservableList<Utilisateur> utilisateurList = FXCollections.observableArrayList();
-		utilisateurList.addAll(dbUtil.getAllUtilisateurs());
-		return utilisateurList;
-	}
-
-	@FXML
-	private void addUtilisateur() {
-		if (validateInput()) {
-			Utilisateur utilisateur = new Utilisateur();
-			utilisateur.setNom(firstNameTextField.getText());
-			utilisateur.setPrenom(lastNameTextField.getText());
-			utilisateur.setEmail(emailTextField.getText());
-			utilisateur.setMot_de_passe(passwordTextField.getText());
-			utilisateur.setDate_de_naissance(Date.valueOf(birthDatePicker.getValue()));
-			utilisateur.setType(userTypeComboBox.getValue());
-
-			try {
-				DatabaseUtil.addUtilisateur(utilisateur);
-				utilisateurTableView.setItems(getUtilisateurList());
-				clearInputFields();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -140,15 +150,6 @@ public class UserAddController {
 
 			return false;
 		}
-	}
-
-	private void clearInputFields() {
-		firstNameTextField.clear();
-		lastNameTextField.clear();
-		emailTextField.clear();
-		passwordTextField.clear();
-		birthDatePicker.setValue(null);
-		userTypeComboBox.getSelectionModel().clearSelection();
 	}
 
 }

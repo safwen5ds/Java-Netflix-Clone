@@ -2,8 +2,8 @@ package org.fsb.FlixFlow.Models;
 
 public class Role_serie {
 	private int id_acteur;
-	private int id_serie;
 	private int id_saison;
+	private int id_serie;
 	private String role_type;
 	private String url_image;
 
@@ -20,12 +20,12 @@ public class Role_serie {
 		return id_acteur;
 	}
 
-	public int getId_serie() {
-		return id_serie;
-	}
-
 	public int getId_saison() {
 		return id_saison;
+	}
+
+	public int getId_serie() {
+		return id_serie;
 	}
 
 	public String getRole_type() {
@@ -40,12 +40,12 @@ public class Role_serie {
 		this.id_acteur = id_acteur;
 	}
 
-	public void setId_serie(int id_serie) {
-		this.id_serie = id_serie;
-	}
-
 	public void setId_saison(int id_saison) {
 		this.id_saison = id_saison;
+	}
+
+	public void setId_serie(int id_serie) {
+		this.id_serie = id_serie;
 	}
 
 	public void setRole_type(String role_type) {

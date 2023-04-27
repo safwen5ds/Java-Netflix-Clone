@@ -1,8 +1,22 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.sql.SQLException;
+import java.util.List;
+
+import org.fsb.FlixFlow.Models.Commentaire_episode;
+import org.fsb.FlixFlow.Models.Episode;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
@@ -10,63 +24,123 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
-import org.fsb.FlixFlow.Models.Commentaire_episode;
-import org.fsb.FlixFlow.Models.Episode;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-
-import java.sql.SQLException;
-import java.util.List;
-
 public class EpisodeLayoutController {
 
+	private static void showAlert(String title, String content) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(content);
+		alert.showAndWait();
+	}
+
 	@FXML
-	private ListView<String> episodeListView;
+	private Button addcommentbtn;
+	@FXML
+	private Button addfavbtn;
+
 	@FXML
 	private Label average;
-	@FXML
-	private Label vote;
 
-	@FXML
-	private TextField txtcomment;
-
-	@FXML
-	private WebView episodeWebView;
+	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
 
 	@FXML
 	private Label DATE_DIFFUSION;
 
 	@FXML
-	private Label VUES;
-
-	@FXML
-	private Button addcommentbtn;
-
-	@FXML
 	private Button delbtn;
 
 	@FXML
-	private Button modifbtn;
+	private ListView<String> episodeListView;
 
 	@FXML
 	private Slider episodeRatingSlider;
+
+	private List<Episode> episodes;
+
+	@FXML
+	private WebView episodeWebView;
+
+	@FXML
+	private ListView<Commentaire_episode> listcomments;
+
+	@FXML
+	private Button modifbtn;
 
 	@FXML
 	private Button submitEpisodeRatingButton;
 
 	@FXML
 	private Text synopsistext;
+	@FXML
+	private TextField txtcomment;
 
 	@FXML
-	private Button addfavbtn;
+	private Label vote;
 
 	@FXML
 	private Button votebtn;
+
 	@FXML
-	private ListView<Commentaire_episode> listcomments;
+	private Label VUES;
 
-	private List<Episode> episodes;
+	private void addComment(int id_episode) {
+		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+		String content = txtcomment.getText();
 
-	Font bebasNeueFont = Font.loadFont(getClass().getResourceAsStream("/FXML/fonts/BebasNeue-Regular.ttf"), 20);
+		try {
+			DatabaseUtil.addCommentForEpisode(userId, id_episode, content);
+			updateCommentList(id_episode);
+			txtcomment.clear();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void deleteComment(int id_episode) {
+		Commentaire_episode selectedComment = listcomments.getSelectionModel().getSelectedItem();
+		if (selectedComment != null) {
+			try {
+				DatabaseUtil.deleteCommentForEpisode(selectedComment.getComment_id());
+				updateCommentList(id_episode);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public Callback<ListView<String>, ListCell<String>> episodeCellFactory() {
+		return list -> new ListCell<String>() {
+			private final ImageView playIcon;
+
+			{
+				playIcon = new ImageView(new Image("/FXML/play.png"));
+				playIcon.setFitHeight(16);
+				playIcon.setFitWidth(16);
+				setGraphic(playIcon);
+				setContentDisplay(ContentDisplay.RIGHT);
+			}
+
+			@Override
+			protected void updateItem(String item, boolean empty) {
+				super.updateItem(item, empty);
+
+				if (empty || item == null) {
+					setText(null);
+					setGraphic(null);
+				} else {
+					setText(item);
+					setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+					if (isSelected()) {
+						setStyle("-fx-background-color: #9400D3; -fx-text-fill: white;");
+						setGraphic(playIcon);
+					} else {
+						setGraphic(null);
+					}
+				}
+			}
+		};
+	}
 
 	public void initData(int saisonId, int serieId) {
 		episodeListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
@@ -132,31 +206,6 @@ public class EpisodeLayoutController {
 
 	}
 
-	private void addComment(int id_episode) {
-		int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
-		String content = txtcomment.getText();
-
-		try {
-			DatabaseUtil.addCommentForEpisode(userId, id_episode, content);
-			updateCommentList(id_episode);
-			txtcomment.clear();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void deleteComment(int id_episode) {
-		Commentaire_episode selectedComment = listcomments.getSelectionModel().getSelectedItem();
-		if (selectedComment != null) {
-			try {
-				DatabaseUtil.deleteCommentForEpisode(selectedComment.getComment_id());
-				updateCommentList(id_episode);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	private void modifyComment(int id_episode) {
 		Commentaire_episode selectedComment = listcomments.getSelectionModel().getSelectedItem();
 		if (selectedComment != null) {
@@ -168,38 +217,6 @@ public class EpisodeLayoutController {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
-	}
-
-	private void updateCommentList(int id_episode) {
-		try {
-			List<Commentaire_episode> comments = DatabaseUtil.getCommentaireEpisodesByMediaId(id_episode);
-			listcomments.getItems().setAll(comments);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void submitEpisodeRating() {
-		int selectedIndex = episodeListView.getSelectionModel().getSelectedIndex();
-		if (selectedIndex >= 0) {
-			int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
-			int episodeId = episodes.get(selectedIndex).getId_episode();
-			int rating = (int) Math.round(episodeRatingSlider.getValue());
-			boolean updated = DatabaseUtil.submitEpisodeRating(userId, episodeId, rating);
-			if (updated) {
-				showAlert("Rating Updated", "Your rating for this episode has been updated.");
-			}
-			updateAverageScore(episodeId);
-		}
-	}
-
-	private void updateAverageScore(int episodeId) {
-		try {
-			double averageScore = DatabaseUtil.calculateAverageEpisodeScore(episodeId);
-			average.setText("Average : " + String.format("%.2f", averageScore));
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -261,6 +278,46 @@ public class EpisodeLayoutController {
 		}
 	}
 
+	private void showErrorDialog(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
+	private void submitEpisodeRating() {
+		int selectedIndex = episodeListView.getSelectionModel().getSelectedIndex();
+		if (selectedIndex >= 0) {
+			int userId = DatabaseUtil.readUserFromFile().getId_utilisateur();
+			int episodeId = episodes.get(selectedIndex).getId_episode();
+			int rating = (int) Math.round(episodeRatingSlider.getValue());
+			boolean updated = DatabaseUtil.submitEpisodeRating(userId, episodeId, rating);
+			if (updated) {
+				showAlert("Rating Updated", "Your rating for this episode has been updated.");
+			}
+			updateAverageScore(episodeId);
+		}
+	}
+
+	private void updateAverageScore(int episodeId) {
+		try {
+			double averageScore = DatabaseUtil.calculateAverageEpisodeScore(episodeId);
+			average.setText("Average : " + String.format("%.2f", averageScore));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void updateCommentList(int id_episode) {
+		try {
+			List<Commentaire_episode> comments = DatabaseUtil.getCommentaireEpisodesByMediaId(id_episode);
+			listcomments.getItems().setAll(comments);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void updateVoteCount(int episodeId) {
 		try {
 			int totalRatings = DatabaseUtil.getTotalRatingsForEpisode(episodeId);
@@ -273,54 +330,5 @@ public class EpisodeLayoutController {
 			e.printStackTrace();
 			showErrorDialog("Error Updating Vote !");
 		}
-	}
-
-	public Callback<ListView<String>, ListCell<String>> episodeCellFactory() {
-		return list -> new ListCell<String>() {
-			private final ImageView playIcon;
-
-			{
-				playIcon = new ImageView(new Image("/FXML/play.png"));
-				playIcon.setFitHeight(16);
-				playIcon.setFitWidth(16);
-				setGraphic(playIcon);
-				setContentDisplay(ContentDisplay.RIGHT);
-			}
-
-			@Override
-			protected void updateItem(String item, boolean empty) {
-				super.updateItem(item, empty);
-
-				if (empty || item == null) {
-					setText(null);
-					setGraphic(null);
-				} else {
-					setText(item);
-					setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
-					if (isSelected()) {
-						setStyle("-fx-background-color: #9400D3; -fx-text-fill: white;");
-						setGraphic(playIcon);
-					} else {
-						setGraphic(null);
-					}
-				}
-			}
-		};
-	}
-
-	private void showErrorDialog(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
-	}
-
-	private static void showAlert(String title, String content) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(content);
-		alert.showAndWait();
 	}
 }

@@ -1,5 +1,12 @@
 package org.fsb.FlixFlow.Controllers;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.fsb.FlixFlow.Models.Saison;
+import org.fsb.FlixFlow.Utilities.DatabaseUtil;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
@@ -8,49 +15,20 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import org.fsb.FlixFlow.Models.Saison;
-import org.fsb.FlixFlow.Utilities.DatabaseUtil;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 public class SaisonController {
+	private final IntegerProperty mediaIdProperty = new SimpleIntegerProperty();
+
 	@FXML
 	private VBox seasonsContainer;
-
-	private final IntegerProperty mediaIdProperty = new SimpleIntegerProperty();
 	private final IntegerProperty serieIdProperty = new SimpleIntegerProperty();
-
-	public IntegerProperty mediaIdProperty() {
-		return mediaIdProperty;
-	}
-
-	public void setMediaId(int mediaId) {
-		this.mediaIdProperty.set(mediaId);
-	}
 
 	public int getMediaId() {
 		return mediaIdProperty.get();
 	}
 
-	public IntegerProperty serieIdProperty() {
-		return serieIdProperty;
-	}
-
-	public void setSerieId(int serieId) {
-		this.serieIdProperty.set(serieId);
-	}
-
 	public int getSerieId() {
 		return serieIdProperty.get();
-	}
-
-	public void initialize() {
-		mediaIdProperty.addListener((observable, oldValue, newValue) -> loadData(newValue.intValue(), getSerieId()));
-		serieIdProperty.addListener((observable, oldValue, newValue) -> loadData(getMediaId(), newValue.intValue()));
-
-		loadData(getMediaId(), getSerieId());
 	}
 
 	public void initData(int mediaId, int serieId) {
@@ -58,9 +36,11 @@ public class SaisonController {
 		setSerieId(serieId);
 	}
 
-	public void updateMediaAndSerieId(int mediaId, int serieId) {
-		setMediaId(mediaId);
-		setSerieId(serieId);
+	public void initialize() {
+		mediaIdProperty.addListener((observable, oldValue, newValue) -> loadData(newValue.intValue(), getSerieId()));
+		serieIdProperty.addListener((observable, oldValue, newValue) -> loadData(getMediaId(), newValue.intValue()));
+
+		loadData(getMediaId(), getSerieId());
 	}
 
 	public void loadData(int mediaId, int serieId) {
@@ -110,12 +90,33 @@ public class SaisonController {
 
 	}
 
+	public IntegerProperty mediaIdProperty() {
+		return mediaIdProperty;
+	}
+
+	public IntegerProperty serieIdProperty() {
+		return serieIdProperty;
+	}
+
+	public void setMediaId(int mediaId) {
+		this.mediaIdProperty.set(mediaId);
+	}
+
+	public void setSerieId(int serieId) {
+		this.serieIdProperty.set(serieId);
+	}
+
 	private void showErrorDialog(String message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
 		alert.setHeaderText(null);
 		alert.setContentText(message);
 		alert.showAndWait();
+	}
+
+	public void updateMediaAndSerieId(int mediaId, int serieId) {
+		setMediaId(mediaId);
+		setSerieId(serieId);
 	}
 
 }
