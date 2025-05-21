@@ -32,7 +32,7 @@ FlixFlow est une plateforme de streaming moderne construite avec Java et JavaFX,
 
 1. Clonez le dépôt :
    ```bash
-   git clone https://github.com/yourusername/Java-Netflix-Clone.git
+   git clone https://github.com/safwen5ds/Java-Netflix-Clone.git
    ```
 
 2. Accédez au répertoire du projet :
@@ -77,7 +77,7 @@ Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
 
 ## 👥 Auteurs
 
-- Votre Nom - Travail initial
+- Safwen Gharbi
 
 ## 🙏 Remerciements
 
