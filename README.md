@@ -67,19 +67,6 @@ Après le lancement de l'application, vous pouvez :
 - Lire des vidéos avec le lecteur multimédia intégré
 - Gérer votre profil et vos préférences
 
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à soumettre une Pull Request.
-
-## 📝 Licence
-
-Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
-
 ## 👥 Auteurs
 
 - Safwen Gharbi
-
-## 🙏 Remerciements
-
-- Netflix pour l'inspiration
-- Toutes les bibliothèques open-source utilisées dans ce projet 
